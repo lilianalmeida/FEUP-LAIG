@@ -34,22 +34,32 @@ class MyCylinder extends CGFobject {
 			var alphaAng = 2 * Math.PI / this.slices;
 			for (var i = 0; i <= this.slices; i++) {
 
-				var sa = Math.sin(ang);
-				var saa = Math.sin(ang + alphaAng);
-				var ca = Math.cos(ang);
-				var caa = Math.cos(ang + alphaAng);
+				var nx = Math.sin(ang);
+				var ny = Math.cos(ang);
+				var nz = Math.cos(Math.atan(diffHeight / diffRadius));
 
-				this.vertices.push(sa * radius, ca * radius, subHeight); 
+				this.vertices.push(nx * radius, ny * radius, subHeight); 
 
 				//TO DO!
 				this.texCoords.push(ang / (Math.PI * 2), subHeight);
 
-				//TO DO!!
-				this.normals.push(
-					sa,
-					ca,
-					0
-				);		
+				var normal = [
+					nx,
+					ny,
+					nz
+				];
+
+				//Normalization
+				var nsize = Math.sqrt(
+					normal[0] * normal[0] +
+					normal[1] * normal[1] +
+					normal[2] * normal[2]
+				);
+				normal[0] /= nsize;
+				normal[1] /= nsize;
+				normal[2] /= nsize;
+
+				this.normals.push(...normal);		
 
 				ang += alphaAng;
 			}
