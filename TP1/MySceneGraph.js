@@ -908,39 +908,12 @@ class MySceneGraph {
         //To do: Create display loop for transversing the scene graph
 
         //To test the parsing/creation of the primitives, call the display function directly
-        this.scene.pushMatrix();
-        this.scene.translate(2,3,4);
-        this.primitives['demoRectangle'].display();
-        this.scene.popMatrix();
-
-        this.scene.pushMatrix();
-        this.scene.translate(1,3,1);
-        this.primitives['demoRectangle'].display();
-        this.scene.popMatrix();
-
-        this.scene.pushMatrix();
-        this.scene.translate(0,3,2);
-        this.primitives['demoRectangle'].display();
-        this.scene.popMatrix();
-
-        this.scene.pushMatrix();
-        this.scene.translate(4,3,1);
-        this.primitives['demoRectangle'].display();
-        this.scene.popMatrix();
-
-        this.scene.pushMatrix();
-        this.scene.translate(2,1,1);
-        this.primitives['demoRectangle'].display();
-        this.scene.popMatrix();
-
-        this.scene.pushMatrix();
-        this.scene.translate(2,2,2);
-        this.primitives['demoRectangle'].display();
-        this.scene.popMatrix();
 
         //this.primitives['demoTriangle'].display();
 
-        //this.primitives['demoCylinder'].enableNormalViz();
-       // this.primitives['demoCylinder'].display();
+        this.primitives['demoCylinder'].enableNormalViz();
+        this.primitives['demoCylinder'].display();
+        //this.primitives['demoSphere'].enableNormalViz();
+        //this.primitives['demoSphere'].display();
     }
 }
