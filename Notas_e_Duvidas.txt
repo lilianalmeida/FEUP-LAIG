@@ -1,0 +1,19 @@
+proc(){
+if is primitive
+	drawprimitive
+else
+	update(material, textura, transf)
+	for(child in children):
+		push(mat)
+		push(txt)
+		push(trans)
+		proc(child)
+		opop(mat)
+		opop(txt)
+		opop(trans)
+
+
+onde por o vetor de MyNodes
+
+como aceder na scene ao sceneGraoh se necessario
+para materais e texturas fazer classes proprias ou guarda-se s� em vetor a info toda
