@@ -58,6 +58,9 @@
         <primitive id="demoSphere">
             <sphere radius="0.5" slices="10" stacks="10" />
         </primitive>
+        <primitive id="robotTorus">
+            <torus inner="0.25" outer="0.5" slices="10" loops="10" />
+        </primitive>
     </primitives>
 
     <components>

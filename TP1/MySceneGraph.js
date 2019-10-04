@@ -911,8 +911,8 @@ class MySceneGraph {
 
         //this.primitives['demoTriangle'].display();
 
-        this.primitives['demoCylinder'].enableNormalViz();
-        this.primitives['demoCylinder'].display();
+      //  this.primitives['robotTorus'].enableNormalViz();
+        this.primitives['robotTorus'].display();
         //this.primitives['demoSphere'].enableNormalViz();
         //this.primitives['demoSphere'].display();
     }
