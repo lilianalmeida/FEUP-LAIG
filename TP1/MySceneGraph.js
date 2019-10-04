@@ -25,9 +25,9 @@ class MySceneGraph {
         this.scene = scene;
         scene.graph = this;
 
-        this.nodes = [];
+        this.nodes = [];                    //array with nodes
 
-        this.idRoot = null;                    // The id of the root element.
+        this.idRoot = null;                 // The id of the root element.
 
         this.axisCoords = [];
         this.axisCoords['x'] = [1, 0, 0];
@@ -487,8 +487,8 @@ class MySceneGraph {
                         var coordinates = this.parseAngularCoordinates(grandChildren[j], "rotate tranformation for ID " + transformationID);
                         if (!Array.isArray(coordinates))
                             return coordinates;
-                        
-                        transfMatrix = mat4.rotate(transfMatrix, transfMatrix, coordinates[1], coordinates[0]);   
+
+                        transfMatrix = mat4.rotate(transfMatrix, transfMatrix, coordinates[1], coordinates[0]);
                         break;
                 }
             }
@@ -762,7 +762,7 @@ class MySceneGraph {
             // Texture
 
             // Children
-            
+
         }
     }
 
@@ -825,15 +825,15 @@ class MySceneGraph {
      * @param {block element} node
      * @param {message to be displayed in case of error} messageError
      */
-    parseAngularCoordinates(node, messageError){
+    parseAngularCoordinates(node, messageError) {
         var position = [];
         var options = ['x', 'y', 'z'];
-        
+
         //axis
         var axis = this.reader.getItem(node, 'axis', options);
-       /* if (!axis.isChar()) to do errozinho
-            return "unable to parse axis of the " + messageError;
-        */
+        /* if (!axis.isChar()) to do errozinho
+             return "unable to parse axis of the " + messageError;
+         */
         position.push(axis);
 
         var angle = this.reader.getFloat(node, 'angle');
@@ -875,7 +875,7 @@ class MySceneGraph {
 
         return color;
     }
-    
+
     /*
      * Callback to be executed on any read error, showing an error on the console.
      * @param {string} message
@@ -911,9 +911,11 @@ class MySceneGraph {
 
         //this.primitives['demoTriangle'].display();
 
-      //  this.primitives['robotTorus'].enableNormalViz();
-        this.primitives['robotTorus'].display();
-        //this.primitives['demoSphere'].enableNormalViz();
-        //this.primitives['demoSphere'].display();
+        //this.primitives['robotTorus'].enableNormalViz();
+        //this.primitives['robotTorus'].display();
+        //this.primitives['robotSphere'].enableNormalViz();
+        this.primitives['robotSphere'].display();
+        //this.primitives['robotCylinder'].enableNormalViz();
+        //this.primitives['robotCylinder'].display();
     }
 }

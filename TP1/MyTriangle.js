@@ -2,6 +2,16 @@
  * MyTriangle
  * @constructor
  * @param scene - Reference to MyScene object
+ * @param id - id of the primitive
+ * @param x1 - X coordinate of the first vertex 
+ * @param x2 - X coordinate of the second vertex 
+ * @param x3 - X coordinate of the third vertex 
+ * @param y1 - Y coordinate of the first vertex 
+ * @param y2 - Y coordinate of the second vertex 
+ * @param y3 - Y coordinate of the third vertex 
+ * @param z1 - Z coordinate of the first vertex 
+ * @param z2 - Z coordinate of the second vertex 
+ * @param z3 - Z coordinate of the third vertex 
  */
 class MyTriangle extends CGFobject {
 	constructor(scene, id, x1, x2, x3, y1, y2, y3, z1, z2, z3) {
@@ -27,24 +37,23 @@ class MyTriangle extends CGFobject {
 
 		//Counter-clockwise reference of vertices
 		this.indices = [
-			0,1,2	
+			0, 1, 2
 		];
 
-		this.normals= [
-			0,0,1,
-			0,0,1,
-			0,0,1
+		this.normals = [
+			0, 0, 1,
+			0, 0, 1,
+			0, 0, 1
 		];
 
 		this.texCoords = [
-			0,1,
-			0.5,1,
-			0,0.5
+			0, 1,
+			0.5, 1,
+			0, 0.5
 		];
-		
+
 		this.primitiveType = this.scene.gl.TRIANGLES;
 		this.initGLBuffers();
 	}
-	
 }
 

@@ -79,7 +79,7 @@
         <transformation id= "antennaTrans">
             <translate x="0" y="4.25" z="0" />
             <scale x="0.5" y="0.5" z="0.5" />
-        </transformation>        
+        </transformation>
     </transformations>
 
     <primitives>
@@ -117,7 +117,7 @@
             </children>
         </component>
 
-        <!--Head-->
+        <!-- Head -->
 
         <component id="head">
             <transformation>
@@ -148,7 +148,7 @@
             </children>
         </component>
 
-        <!--Head Children-->
+        <!-- Head Children -->
 
         <component id="eyes">
             <transformation>
@@ -245,7 +245,7 @@
             </children>
         </component>
 
-        <!--Body-->
+        <!-- Body -->
 
         <component id="body">
             <transformation>
@@ -375,7 +375,7 @@
             </children>
         </component>
 
-        <!--Arms-->
+        <!-- Arm -->
 
         <component id="arms">
             <transformation>
@@ -498,7 +498,7 @@
             </children>
         </component>
 
-        <!--Legs-->
+        <!-- Legs -->
 
         <component id="legs">
             <transformation>
@@ -592,9 +592,5 @@
                 <componentref id = "footPrim"/>
             </children>
         </component>
-
-
-
-
     </components>
 </lxs>

@@ -2,8 +2,10 @@
  * MyRectangle
  * @constructor
  * @param scene - Reference to MyScene object
- * @param x - Scale of rectangle in X
- * @param y - Scale of rectangle in Y
+ * @param x1 - Left boundary of rectangle in X 
+ * @param x2 - Right boundary of rectangle in X
+ * @param y1 - Bottom boundary of rectangle in Y
+ * @param y2 - Top boundary of rectangle in Y
  */
 class MyRectangle extends CGFobject {
 	constructor(scene, id, x1, x2, y1, y2) {
@@ -15,7 +17,6 @@ class MyRectangle extends CGFobject {
 
 		this.initBuffers();
 	}
-	
 	initBuffers() {
 		this.vertices = [
 			this.x1, this.y1, 0,	//0
@@ -37,7 +38,7 @@ class MyRectangle extends CGFobject {
 			0, 0, 1,
 			0, 0, 1
 		];
-		
+
 		/*
 		Texture coords (s,t)
 		+----------> s

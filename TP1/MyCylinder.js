@@ -2,6 +2,12 @@
  * MyCylinder
  * @constructor
  * @param scene - Reference to MyScene object
+ * @param id - id of the primitive
+ * @param base - Radius of the base (Z = 0)
+ * @param top - Radius of the top (Z = height)
+ * @param height - Size of the cylinder in the direction of the positive Z axis
+ * @param slices - Number of divisions around the circumference
+ * @param stacks - Number of divisions along the Z direction
  */
 class MyCylinder extends CGFobject {
 	constructor(scene, id, base, top, height, slices, stacks) {
@@ -14,42 +20,49 @@ class MyCylinder extends CGFobject {
 
 		this.initBuffers();
 	}
-
 	initBuffers() {
-
 		this.vertices = [];
 		this.indices = [];
 		this.normals = [];
 		this.texCoords = [];
 
+		//Height of cylinder in each stack
 		var subHeight = 0;
 		var diffHeight = this.height / this.stacks;
 
+		//Top radius of cylinder in each stack
 		var radius = this.base;
 		var diffRadius = (this.top - this.base) / this.stacks;
 
-		for (var j = 0; j <= this.stacks; j++) {
+		//Angle between each slice
+		var ang = 0;
+		var alphaAng = 2 * Math.PI / this.slices;
 
-			var ang = 0;
-			var alphaAng = 2 * Math.PI / this.slices;
+		for (var j = 0; j <= this.stacks; j++) {
+			//Reinitialize angle
+			ang = 0;
+
 			for (var i = 0; i <= this.slices; i++) {
 
+				//Normal components
 				var nx = Math.sin(ang);
 				var ny = Math.cos(ang);
-				var nz = Math.cos(Math.atan(diffHeight / diffRadius));
+				var nz = Math.tan(Math.PI / 2 - Math.atan(diffHeight / (- diffRadius)));
 
-				this.vertices.push(nx * radius, ny * radius, subHeight); 
+				//Vertices
+				this.vertices.push(nx * radius, ny * radius, subHeight);
 
-				//TO DO!
+				//Texture Coordinates - TO DO!
 				this.texCoords.push(ang / (Math.PI * 2), subHeight);
 
+				//Normal
 				var normal = [
 					nx,
 					ny,
 					nz
 				];
 
-				//Normalization
+				//Normal normalization
 				var nsize = Math.sqrt(
 					normal[0] * normal[0] +
 					normal[1] * normal[1] +
@@ -59,30 +72,28 @@ class MyCylinder extends CGFobject {
 				normal[1] /= nsize;
 				normal[2] /= nsize;
 
-				this.normals.push(...normal);		
+				this.normals.push(...normal);
 
+				//Next angle for next slice
 				ang += alphaAng;
 			}
-
+			//Next height and radius for next stack
 			subHeight += diffHeight;
 			radius += diffRadius;
 		}
 
+		//Generates cylinder surface
 		for (var j = 0; j < this.stacks; j++) {
 			for (var i = j * (this.slices + 1); i < j * (this.slices + 1) + this.slices; i++) {
-				this.indices.push((i + this.slices + 1), (i + 1), (i));
-				this.indices.push((i + 1), (i + this.slices + 1), (i + this.slices + 2));
+				this.indices.push(i + this.slices + 1, i + 1, i);
+				this.indices.push(i + 1, i + this.slices + 1, i + this.slices + 2);
 			}
 		}
 
 		this.primitiveType = this.scene.gl.TRIANGLES;
 		this.initGLBuffers();
 	}
-
 	updateBuffers(complexity) {
-		//this.slices = 3 + Math.round(9 * complexity); //complexity varies 0-1, so slices varies 3-12
-
-		// reinitialize buffers
 		this.initBuffers();
 		this.initNormalVizBuffers();
 	}
