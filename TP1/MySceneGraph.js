@@ -3,7 +3,7 @@ var DEGREE_TO_RAD = Math.PI / 180;
 // Order of the groups in the XML document.
 var SCENE_INDEX = 0;
 var VIEWS_INDEX = 1;
-var AMBIENT_INDEX = 2;
+var GLOBALS_INDEX = 2;
 var LIGHTS_INDEX = 3;
 var TEXTURES_INDEX = 4;
 var MATERIALS_INDEX = 5;
@@ -25,7 +25,7 @@ class MySceneGraph {
         this.scene = scene;
         scene.graph = this;
 
-        this.nodes = [];                    //array with nodes
+        this.nodesGraph = [];                    //array with nodes
 
         this.idRoot = null;                 // The id of the root element.
 
@@ -112,15 +112,15 @@ class MySceneGraph {
                 return error;
         }
 
-        // <ambient>
-        if ((index = nodeNames.indexOf("ambient")) == -1)
-            return "tag <ambient> missing";
+        // <globals>
+        if ((index = nodeNames.indexOf("globals")) == -1)
+            return "tag <globals> missing";
         else {
-            if (index != AMBIENT_INDEX)
-                this.onXMLMinorError("tag <ambient> out of order");
+            if (index != GLOBALS_INDEX)
+                this.onXMLMinorError("tag <globals> out of order");
 
-            //Parse ambient block
-            if ((error = this.parseAmbient(nodes[index])) != null)
+            //Parse globals block
+            if ((error = this.parseGlobals(nodes[index])) != null)
                 return error;
         }
 
@@ -233,12 +233,12 @@ class MySceneGraph {
     }
 
     /**
-     * Parses the <ambient> node.
-     * @param {ambient block element} ambientsNode
+     * Parses the <globals> node.
+     * @param {globals block element} globalsNode
      */
-    parseAmbient(ambientsNode) {
+    parseGlobals(globalsNode) {
 
-        var children = ambientsNode.children;
+        var children = globalsNode.children;
 
         this.ambient = [];
         this.background = [];
@@ -263,7 +263,7 @@ class MySceneGraph {
         else
             this.background = color;
 
-        this.log("Parsed ambient");
+        this.log("Parsed globals");
 
         return null;
     }
@@ -470,6 +470,7 @@ class MySceneGraph {
             for (var j = 0; j < grandChildren.length; j++) {
                 switch (grandChildren[j].nodeName) {
                     case 'translate':
+                        console.log("Here");
                         var coordinates = this.parseCoordinates3D(grandChildren[j], "translate transformation for ID " + transformationID);
                         if (!Array.isArray(coordinates))
                             return coordinates;
@@ -477,6 +478,7 @@ class MySceneGraph {
                         transfMatrix = mat4.translate(transfMatrix, transfMatrix, coordinates);
                         break;
                     case 'scale':
+                            console.log("Here2");
                         var coordinates = this.parseCoordinates3D(grandChildren[j], "scale transformation for ID " + transformationID);
                         if (!Array.isArray(coordinates))
                             return coordinates;
@@ -484,6 +486,7 @@ class MySceneGraph {
                         transfMatrix = mat4.scale(transfMatrix, transfMatrix, coordinates);
                         break;
                     case 'rotate':
+                            console.log("Her3e");
                         var coordinates = this.parseAngularCoordinates(grandChildren[j], "rotate tranformation for ID " + transformationID);
                         if (!Array.isArray(coordinates))
                             return coordinates;
@@ -491,10 +494,10 @@ class MySceneGraph {
                         transfMatrix = mat4.rotate(transfMatrix, transfMatrix, coordinates[1], coordinates[0]);
                         break;
                 }
+                
             }
             this.transformations[transformationID] = transfMatrix;
         }
-
         this.log("Parsed transformations");
         return null;
     }
@@ -704,8 +707,9 @@ class MySceneGraph {
                 console.warn('Primitive type not found')
                 return "unable to identify primitive";
             }
+            var nodeGraph = new MyNode(this.scene, primitiveId, true, null, null, null,null);
+            this.nodesGraph[primitiveId] = nodeGraph;
         }
-
         this.log("Parsed primitives");
         return null;
     }
@@ -722,6 +726,7 @@ class MySceneGraph {
         var grandChildren = [];
         var grandgrandChildren = [];
         var nodeNames = [];
+        var nodeTransf;
 
         // Any number of components.
         for (var i = 0; i < children.length; i++) {
@@ -740,6 +745,12 @@ class MySceneGraph {
             if (this.components[componentID] != null)
                 return "ID must be unique for each component (conflict: ID = " + componentID + ")";
 
+
+           /*if (this.primitives[componentID] != null){
+                var nodeGraph = new MyNode(this.scene, children[i].nodeName, true, "", "", "", "");
+                this.nodesGraph.push(nodeGraph);
+                continue;
+            }*/
             grandChildren = children[i].children;
 
             nodeNames = [];
@@ -752,18 +763,85 @@ class MySceneGraph {
             var textureIndex = nodeNames.indexOf("texture");
             var childrenIndex = nodeNames.indexOf("children");
 
-            this.onXMLMinorError("To do: Parse components.");
+            //this.onXMLMinorError("To do: Parse components.");
+
             // Transformations
-            //MyNode node;
-            //this.scene.nodesss.push(node);
+            if (grandChildren[transformationIndex].nodeName != "transformation") {
+                this.onXMLMinorError("unknown tag <" + grandChildren[transformationIndex].nodeName + ">");
+                continue;
+            }
+            
+
+            grandgrandChildren = grandChildren[transformationIndex].children;
+            nodeTransf = mat4.create();
+            if (grandgrandChildren.length != 0) {
+                if (grandgrandChildren[transformationIndex].nodeName == "transformationref") {
+                    nodeTransf = this.transformations[this.reader.getString(grandgrandChildren[transformationIndex], 'id')];
+                    
+                } else {
+
+                    for (var j = 0; j < grandgrandChildren.length; j++) {
+                        switch (grandgrandChildren[j].nodeName) {
+                            case 'translate':
+                                var coordinates = this.parseCoordinates3D(grandgrandChildren[j], "translate transformation for node ID " + children[i].nodeName);
+                                if (!Array.isArray(coordinates))
+                                    return coordinates;
+
+                                    nodeTransf = mat4.translate(nodeTransf, nodeTransf, coordinates);
+
+                                break;
+                            case 'scale':
+                                var coordinates = this.parseCoordinates3D(grandgrandChildren[j], "scale transformation for node ID " + children[i].nodeName);
+                                if (!Array.isArray(coordinates))
+                                    return coordinates;
+
+                                    nodeTransf = mat4.scale(nodeTransf, nodeTransf, coordinates);
+                                break;
+                            case 'rotate':
+                                var coordinates = this.parseAngularCoordinates(grandgrandChildren[j], "rotate tranformation for node ID " + children[i].nodeName);
+                                if (!Array.isArray(coordinates))
+                                    return coordinates;
+                                    nodeTransf = mat4.rotate(nodeTransf, nodeTransf, coordinates[1], coordinates[0]);
+                                    break;
+                        }
+                    }
+                }
+                
+            }
+            
 
             // Materials
+            /*if (grandChildren[materialsIndex].nodeName != "materials") {
+                this.onXMLMinorError("unknown tag <" + grandChildren[materialsIndex].nodeName + ">");
+                continue;
+            }
+
+            grandgrandChildren = grandChildren[materialsIndex].children;
+
+            //to do: aceitar mais q um material
+            grandgrandChildren[0]*/
 
             // Texture
 
             // Children
+            // Any number of children
+            if (grandChildren[childrenIndex].nodeName != "children") {
+                this.onXMLMinorError("unknown tag <" + grandChildren[childrenIndex].nodeName + ">");
+                continue;
+            }
 
+            grandgrandChildren = grandChildren[childrenIndex].children;
+            var childrenGraph = [];
+
+            for (var j = 0; j < grandgrandChildren.length; j++) {
+                childrenGraph.push(this.reader.getString(grandgrandChildren[j], 'id'));
+            }
+
+            var nodeGraph = new MyNode(this.scene, this.reader.getString(children[i], 'id'), false, nodeTransf, "", "", childrenGraph);
+            this.nodesGraph[this.reader.getString(children[i], 'id')] = nodeGraph;
         }
+
+        this.log("Parsed components");
     }
 
 
@@ -827,20 +905,27 @@ class MySceneGraph {
      */
     parseAngularCoordinates(node, messageError) {
         var position = [];
-        var options = ['x', 'y', 'z'];
+        var options = ["x", "y", "z"];
 
         //axis
-        var axis = this.reader.getItem(node, 'axis', options);
-        /* if (!axis.isChar()) to do errozinho
-             return "unable to parse axis of the " + messageError;
-         */
-        position.push(axis);
+        var axis = this.reader.getString(node, 'axis');
+       // if (axis != "x" && axis != "y" && axis != "z") 
+         //   return "unable to parse axis of the " + messageError;
+        if (axis == "x"){
+            position.push([1,0,0]);
+        }else if (axis == "y"){
+            position.push([0,1,0]);
+        }else if (axis == "z"){
+            position.push([0,0,1]);
+        }else{
+            return "unable to parse axis of the " + messageError;
+        }
 
         var angle = this.reader.getFloat(node, 'angle');
         if (!(angle != null && !isNaN(angle)))
             return "unable to parse angle of the " + messageError;
-
-        position.push(angle);
+        position.push(angle* Math.PI /180);
+        return position;
     }
 
     /**
@@ -905,17 +990,39 @@ class MySceneGraph {
      * Displays the scene, processing each node, starting in the root node.
      */
     displayScene() {
-        //To do: Create display loop for transversing the scene graph
-
-        //To test the parsing/creation of the primitives, call the display function directly
-
+        //To do: Create display loop for transversing the scene graph 
+        var transfs = mat4.create();
+        var atualNode = this.nodesGraph[this.idRoot];
+        //console.log(this.idRoot);
+       //console.dir(this.nodesGraph);
+        this.stack = [];
+        this.processNode(atualNode, transfs);
         //this.primitives['demoTriangle'].display();
-
         //this.primitives['robotTorus'].enableNormalViz();
         //this.primitives['robotTorus'].display();
-        //this.primitives['robotSphere'].enableNormalViz();
-        this.primitives['robotSphere'].display();
+       // this.primitives['robotSphere'].enableNormalViz();
+       // this.primitives['robotSphere'].display();
         //this.primitives['robotCylinder'].enableNormalViz();
         //this.primitives['robotCylinder'].display();
+    }
+    processNode(nodeProc, tG){
+        if(nodeProc.isPrimitive == true){
+            this.scene.pushMatrix();
+            this.scene.multMatrix(tG);
+            this.primitives[nodeProc.id].display();
+            this.scene.popMatrix();
+        }else{
+           tG = this.updateProperties(tG, nodeProc.transfMatrix);
+            for(var i = 0; i < nodeProc.children.length; i++){
+                this.stack.push(tG);
+                this.processNode(this.nodesGraph[ nodeProc.children[i]], tG);
+                tG = this.stack.pop();
+            }
+        }
+        
+    }
+    updateProperties(tG, tGF){
+        var mout = mat4.create();
+        return mat4.multiply(mout,tG,tGF);
     }
 }

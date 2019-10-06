@@ -10,7 +10,6 @@ class XMLscene extends CGFscene {
      */
     constructor(myinterface) {
         super();
-        //this.nodesss =  [];
         this.interface = myinterface;
     }
 

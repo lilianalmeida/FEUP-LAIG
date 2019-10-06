@@ -1,5 +1,5 @@
 <lxs>
-    <scene root="robot" axis_length="5"/>
+    <scene root="root" axis_length="5"/>
 
     <views default="defaultCamera">
         <perspective id="defaultCamera" near="0.1" far="500" angle="45">
@@ -8,10 +8,10 @@
         </perspective>
     </views>
 
-    <ambient>
+    <globals>
         <ambient r="0.2" g="0.2" b="0.2" a="1.0" />
         <background r="0.0" g="0.0" b="0.0" a="1.0" />
-    </ambient>
+    </globals>
 
     <lights>
         <omni id="robotLight" enabled="1">
@@ -19,6 +19,7 @@
             <ambient r="0" g="0" b="0" a="1.0" />
             <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
             <specular r="1.0" g="1.0" b="1.0" a="1.0" />
+            <attenuation constant="0" linear="1" quadratic="0" />
         </omni>
     </lights>
 
@@ -102,12 +103,24 @@
 
     <components>
 
+        <component id="root">
+            <transformation>
+            </transformation>
+            <materials>
+                <material id="robotMaterialBody" />
+            </materials>
+            <texture id="none"/>
+            <children>
+                <componentref id="robot" />
+            </children>
+        </component>
+
         <component id="robot">
             <transformation>
                 <transformationref id="robotMove" />
             </transformation>
             <materials>
-                <material id="robotMaterialBody" />
+                <material id="inherit" />
             </materials>
             <texture id="robotTexture"/>
             <children>
@@ -212,7 +225,7 @@
             <materials>
                 <material id="robotMaterialNose" />
             </materials>
-            <texture id="inherit"/>
+            <texture id="inherit" length_s="1" length_t="1"/>
             <children>
                 <primitiveref id = "robotTriangle"/>
             </children>
@@ -226,7 +239,7 @@
             <materials>
                 <material id="robotMaterialMouth" />
             </materials>
-            <texture id="inherit"/>
+            <texture id="inherit" length_s="1" length_t="1" />
             <children>
                 <primitiveref id = "robotRectangle"/>
             </children>
@@ -300,7 +313,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit"/>
+            <texture id="inherit" length_s="1" length_t="1"/>
             <children>
                 <primitiveref id = "robotRectangle"/>
             </children>
@@ -314,7 +327,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit"/>
+            <texture id="inherit" length_s="1" length_t="1"/>
             <children>
                 <primitiveref id = "robotRectangle"/>
             </children>
@@ -327,7 +340,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit"/>
+            <texture id="inherit" length_s="1" length_t="1"/>
             <children>
                 <primitiveref id = "robotRectangle"/>
             </children>
@@ -341,7 +354,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit"/>
+            <texture id="inherit" length_s="1" length_t ="1" />
             <children>
                 <primitiveref id = "robotRectangle"/>
             </children>
@@ -355,7 +368,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit"/>
+            <texture id="inherit" length_s="1" length_t="1"/>
             <children>
                 <primitiveref id = "robotRectangle"/>
             </children>
@@ -369,7 +382,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit"/>
+            <texture id="inherit" length_s="1" length_t="1"/>
             <children>
                 <primitiveref id = "robotRectangle"/>
             </children>
