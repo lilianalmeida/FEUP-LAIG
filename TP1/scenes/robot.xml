@@ -3,8 +3,8 @@
 
     <views default="defaultCamera">
         <perspective id="defaultCamera" near="0.1" far="500" angle="45">
-            <from x="30" y="15" z="30" />
-            <to x="0" y="-2" z="0" />
+            <from x="0" y="5.5" z="8" />
+            <to x="0" y="1.5" z="0" />
         </perspective>
     </views>
 
@@ -24,20 +24,21 @@
     </lights>
 
     <textures>
-        <texture id="robotTexture" file="scenes/images/vidral.jpg" />
+        <texture id="robotTexture" file="scenes/images/square.png" />
+        <texture id="robotArmLeg" file="scenes/images/square2.jpg" />
     </textures>
 
     <materials>
         <material id="robotMaterialBody" shininess="10">
             <emission r="0.0" g="0.0" b="0.0" a="1.0" />
-            <ambient r="0.5" g="0.5" b="0.5" a="1.0" />
-            <diffuse r="0.3" g="0.3" b="0.3" a="1.0" />
+            <ambient r="0.4" g="0.5" b="0.5" a="1.0" />
+            <diffuse r="0.2" g="0.3" b="0.3" a="1.0" />
             <specular r="0.3" g="0.3" b="0.3" a="1.0" />
         </material>
 
         <material id="robotMaterialMembers" shininess="10">
             <emission r="0.0" g="0.0" b="0.0" a="1.0" />
-            <ambient r="0.3" g="0.3" b="0.3" a="1.0" />
+            <ambient r="0.8" g="0.8" b="0.8" a="1.0" />
             <diffuse r="0.2" g="0.2" b="0.2" a="1.0" />
             <specular r="0.2" g="0.2" b="0.2" a="1.0" />
         </material>
@@ -94,10 +95,10 @@
             <cylinder base="0.2" top="0.2" height="1.5" slices="10" stacks="10" />
         </primitive>
         <primitive id="robotSphere">
-            <sphere radius="0.5" slices="10" stacks="10" />
+            <sphere radius="0.5" slices="20" stacks="20" />
         </primitive>
         <primitive id="robotTorus">
-            <torus inner="0.1" outer="0.4" slices="10" loops="10" />
+            <torus inner="0.25" outer="0.5" slices="20" loops="20" />
         </primitive>
     </primitives>
 
@@ -117,7 +118,7 @@
 
         <component id="robot">
             <transformation>
-                <transformationref id="robotMove" />
+                <!--<transformationref id="robotMove" />-->
             </transformation>
             <materials>
                 <material id="inherit" />
@@ -151,6 +152,7 @@
         <component id="headPrism">
             <transformation>
                 <translate x="0" y="3.75" z="0" />
+                <scale x = "1" y = "1" z= "0.75"/>
             </transformation>
             <materials>
                 <material id="inherit" />
@@ -165,8 +167,7 @@
 
         <component id="eyes">
             <transformation>
-                <translate x="0" y="0" z="1" />
-                <scale x="2" y="1" z="1" />
+                <translate x="0" y="0" z="0.376" />
             </transformation>
             <materials>
                 <material id="robotMaterialEyes" />
@@ -180,7 +181,7 @@
 
         <component id="leftEye">
             <transformation>
-                <translate x="0.25" y="4" z="0.376" />
+                <translate x="0.25" y="4" z="0" />
             </transformation>
             <materials>
                 <material id="inherit" />
@@ -206,7 +207,7 @@
 
         <component id="rightEye">
             <transformation>
-                <translate x="-0.25" y="4" z="0.376" />
+                <translate x="-0.25" y="4" z="0" />
             </transformation>
             <materials>
                 <material id="inherit" />
@@ -447,6 +448,7 @@
         <component id="leftHand">
             <transformation>
                 <translate x="1.875" y="2.75" z="0" />
+                <rotate axis = "z" angle = "-90"/>
             </transformation>
             <materials>
                 <material id="robotMaterialSpheres" />
@@ -486,8 +488,8 @@
 
         <component id="rightArmMov">
             <transformation>
-                <translate x="-0.75" y="2.75" z="0" />
-                <rotate axis="y" angle="-90" />
+                <translate x="-1.85" y="2.75" z="0" />
+                <rotate axis="y" angle="90" />
             </transformation>
             <materials>
                 <material id="inherit" />
@@ -501,6 +503,7 @@
         <component id="rightHand">
             <transformation>
                 <translate x="-1.875" y="2.75" z="0" />
+                <rotate axis = "z" angle = "90"/>
             </transformation>
             <materials>
                 <material id="robotMaterialSpheres" />
@@ -547,7 +550,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit"/>
+            <texture id="robotArmLeg"/>
             <children>
                 <primitiveref id= "robotCylinder"/>
             </children>
@@ -555,7 +558,7 @@
 
         <component id="leftFoot">
             <transformation>
-                <translate x="0" y="0.25" z="0" />
+                <translate x="0" y="-0.25" z="0" />
             </transformation>
             <materials>
                 <material id="robotMaterialSpheres" />
@@ -573,7 +576,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit"/>
+            <texture id="robotTexture"/>
             <children>
                 <primitiveref id = "robotSphere"/>
             </children>
@@ -595,7 +598,7 @@
 
         <component id="rightFoot">
             <transformation>
-                <translate x="0" y="0.25" z="0" />
+                <translate x="0" y="-0.25" z="0" />
             </transformation>
             <materials>
                 <material id="robotMaterialSpheres" />
