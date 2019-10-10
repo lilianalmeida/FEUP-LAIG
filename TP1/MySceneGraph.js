@@ -408,7 +408,7 @@ class MySceneGraph {
         this.materials = [];    // Array with all materials
 
         // Checks the existence of at least one material
-        if (children.length < 1){
+        if (children.length < 1) {
             return "There must be at least one material block";
         }
 
@@ -452,29 +452,29 @@ class MySceneGraph {
             // TODO: Check for other wrong properties?
 
             // Parsing each material property
-            var emission = this.parseColor(grandChildren[emissionIndex], "emission for material "+ materialID);
+            var emission = this.parseColor(grandChildren[emissionIndex], "emission for material " + materialID);
             if (emission == null)
                 return "no emission defined for material";
 
-            var ambient = this.parseColor(grandChildren[ambientIndex], "ambient for material "+ materialID);
+            var ambient = this.parseColor(grandChildren[ambientIndex], "ambient for material " + materialID);
             if (ambient == null)
                 return "no ambient defined for material";
 
-            var diffuse = this.parseColor(grandChildren[diffuseIndex], "diffuse for material "+ materialID);
+            var diffuse = this.parseColor(grandChildren[diffuseIndex], "diffuse for material " + materialID);
             if (diffuse == null)
                 return "no diffuse defined for material";
 
-            var specular = this.parseColor(grandChildren[specularIndex], "specular for material "+ materialID);
+            var specular = this.parseColor(grandChildren[specularIndex], "specular for material " + materialID);
             if (specular == null)
                 return "no specular defined for material";
 
             // Sets all components of the material
             newMaterial.setShininess(shininess);
-            newMaterial.setEmission(emission[0],emission[1],emission[2],emission[3]);
-            newMaterial.setAmbient(ambient[0],ambient[1],ambient[2],ambient[3]);
-            newMaterial.setDiffuse(diffuse[0],diffuse[1],diffuse[2],diffuse[3]);
-            newMaterial.setSpecular(specular[0],specular[1],specular[2],specular[3]);
-            
+            newMaterial.setEmission(emission[0], emission[1], emission[2], emission[3]);
+            newMaterial.setAmbient(ambient[0], ambient[1], ambient[2], ambient[3]);
+            newMaterial.setDiffuse(diffuse[0], diffuse[1], diffuse[2], diffuse[3]);
+            newMaterial.setSpecular(specular[0], specular[1], specular[2], specular[3]);
+
             // Adds new material to the array
             this.materials[materialID] = newMaterial;
         }
@@ -493,7 +493,7 @@ class MySceneGraph {
         this.transformations = [];      // Array with all defined tranformations
 
         // Checks the existence of at least one transformation block
-        if (children.length < 1){
+        if (children.length < 1) {
             return "There must be at least one transformation block";
         }
 
@@ -546,7 +546,7 @@ class MySceneGraph {
                     default:
                         this.onXMLMinorError("tranformation " + grandChildren[j].nodeName + " does not exist");
                         break;
-                        
+
                 }
             }
             this.transformations[transformationID] = transfMat;
@@ -767,7 +767,7 @@ class MySceneGraph {
         var children = componentsNode.children; // Components
         var grandChildren = [];                 // Components properties blocks
         var grandgrandChildren = [];
-        
+
         this.components = [];                   // Array with already parsed components id
         var nodeNames = [];                     // Component properties names
 
@@ -813,19 +813,19 @@ class MySceneGraph {
             }
 
             grandgrandChildren = grandChildren[transformationIndex].children;   // Transformations of this component
-            nodeTransf = mat4.create();                                         // Resets matrix to identity matrix           
+            nodeTransf = mat4.create();                                     // Resets matrix to identity matrix           
 
             if (grandgrandChildren.length != 0) {   // If there is at least one transformation block
                 // Reference to a transformation previously declared
                 if (grandgrandChildren[transformationIndex].nodeName == "transformationref") {
                     nodeTransf = this.transformations[this.reader.getString(grandgrandChildren[transformationIndex], 'id')];
-                } 
+                }
                 else {  // Several explicit transformations 
                     // TODO: separar funcão
                     for (var j = 0; j < grandgrandChildren.length; j++) {
                         switch (grandgrandChildren[j].nodeName) {
                             case 'translate':
-                                var coordinates = this.parseCoordinates3D(grandgrandChildren[j], "translate transformation for node ID " + children[i].nodeName);
+                                var coordinates = this.parseCoordinates3D(grandgrandChildren[j], "translate transformation for node ID " + this.reader.getString(children[i], 'id'));
                                 if (!Array.isArray(coordinates))
                                     return coordinates;
 
@@ -833,14 +833,14 @@ class MySceneGraph {
 
                                 break;
                             case 'scale':
-                                var coordinates = this.parseCoordinates3D(grandgrandChildren[j], "scale transformation for node ID " + children[i].nodeName);
+                                var coordinates = this.parseCoordinates3D(grandgrandChildren[j], "scale transformation for node ID " + this.reader.getString(children[i], 'id'));
                                 if (!Array.isArray(coordinates))
                                     return coordinates;
 
                                 nodeTransf = mat4.scale(nodeTransf, nodeTransf, coordinates);
                                 break;
                             case 'rotate':
-                                var coordinates = this.parseAngularCoordinates(grandgrandChildren[j], "rotate tranformation for node ID " + children[i].nodeName);
+                                var coordinates = this.parseAngularCoordinates(grandgrandChildren[j], "rotate tranformation for node ID " + this.reader.getString(children[i], 'id'));
                                 if (!Array.isArray(coordinates))
                                     return coordinates;
                                 nodeTransf = mat4.rotate(nodeTransf, nodeTransf, coordinates[1], coordinates[0]);
@@ -849,7 +849,6 @@ class MySceneGraph {
                     }
                 }
             }
-            console.log(nodeTransf);
             nodeGraph.transfMatrix = nodeTransf;
 
             // Materials
@@ -859,6 +858,12 @@ class MySceneGraph {
             }
 
             grandgrandChildren = grandChildren[materialsIndex].children;    // Materials declared
+            materialIds = [];                                               // Resets array
+
+            // Checks the existence of at least one material
+            if (grandgrandChildren.length < 1) {
+                this.onXMLMinorError("There must be at least one material at node " + this.reader.getString(children[i], 'id'));
+            }
             // TODO: aceitar mais q um material
 
             // Any number of materials.
@@ -878,6 +883,12 @@ class MySceneGraph {
             }
 
             grandgrandChildren = grandChildren[childrenIndex].children;     // All component children
+            childrenGraph = [];                                             // Resets array
+
+            // Checks the existence of at least one child
+            if (grandgrandChildren.length < 1) {
+                this.onXMLMinorError("There must be at least one child at node " + this.reader.getString(children[i], 'id'));
+            }
 
             // Any number of children
             for (var j = 0; j < grandgrandChildren.length; j++) {
@@ -936,7 +947,6 @@ class MySceneGraph {
         if (!Array.isArray(position))
             return position;
 
-
         // w
         var w = this.reader.getFloat(node, 'w');
         if (!(w != null && !isNaN(w)))
@@ -954,12 +964,11 @@ class MySceneGraph {
      */
     parseAngularCoordinates(node, messageError) {
         var position = [];
-        var options = ["x", "y", "z"];
 
-        //axis
+        // Get axis
         var axis = this.reader.getString(node, 'axis');
-        // if (axis != "x" && axis != "y" && axis != "z") 
-        //   return "unable to parse axis of the " + messageError;
+        if (axis != "x" && axis != "y" && axis != "z")
+            return "unable to parse axis of the " + messageError;
         if (axis == "x") {
             position.push([1, 0, 0]);
         } else if (axis == "y") {
@@ -970,10 +979,12 @@ class MySceneGraph {
             return "unable to parse axis of the " + messageError;
         }
 
+        // Get angle
         var angle = this.reader.getFloat(node, 'angle');
         if (!(angle != null && !isNaN(angle)))
             return "unable to parse angle of the " + messageError;
         position.push(angle * Math.PI / 180);
+
         return position;
     }
 
@@ -1039,43 +1050,75 @@ class MySceneGraph {
     * Displays the scene, processing each node, starting in the root node.
     */
     displayScene() {
-        var transfs = mat4.create();
+        var matTrans = mat4.create();
         var actualNode = this.nodesGraph[this.idRoot];
-        this.stack = [];
-        this.processNode(actualNode, transfs, null);
+        this.processNode(actualNode, matTrans, null);
     }
-    processNode(nodeProc, tG, matInitial) { //, TexturaInitial, length_s, length_t)
-        var material = matInitial;
+
+    /**
+     * Processes a node and displays it if it is a primitive
+     * @param {MyNode} nodeProc - node to be processed
+     * @param {mat4} transP - transformation matrix received by the node parent
+     * @param {string} matP - material inherited by the node parent
+     */
+    processNode(nodeProc, transP, matP) { //, TexturaInitial, length_s, length_t)
+        var material = matP;
         //var textura = TexturaInitial
+
+        // Checks if it is a valid node
         if (nodeProc.id == null) {
-            console.log("something error");
-            return;
+            this.onXMLMinorError("invalid node");
         }
 
+        // Primitive node
         if (nodeProc.isPrimitive == true) {
+            // Applies material if theres is one defined
             if (material != null) {
                 this.materials[material].apply();
             }
-            this.scene.multMatrix(tG);
-            this.primitives[nodeProc.id].display();
-        } else {
-            //Update properties
-            if (nodeProc.materials[0] != "inherit") {
-                material = nodeProc.materials[0];
-            }
-            tG = this.updateProperties(tG, nodeProc.transfMatrix);
 
-            //for each child do the same
+            // Applies transformation matrix
+            this.scene.multMatrix(transP);
+
+            // Primitive display
+            this.primitives[nodeProc.id].display();
+        }
+        else    // Intermediate node
+        {
+            // Update properties considering the parents nodes properties
+            material = this.updateMaterial(material, nodeProc.materials[0]);
+            transP = this.updateTransf(transP, nodeProc.transfMatrix);
+
+            // Process each child node, keeping the transformation matrix of the current node in the stack of the scene
             for (var i = 0; i < nodeProc.children.length; i++) {
                 this.scene.pushMatrix();
-                this.processNode(this.nodesGraph[nodeProc.children[i]], tG, material);
+                this.processNode(this.nodesGraph[nodeProc.children[i]], transP, material);
                 this.scene.popMatrix();
             }
         }
 
     }
-    updateProperties(tG, tGF) {
+
+    /**
+     * Updates material considering what the node has saved as material
+     * @param {mat4} matP - material of the parent node
+     * @param {mat4} matC - material of the node
+     */
+    updateMaterial(matP, matC) {
+        if (matC != "inherit") {
+            return matC;
+        } else {
+            return matP;
+        }
+    }
+
+    /**
+     * Updates transformation matrix multiplying the node matrix by the one received by the parent 
+     * @param {mat4} transP - transformation matrix of the parent node
+     * @param {mat4} transC - transformation matrix of the node
+     */
+    updateTransf(transP, transC) {
         var mout = mat4.create();
-        return mat4.multiply(mout, tG, tGF);
+        return mat4.multiply(mout, transP, transC);
     }
 }
