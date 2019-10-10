@@ -25,8 +25,7 @@ class MySceneGraph {
         this.scene = scene;
         scene.graph = this;
 
-        this.nodesGraph = [];                    //array with nodes
-
+        this.nodesGraph = [];               // Array with all nodes
         this.idRoot = null;                 // The id of the root element.
 
         this.axisCoords = [];
@@ -402,12 +401,16 @@ class MySceneGraph {
      * @param {materials block element} materialsNode
      */
     parseMaterials(materialsNode) {
-        var children = materialsNode.children;
+        var children = materialsNode.children;  // Materials
+        var grandChildren = [];                 // Material properties
 
-        this.materials = [];
+        var nodeNames = [];     // Material properties names
+        this.materials = [];    // Array with all materials
 
-        var grandChildren = [];
-        var nodeNames = [];
+        // Checks the existence of at least one material
+        if (children.length < 1){
+            return "There must be at least one material block";
+        }
 
         // Any number of materials.
         for (var i = 0; i < children.length; i++) {
@@ -417,8 +420,10 @@ class MySceneGraph {
                 continue;
             }
 
+            // New material
             var newMaterial = new CGFappearance(this.scene);
-            // Get id of the current material.
+
+            // Gets id of the current material.
             var materialID = this.reader.getString(children[i], 'id');
             if (materialID == null)
                 return "no ID defined for material";
@@ -427,40 +432,53 @@ class MySceneGraph {
             if (this.materials[materialID] != null)
                 return "ID must be unique for each material (conflict: ID = " + materialID + ")";
 
-
+            // Gets material shininess
             var shininess = this.reader.getFloat(children[i], 'shininess');
             if (shininess == null)
                 return "no shininess defined for material";
 
-            grandChildren = children[i].children; //emission ambient etc...
+            grandChildren = children[i].children;
 
-            //To do: for mais eficiente que isto
-            var emission = this.parseColor(grandChildren[0], "emission for material "+ materialID);
+            // Fills nodeNames and saves material properties index
+            nodeNames = [];
+            for (var j = 0; j < grandChildren.length; j++) {
+                nodeNames.push(grandChildren[j].nodeName);
+            }
+
+            var emissionIndex = nodeNames.indexOf("emission");
+            var ambientIndex = nodeNames.indexOf("ambient");
+            var diffuseIndex = nodeNames.indexOf("diffuse");
+            var specularIndex = nodeNames.indexOf("specular");
+            // TODO: Check for other wrong properties?
+
+            // Parsing each material property
+            var emission = this.parseColor(grandChildren[emissionIndex], "emission for material "+ materialID);
             if (emission == null)
                 return "no emission defined for material";
 
-            var ambient = this.parseColor(grandChildren[1], "ambient for material "+ materialID);
+            var ambient = this.parseColor(grandChildren[ambientIndex], "ambient for material "+ materialID);
             if (ambient == null)
                 return "no ambient defined for material";
 
-            var diffuse = this.parseColor(grandChildren[2], "diffuse for material "+ materialID);
+            var diffuse = this.parseColor(grandChildren[diffuseIndex], "diffuse for material "+ materialID);
             if (diffuse == null)
                 return "no diffuse defined for material";
 
-            var specular = this.parseColor(grandChildren[3], "specular for material "+ materialID);
+            var specular = this.parseColor(grandChildren[specularIndex], "specular for material "+ materialID);
             if (specular == null)
                 return "no specular defined for material";
 
+            // Sets all components of the material
             newMaterial.setShininess(shininess);
             newMaterial.setEmission(emission[0],emission[1],emission[2],emission[3]);
             newMaterial.setAmbient(ambient[0],ambient[1],ambient[2],ambient[3]);
             newMaterial.setDiffuse(diffuse[0],diffuse[1],diffuse[2],diffuse[3]);
             newMaterial.setSpecular(specular[0],specular[1],specular[2],specular[3]);
+            
+            // Adds new material to the array
             this.materials[materialID] = newMaterial;
-
         }
-        console.dir(this.materials);
-        //this.log("Parsed materials");
+        this.log("Parsed materials");
         return null;
     }
 
@@ -469,11 +487,15 @@ class MySceneGraph {
      * @param {transformations block element} transformationsNode
      */
     parseTransformations(transformationsNode) {
-        var children = transformationsNode.children;
+        var children = transformationsNode.children;    // Transformations blocks
+        var grandChildren = [];         // Transformations of a defined transformation block 
 
-        this.transformations = [];
+        this.transformations = [];      // Array with all defined tranformations
 
-        var grandChildren = [];
+        // Checks the existence of at least one transformation block
+        if (children.length < 1){
+            return "There must be at least one transformation block";
+        }
 
         // Any number of transformations.
         for (var i = 0; i < children.length; i++) {
@@ -483,7 +505,7 @@ class MySceneGraph {
                 continue;
             }
 
-            // Get id of the current transformation.
+            // Gets id of the current transformation.
             var transformationID = this.reader.getString(children[i], 'id');
             if (transformationID == null)
                 return "no ID defined for transformation";
@@ -493,10 +515,10 @@ class MySceneGraph {
                 return "ID must be unique for each transformation (conflict: ID = " + transformationID + ")";
 
             grandChildren = children[i].children;
+
             // Specifications for the current transformation.
-
-            var transfMatrix = mat4.create();
-
+            var transfMat = mat4.create();
+            // TODO: separate function
             for (var j = 0; j < grandChildren.length; j++) {
                 switch (grandChildren[j].nodeName) {
                     case 'translate':
@@ -504,26 +526,30 @@ class MySceneGraph {
                         if (!Array.isArray(coordinates))
                             return coordinates;
 
-                        transfMatrix = mat4.translate(transfMatrix, transfMatrix, coordinates);
+                        transfMat = mat4.translate(transfMat, transfMat, coordinates);
                         break;
                     case 'scale':
                         var coordinates = this.parseCoordinates3D(grandChildren[j], "scale transformation for ID " + transformationID);
                         if (!Array.isArray(coordinates))
                             return coordinates;
 
-                        transfMatrix = mat4.scale(transfMatrix, transfMatrix, coordinates);
+                        transfMat = mat4.scale(transfMat, transfMat, coordinates);
                         break;
                     case 'rotate':
+                        // TODO: check angulos entre 0 e 360?
                         var coordinates = this.parseAngularCoordinates(grandChildren[j], "rotate tranformation for ID " + transformationID);
                         if (!Array.isArray(coordinates))
                             return coordinates;
 
-                        transfMatrix = mat4.rotate(transfMatrix, transfMatrix, coordinates[1], coordinates[0]);
+                        transfMat = mat4.rotate(transfMat, transfMat, coordinates[1], coordinates[0]);
                         break;
+                    default:
+                        this.onXMLMinorError("tranformation " + grandChildren[j].nodeName + " does not exist");
+                        break;
+                        
                 }
-
             }
-            this.transformations[transformationID] = transfMatrix;
+            this.transformations[transformationID] = transfMat;
         }
         this.log("Parsed transformations");
         return null;
@@ -534,11 +560,10 @@ class MySceneGraph {
      * @param {primitives block element} primitivesNode
      */
     parsePrimitives(primitivesNode) {
-        var children = primitivesNode.children;
+        var children = primitivesNode.children; // Primitives
+        var grandChildren = [];                 // Primitive specification
 
-        this.primitives = [];
-
-        var grandChildren = [];
+        this.primitives = [];                   // Array with all primitives
 
         // Any number of primitives.
         for (var i = 0; i < children.length; i++) {
@@ -548,7 +573,7 @@ class MySceneGraph {
                 continue;
             }
 
-            // Get id of the current primitive.
+            // Gets id of the current primitive.
             var primitiveId = this.reader.getString(children[i], 'id');
             if (primitiveId == null)
                 return "no ID defined for texture";
@@ -564,7 +589,7 @@ class MySceneGraph {
                 (grandChildren[0].nodeName != 'rectangle' && grandChildren[0].nodeName != 'triangle' &&
                     grandChildren[0].nodeName != 'cylinder' && grandChildren[0].nodeName != 'sphere' &&
                     grandChildren[0].nodeName != 'torus')) {
-                return "There must be exactly 1 primitive type (rectangle, triangle, cylinder, sphere or torus)"
+                return "There must be exactly 1 primitive type (rectangle, triangle, cylinder, sphere or torus)";
             }
 
             // Specifications for the current primitive.
@@ -592,14 +617,14 @@ class MySceneGraph {
                 if (!(y2 != null && !isNaN(y2) && y2 > y1))
                     return "unable to parse y2 of the primitive coordinates for ID = " + primitiveId;
 
+                // New rectangle
                 var rect = new MyRectangle(this.scene, primitiveId, x1, x2, y1, y2);
-
                 this.primitives[primitiveId] = rect;
             }
             else if (primitiveType == 'triangle') {
-
-                //1st vert
-                //x1
+                // TODO: Verificar se é posivel formar triangulo
+                //  First vertex
+                //  x1
                 var x1 = this.reader.getFloat(grandChildren[0], 'x1');
                 if (!(x1 != null && !isNaN(x1)))
                     return "unable to parse x1 of the primitive coordinates for ID = " + primitiveId;
@@ -614,7 +639,7 @@ class MySceneGraph {
                 if (!(z1 != null && !isNaN(z1)))
                     return "unable to parse z1 of the primitive coordinates for ID = " + primitiveId;
 
-                //2nd vert
+                // Second vertex
                 // x2
                 var x2 = this.reader.getFloat(grandChildren[0], 'x2');
                 if (!(x2 != null && !isNaN(x2)))
@@ -630,7 +655,7 @@ class MySceneGraph {
                 if (!(z2 != null && !isNaN(z2)))
                     return "unable to parse z2 of the primitive coordinates for ID = " + primitiveId;
 
-                //3rd vert
+                // Third vertex
                 // x3
                 var x3 = this.reader.getFloat(grandChildren[0], 'x3');
                 if (!(x3 != null && !isNaN(x3)))
@@ -646,95 +671,88 @@ class MySceneGraph {
                 if (!(z3 != null && !isNaN(z3)))
                     return "unable to parse z3 of the primitive coordinates for ID = " + primitiveId;
 
+                // New triangle
                 var triangle = new MyTriangle(this.scene, primitiveId, x1, x2, x3, y1, y2, y3, z1, z2, z3);
-
                 this.primitives[primitiveId] = triangle;
             }
-
             else if (primitiveType == 'cylinder') {
-
-                // base
+                // Base
                 var base = this.reader.getFloat(grandChildren[0], 'base');
                 if (!(base != null && !isNaN(base)))
                     return "unable to parse base of the primitive for ID = " + primitiveId;
 
-                // top
+                // Top
                 var top = this.reader.getFloat(grandChildren[0], 'top');
                 if (!(top != null && !isNaN(top)))
                     return "unable to parse top of the primitive for ID = " + primitiveId;
 
-                // height
+                // Height
                 var height = this.reader.getFloat(grandChildren[0], 'height');
                 if (!(height != null && !isNaN(height)))
                     return "unable to parse height of the primitive for ID = " + primitiveId;
 
-                // slices
+                // Slices
                 var slices = this.reader.getInteger(grandChildren[0], 'slices');
                 if (!(slices != null && !isNaN(slices)))
                     return "unable to parse slices of the primitive for ID = " + primitiveId;
 
-                // stacks
+                // Stacks
                 var stacks = this.reader.getInteger(grandChildren[0], 'stacks');
                 if (!(stacks != null && !isNaN(stacks)))
                     return "unable to parse stacks of the primitive for ID = " + primitiveId;
 
+                // New cylinder
                 var cylinder = new MyCylinder(this.scene, primitiveId, base, top, height, slices, stacks);
                 this.primitives[primitiveId] = cylinder;
-
             }
-
             else if (primitiveType == 'sphere') {
-
-                // radius
+                // Radius
                 var radius = this.reader.getFloat(grandChildren[0], 'radius');
                 if (!(radius != null && !isNaN(radius)))
                     return "unable to parse radius of the primitive for ID = " + primitiveId;
 
-                // slices
+                // Slices
                 var slices = this.reader.getInteger(grandChildren[0], 'slices');
                 if (!(slices != null && !isNaN(slices)))
                     return "unable to parse slices of the primitive for ID = " + primitiveId;
 
-                // stacks
+                // Stacks
                 var stacks = this.reader.getInteger(grandChildren[0], 'stacks');
                 if (!(stacks != null && !isNaN(stacks)))
                     return "unable to parse stacks of the primitive for ID = " + primitiveId;
 
+                // New sphere
                 var sphere = new MySphere(this.scene, primitiveId, radius, slices, stacks);
                 this.primitives[primitiveId] = sphere;
-
             }
             else if (primitiveType == 'torus') {
-
-                // inner
+                // Inner
                 var inner = this.reader.getFloat(grandChildren[0], 'inner');
                 if (!(inner != null && !isNaN(inner)))
                     return "unable to parse inner of the primitive for ID = " + primitiveId;
 
-                // outer
+                // Outer
                 var outer = this.reader.getFloat(grandChildren[0], 'outer');
                 if (!(outer != null && !isNaN(outer)))
                     return "unable to parse outer of the primitive for ID = " + primitiveId;
 
-                // slices
+                // Slices
                 var slices = this.reader.getInteger(grandChildren[0], 'slices');
                 if (!(slices != null && !isNaN(slices)))
                     return "unable to parse slices of the primitive for ID = " + primitiveId;
 
-                // loops
+                // Loops
                 var loops = this.reader.getInteger(grandChildren[0], 'loops');
                 if (!(loops != null && !isNaN(loops)))
                     return "unable to parse loops of the primitive for ID = " + primitiveId;
 
+                // New Torus
                 var torus = new MyTorus(this.scene, primitiveId, inner, outer, slices, loops);
                 this.primitives[primitiveId] = torus;
+            }
 
-            }
-            else {
-                console.warn('Primitive type not found')
-                return "unable to identify primitive";
-            }
-            var nodeGraph = new MyNode(this.scene, primitiveId, true, null, null, null, null);
+            // Adds the primitive as a new node of the graph
+            var nodeGraph = new MyNode(this.scene, primitiveId, true);
             this.nodesGraph[primitiveId] = nodeGraph;
         }
         this.log("Parsed primitives");
@@ -746,24 +764,25 @@ class MySceneGraph {
    * @param {components block element} componentsNode
    */
     parseComponents(componentsNode) {
-        var children = componentsNode.children;
-
-        this.components = [];
-
-        var grandChildren = [];
+        var children = componentsNode.children; // Components
+        var grandChildren = [];                 // Components properties blocks
         var grandgrandChildren = [];
-        var nodeNames = [];
-        var nodeTransf;
+        
+        this.components = [];                   // Array with already parsed components id
+        var nodeNames = [];                     // Component properties names
+
+        var nodeTransf;                         // Transformation matrix of a component
+        var materialIds = [];                   // Component materials
+        var childrenGraph = [];                 // Component children
 
         // Any number of components.
         for (var i = 0; i < children.length; i++) {
-
             if (children[i].nodeName != "component") {
                 this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
                 continue;
             }
 
-            // Get id of the current component.
+            // Gets id of the current component.
             var componentID = this.reader.getString(children[i], 'id');
             if (componentID == null)
                 return "no ID defined for componentID";
@@ -772,14 +791,11 @@ class MySceneGraph {
             if (this.components[componentID] != null)
                 return "ID must be unique for each component (conflict: ID = " + componentID + ")";
 
-
-            /*if (this.primitives[componentID] != null){
-                 var nodeGraph = new MyNode(this.scene, children[i].nodeName, true, "", "", "", "");
-                 this.nodesGraph.push(nodeGraph);
-                 continue;
-             }*/
+            var nodeGraph = new MyNode(this.scene, this.reader.getString(children[i], 'id'), false);    // New not primitive type node
+            // nodeTransf, materialIds, "", childrenGraph);
             grandChildren = children[i].children;
 
+            // Fills nodeNames and saves components properties index
             nodeNames = [];
             for (var j = 0; j < grandChildren.length; j++) {
                 nodeNames.push(grandChildren[j].nodeName);
@@ -790,23 +806,22 @@ class MySceneGraph {
             var textureIndex = nodeNames.indexOf("texture");
             var childrenIndex = nodeNames.indexOf("children");
 
-            //this.onXMLMinorError("To do: Parse components.");
-
             // Transformations
             if (grandChildren[transformationIndex].nodeName != "transformation") {
                 this.onXMLMinorError("unknown tag <" + grandChildren[transformationIndex].nodeName + ">");
                 continue;
             }
 
+            grandgrandChildren = grandChildren[transformationIndex].children;   // Transformations of this component
+            nodeTransf = mat4.create();                                         // Resets matrix to identity matrix           
 
-            grandgrandChildren = grandChildren[transformationIndex].children;
-            nodeTransf = mat4.create();
-            if (grandgrandChildren.length != 0) {
+            if (grandgrandChildren.length != 0) {   // If there is at least one transformation block
+                // Reference to a transformation previously declared
                 if (grandgrandChildren[transformationIndex].nodeName == "transformationref") {
                     nodeTransf = this.transformations[this.reader.getString(grandgrandChildren[transformationIndex], 'id')];
-
-                } else {
-
+                } 
+                else {  // Several explicit transformations 
+                    // TODO: separar funcão
                     for (var j = 0; j < grandgrandChildren.length; j++) {
                         switch (grandgrandChildren[j].nodeName) {
                             case 'translate':
@@ -833,9 +848,9 @@ class MySceneGraph {
                         }
                     }
                 }
-
             }
-
+            console.log(nodeTransf);
+            nodeGraph.transfMatrix = nodeTransf;
 
             // Materials
             if (grandChildren[materialsIndex].nodeName != "materials") {
@@ -843,38 +858,39 @@ class MySceneGraph {
                 continue;
             }
 
-            grandgrandChildren = grandChildren[materialsIndex].children;
-            //to do: aceitar mais q um material
-            var materialIds = [];
+            grandgrandChildren = grandChildren[materialsIndex].children;    // Materials declared
+            // TODO: aceitar mais q um material
 
+            // Any number of materials.
             for (var j = 0; j < grandgrandChildren.length; j++) {
                 materialIds.push(this.reader.getString(grandgrandChildren[j], 'id'));
             }
-            console.dir(materialIds);
+
+            nodeGraph.materials = materialIds;
 
             // Texture
 
 
-
             // Children
-            // Any number of children
             if (grandChildren[childrenIndex].nodeName != "children") {
                 this.onXMLMinorError("unknown tag <" + grandChildren[childrenIndex].nodeName + ">");
                 continue;
             }
 
-            grandgrandChildren = grandChildren[childrenIndex].children;
-            var childrenGraph = [];
+            grandgrandChildren = grandChildren[childrenIndex].children;     // All component children
 
+            // Any number of children
             for (var j = 0; j < grandgrandChildren.length; j++) {
                 childrenGraph.push(this.reader.getString(grandgrandChildren[j], 'id'));
             }
 
-            var nodeGraph = new MyNode(this.scene, this.reader.getString(children[i], 'id'), false, nodeTransf, materialIds, "", childrenGraph);
+            nodeGraph.children = childrenGraph;
+
+            // Adds node with all its properties defined to the graph
             this.nodesGraph[this.reader.getString(children[i], 'id')] = nodeGraph;
         }
-
         this.log("Parsed components");
+        return null;
     }
 
 
@@ -1023,22 +1039,12 @@ class MySceneGraph {
     * Displays the scene, processing each node, starting in the root node.
     */
     displayScene() {
-        //To do: Create display loop for transversing the scene graph 
         var transfs = mat4.create();
-        var atualNode = this.nodesGraph[this.idRoot];
-        //console.log(this.idRoot);
-        //console.dir(this.nodesGraph);
+        var actualNode = this.nodesGraph[this.idRoot];
         this.stack = [];
-        this.processNode(atualNode, transfs, null);
-        //this.primitives['demoTriangle'].display();
-        //this.primitives['robotTorus'].enableNormalViz();
-        //this.primitives['robotTorus'].display();
-        // this.primitives['robotSphere'].enableNormalViz();
-        // this.primitives['robotSphere'].display();
-        //this.primitives['robotCylinder'].enableNormalViz();
-        //this.primitives['robotCylinder'].display();
+        this.processNode(actualNode, transfs, null);
     }
-    processNode(nodeProc, tG, matInitial) { //, MatInitial, TexturaInitial)
+    processNode(nodeProc, tG, matInitial) { //, TexturaInitial, length_s, length_t)
         var material = matInitial;
         //var textura = TexturaInitial
         if (nodeProc.id == null) {
@@ -1048,18 +1054,18 @@ class MySceneGraph {
 
         if (nodeProc.isPrimitive == true) {
             if (material != null) {
-
                 this.materials[material].apply();
-                console.dir(this.materials[material]);
             }
             this.scene.multMatrix(tG);
             this.primitives[nodeProc.id].display();
         } else {
+            //Update properties
             if (nodeProc.materials[0] != "inherit") {
                 material = nodeProc.materials[0];
-                //console.log(nodeProc.materials[0]);
             }
             tG = this.updateProperties(tG, nodeProc.transfMatrix);
+
+            //for each child do the same
             for (var i = 0; i < nodeProc.children.length; i++) {
                 this.scene.pushMatrix();
                 this.processNode(this.nodesGraph[nodeProc.children[i]], tG, material);

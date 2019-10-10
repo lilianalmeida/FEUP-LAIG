@@ -10,15 +10,15 @@
  * @param children - children nodes
  */
 class MyNode extends CGFobject {
-    constructor(scene, id, isPrimitive, transfMatrix, materials, texture, children) {
+    constructor(scene, id, isPrimitive) {
         super(scene);
         this.id = id;
         this.isPrimitive = isPrimitive;
 
-        this.transfMatrix = transfMatrix;
-        this.materials = materials;
-        this.texture = texture;
-        this.children = children;
-        this.visited = false; //needed??? for display
+        this.transfMatrix = null;
+        this.materials = [];
+        this.texture = null;
+        this.children = [];
+        // todo: length_s e length_t
     }
 }
