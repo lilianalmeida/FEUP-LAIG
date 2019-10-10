@@ -1052,7 +1052,7 @@ class MySceneGraph {
     displayScene() {
         var matTrans = mat4.create();
         var actualNode = this.nodesGraph[this.idRoot];
-        this.processNode(actualNode, matTrans, null);
+        this.processNode(actualNode, matTrans, null, 1, 1);
     }
 
     /**
@@ -1061,7 +1061,7 @@ class MySceneGraph {
      * @param {mat4} transP - transformation matrix received by the node parent
      * @param {string} matP - material inherited by the node parent
      */
-    processNode(nodeProc, transP, matP) { //, TexturaInitial, length_s, length_t)
+    processNode(nodeProc, transP, matP, length_sP, length_tP) { //, TexturaInitial, length_s, length_t)
         var material = matP;
         //var textura = TexturaInitial
 
@@ -1072,10 +1072,19 @@ class MySceneGraph {
 
         // Primitive node
         if (nodeProc.isPrimitive == true) {
-            // Applies material if theres is one defined
+            // Applies material if there is one defined
             if (material != null) {
                 this.materials[material].apply();
             }
+            /*  // Updates primitive texture coordinates according to the parent's texture coordinates 
+                this.primitives[nodeProc.id].updateTexCoords(length_sP, length_tP);
+
+                // Applies texture if there is one defines
+                if (textura != null) {
+                    aplly textura
+                }
+            }
+            */
 
             // Applies transformation matrix
             this.scene.multMatrix(transP);

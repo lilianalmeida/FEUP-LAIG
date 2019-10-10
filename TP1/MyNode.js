@@ -19,6 +19,8 @@ class MyNode extends CGFobject {
         this.materials = [];
         this.texture = null;
         this.children = [];
-        // todo: length_s e length_t
+        
+        this.length_s = null; 
+        this.length_t = null;
     }
 }

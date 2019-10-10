@@ -95,8 +95,13 @@ class MyTorus extends CGFobject {
         this.primitiveType = this.scene.gl.TRIANGLES;
         this.initGLBuffers();
     }
-    updateBuffers(complexity) {
-        this.initBuffers();
-        this.initNormalVizBuffers();
+
+	/**
+	 * @method updateTexCoords
+	 * Updates the list of texture coordinates of the torus
+	 * @param {real} length_s - texture scale factor in s axis
+	 * @param {real} length_t - texture scale factor in t axis
+	 */
+    updateTexCoords(length_s, length_t) {
     }
 }

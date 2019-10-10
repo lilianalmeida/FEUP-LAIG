@@ -13,6 +13,13 @@ else
 		opop(trans)
 
 
-para materais e texturas fazer classes proprias ou guarda-se s� em vetor a info toda
-
 no display, para o no raiz dar uma matriz identidade como antecessor das transformações, uma material e uma textura default
+
+Pontos principais a fazer:
+- Coordenadas de textura do cilindro, esfera e torus
+- Parser das texturas (com a cena dos length e que so podem ser postas quando n tem inherit nem none) --- mudar xml!
+- Mudar materiais com teclinha
+- Parser views e cameras
+- Robustar a erros
+
+

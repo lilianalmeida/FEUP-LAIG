@@ -47,14 +47,36 @@ class MyTriangle extends CGFobject {
 			0, 0, 1
 		];
 
+		var a = Math.sqrt((this.x2 - this.x1) * (this.x2 - this.x1) + (this.y2 - this.y1) * (this.y2 - this.y1) + (this.z2 - this.z1) * (this.z2 - this.z1));
+		var b = Math.sqrt((this.x3 - this.x2) * (this.x3 - this.x2) + (this.y3 - this.y2) * (this.y3 - this.y2) + (this.z3 - this.z2) * (this.z3 - this.z2));;
+		var c = Math.sqrt((this.x1 - this.x3) * (this.x1 - this.x3) + (this.y1 - this.y3) * (this.y1 - this.y3) + (this.z1 - this.z3) * (this.z1 - this.z3));;
+
+		var cos = (a * a - b * b + c * c) / (2 * a * c);
+		var sin = Math.sqrt(1 - cos * cos);
+
 		this.texCoords = [
-			0, 1,
-			0.5, 1,
-			0, 0.5
+			0, 0,
+			a, 0,
+			c * cos, c * sin
 		];
 
 		this.primitiveType = this.scene.gl.TRIANGLES;
 		this.initGLBuffers();
+	}
+
+	/**
+	 * @method updateTexCoords
+	 * Updates the list of texture coordinates of the triangle
+	 * @param {real} length_s - texture scale factor in s axis
+	 * @param {real} length_t - texture scale factor in t axis
+	 */
+	updateTexCoords(length_s, length_t) {
+		this.texCoords = [
+			0, 0,
+			a / length_s, 0,
+			c * cos / length_s, c * sin / length_t
+		];
+		this.updateTexCoordsGLBuffers();
 	}
 }
 
