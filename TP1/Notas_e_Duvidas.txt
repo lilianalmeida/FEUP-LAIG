@@ -21,5 +21,6 @@ Pontos principais a fazer:
 - Mudar materiais com teclinha
 - Parser views e cameras
 - Robustar a erros
+- Fazer interface com luzes e seleção da camara
 
 

@@ -226,7 +226,7 @@
             <materials>
                 <material id="robotMaterialNose" />
             </materials>
-            <texture id="inherit"/>
+            <texture id="none"/>
             <children>
                 <primitiveref id = "robotTriangle"/>
             </children>

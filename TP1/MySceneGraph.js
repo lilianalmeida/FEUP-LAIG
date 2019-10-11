@@ -271,8 +271,8 @@ class MySceneGraph {
     parsePerspectiveView(pNode) {
 
         var id = this.reader.getString(pNode, 'id');
-        if(this.views[id] !=null){
-            this.onXMLMinorError('ID '+ id + 'already in use')
+        if (this.views[id] != null) {
+            this.onXMLMinorError('ID ' + id + 'already in use')
         }
 
 
@@ -307,7 +307,13 @@ class MySceneGraph {
         }
 
         var newP = new CGFcamera(angle, near, far, from, to);
-        this.views[id]= newP;
+
+        if (id == this.defaultView) {
+
+            this.scene.camera = newP;
+            this.scene.interface.setActiveCamera(this.scene.camera);
+        }
+        this.views[id] = newP;
 
     }
 
@@ -363,7 +369,7 @@ class MySceneGraph {
         }
 
         var newO = new CGFcameraOrtho(left, right, bottom, top, near, far, from, to, up);
-        this.views[id]= newO;
+        this.views[id] = newO;
     }
 
     /**
@@ -1266,14 +1272,13 @@ class MySceneGraph {
     * Displays the scene, processing each node, starting in the root node.
     */
     displayScene() {
+
+
         var matTrans = mat4.create();
-        this.scene.appearance = new CGFappearance(this.scene);
+        //this.scene.appearance = new CGFappearance(this.scene);
         var actualNode = this.nodesGraph[this.idRoot];
         this.stored_length_s = [];
         this.stored_length_t = [];
-        this.scene.loadIdentity();
-        this.scene.applyViewMatrix();
-        this.scene.updateProjectionMatrix();
         this.processNode(actualNode, matTrans, null, 'none', null, null);
     }
 
@@ -1295,21 +1300,26 @@ class MySceneGraph {
 
         // Primitive node
         if (nodeProc.isPrimitive == true) {
+            // Applies texture to the material if there is one defined
+            if (texture != null && texture != 'none') {
+                this.materials[material].setTexture(this.textures[texture]);
+                this.materials[material].setTextureWrap('REPEAT', 'REPEAT');
+                //no caso de n haver material é suposto criar um novo (ou usar um default na raiz) ou fazer como o johny:
+                /*this.scene.appearance.setTexture(this.textures[texture]);
+                this.scene.appearance.setTextureWrap('REPEAT', 'REPEAT');
+                this.scene.appearance.apply();*/
+            }
+
             // Applies material if there is one defined
             if (material != null) {
+                this.materials[material].setTexture(this.textures[texture]);
+                this.materials[material].setTextureWrap('REPEAT', 'REPEAT');
                 this.materials[material].apply();
+
             }
             // Updates primitive texture coordinates according to the parent's texture coordinates 
             if (this.stored_length_s.length != 0 && this.stored_length_t.length != 0) {
                 this.primitives[nodeProc.id].updateTexCoords(this.stored_length_s[this.stored_length_s.length - 1], this.stored_length_t[this.stored_length_t.length - 1]);
-            }
-
-            // Applies texture if there is one defines
-            if (texture != null && texture != 'none') {
-
-                this.scene.appearance.setTexture(this.textures[texture]);
-                this.scene.appearance.setTextureWrap('REPEAT', 'REPEAT');
-                this.scene.appearance.apply();
             }
 
             // Applies transformation matrix
@@ -1325,8 +1335,6 @@ class MySceneGraph {
             transP = this.updateTransf(transP, nodeProc.transfMatrix);
             texture = this.updateTexture(texture, nodeProc.texture);
 
-
-            var parent = nodeProc.nodeName;
             if (nodeProc.texture != 'none' && nodeProc.texture != 'inherit') {
                 this.stored_length_s.push(nodeProc.length_s);
                 this.stored_length_t.push(nodeProc.length_t);
