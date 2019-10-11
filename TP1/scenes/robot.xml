@@ -123,7 +123,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="robotTexture"/>
+            <texture id="robotTexture" length_s="1" length_t = "1"/>
             <children>
                 <componentref id = "head"/>
                 <componentref id = "body"/>
@@ -226,7 +226,7 @@
             <materials>
                 <material id="robotMaterialNose" />
             </materials>
-            <texture id="inherit" length_s="1" length_t="1"/>
+            <texture id="inherit"/>
             <children>
                 <primitiveref id = "robotTriangle"/>
             </children>
@@ -240,7 +240,7 @@
             <materials>
                 <material id="robotMaterialMouth" />
             </materials>
-            <texture id="inherit" length_s="1" length_t="1" />
+            <texture id="robotTexture" length_s = "1" length_t = "1"/>
             <children>
                 <primitiveref id = "robotRectangle"/>
             </children>
@@ -253,7 +253,7 @@
             <materials>
                 <material id="robotMaterialSpheres" />
             </materials>
-            <texture id="inherit"/>
+            <texture id="robotTexture"/>
             <children>
                 <primitiveref id = "robotSphere"/>
             </children>
@@ -314,7 +314,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" length_s="1" length_t="1"/>
+            <texture id="inherit"/>
             <children>
                 <primitiveref id = "robotRectangle"/>
             </children>
@@ -328,7 +328,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" length_s="1" length_t="1"/>
+            <texture id="inherit"/>
             <children>
                 <primitiveref id = "robotRectangle"/>
             </children>
@@ -341,7 +341,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" length_s="1" length_t="1"/>
+            <texture id="inherit"/>
             <children>
                 <primitiveref id = "robotRectangle"/>
             </children>

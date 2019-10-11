@@ -47,17 +47,17 @@ class MyTriangle extends CGFobject {
 			0, 0, 1
 		];
 
-		var a = Math.sqrt((this.x2 - this.x1) * (this.x2 - this.x1) + (this.y2 - this.y1) * (this.y2 - this.y1) + (this.z2 - this.z1) * (this.z2 - this.z1));
-		var b = Math.sqrt((this.x3 - this.x2) * (this.x3 - this.x2) + (this.y3 - this.y2) * (this.y3 - this.y2) + (this.z3 - this.z2) * (this.z3 - this.z2));;
-		var c = Math.sqrt((this.x1 - this.x3) * (this.x1 - this.x3) + (this.y1 - this.y3) * (this.y1 - this.y3) + (this.z1 - this.z3) * (this.z1 - this.z3));;
+		this.a = Math.sqrt((this.x2 - this.x1) * (this.x2 - this.x1) + (this.y2 - this.y1) * (this.y2 - this.y1) + (this.z2 - this.z1) * (this.z2 - this.z1));
+		this.b = Math.sqrt((this.x3 - this.x2) * (this.x3 - this.x2) + (this.y3 - this.y2) * (this.y3 - this.y2) + (this.z3 - this.z2) * (this.z3 - this.z2));;
+		this.c = Math.sqrt((this.x1 - this.x3) * (this.x1 - this.x3) + (this.y1 - this.y3) * (this.y1 - this.y3) + (this.z1 - this.z3) * (this.z1 - this.z3));;
 
-		var cos = (a * a - b * b + c * c) / (2 * a * c);
-		var sin = Math.sqrt(1 - cos * cos);
+		this.cos = (this.a * this.a - this.b * this.b + this.c * this.c) / (2 * this.a * this.c);
+		this.sin = Math.sqrt(1 - this.cos * this.cos);
 
 		this.texCoords = [
 			0, 0,
-			a, 0,
-			c * cos, c * sin
+			this.a, 0,
+			this.c * this.cos, this.c * this.sin
 		];
 
 		this.primitiveType = this.scene.gl.TRIANGLES;
@@ -73,8 +73,8 @@ class MyTriangle extends CGFobject {
 	updateTexCoords(length_s, length_t) {
 		this.texCoords = [
 			0, 0,
-			a / length_s, 0,
-			c * cos / length_s, c * sin / length_t
+			this.a / length_s, 0,
+			this.c * this.cos / length_s, this.c * this.sin / length_t
 		];
 		this.updateTexCoordsGLBuffers();
 	}
