@@ -91,6 +91,8 @@ class MyCylinder extends CGFobject {
 			}
 		}
 
+        
+		
 		this.primitiveType = this.scene.gl.TRIANGLES;
 		this.initGLBuffers();
 	}
@@ -102,17 +104,8 @@ class MyCylinder extends CGFobject {
 	 * @param {real} length_t - texture scale factor in t axis
 	 */
 	updateTexCoords(length_s, length_t) {
-		this.texCoords = [];
+		
 
-        for (var stack_c = 0; stack_c <= this.stacks; stack_c++) {
-            var v = 1 - (stack_c / this.stacks);
-            for (var slice_c = 0; slice_c <= this.slices; slice_c++) {
-                var u = 1 - (slice_c / this.slices);
-                this.texCoords.push(u, v);
-            }
-        }
-
-        this.updateTexCoordsGLBuffers();
 	}
 
 

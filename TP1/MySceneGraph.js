@@ -569,10 +569,7 @@ class MySceneGraph {
             var newTex = new CGFtexture(this.scene, textureSrc);
             this.textures[textureID] = newTex;
 
-
-
         }
-
 
     }
 
@@ -1279,7 +1276,7 @@ class MySceneGraph {
         var actualNode = this.nodesGraph[this.idRoot];
         this.stored_length_s = [];
         this.stored_length_t = [];
-        this.processNode(actualNode, matTrans, null, 'none', null, null);
+        this.processNode(actualNode, matTrans, null, 'none', 1, 1);
     }
 
     /**
@@ -1291,6 +1288,9 @@ class MySceneGraph {
     processNode(nodeProc, transP, matP, texP, length_sP, length_tP) { //, texp, length_s, length_t)
         var material = matP;
         var texture = texP;
+        var length_s = length_sP;
+        var length_t = length_tP;
+        var tex_plus_len = [];
 
 
         // Checks if it is a valid node
@@ -1305,9 +1305,7 @@ class MySceneGraph {
                 this.materials[material].setTexture(this.textures[texture]);
                 this.materials[material].setTextureWrap('REPEAT', 'REPEAT');
                 //no caso de n haver material é suposto criar um novo (ou usar um default na raiz) ou fazer como o johny:
-                /*this.scene.appearance.setTexture(this.textures[texture]);
-                this.scene.appearance.setTextureWrap('REPEAT', 'REPEAT');
-                this.scene.appearance.apply();*/
+
             }
 
             // Applies material if there is one defined
@@ -1318,8 +1316,8 @@ class MySceneGraph {
 
             }
             // Updates primitive texture coordinates according to the parent's texture coordinates 
-            if (this.stored_length_s.length != 0 && this.stored_length_t.length != 0) {
-                this.primitives[nodeProc.id].updateTexCoords(this.stored_length_s[this.stored_length_s.length - 1], this.stored_length_t[this.stored_length_t.length - 1]);
+            if (length_s != 0 && length_t != 0) {
+                this.primitives[nodeProc.id].updateTexCoords(length_s, length_t);
             }
 
             // Applies transformation matrix
@@ -1333,25 +1331,20 @@ class MySceneGraph {
             // Update properties considering the parents nodes properties
             material = this.updateMaterial(material, nodeProc.materials[0]);
             transP = this.updateTransf(transP, nodeProc.transfMatrix);
-            texture = this.updateTexture(texture, nodeProc.texture);
-
-            if (nodeProc.texture != 'none' && nodeProc.texture != 'inherit') {
-                this.stored_length_s.push(nodeProc.length_s);
-                this.stored_length_t.push(nodeProc.length_t);
-            }
+            tex_plus_len = this.updateTexture(texture, nodeProc.texture, length_s, length_t, nodeProc.length_s, nodeProc.length_t);
+            texture = tex_plus_len[0];
+            length_s = tex_plus_len[1];
+            length_t = tex_plus_len[2];
             // Process each child node, keeping the transformation matrix of the current node in the stack of the scene
             for (var i = 0; i < nodeProc.children.length; i++) {
 
                 this.scene.pushMatrix();
 
-                this.processNode(this.nodesGraph[nodeProc.children[i]], transP, material, texture, this.stored_length_s[this.stored_length_s.length - 1], this.stored_length_t[this.stored_length_t.length - 1]);
+                this.processNode(this.nodesGraph[nodeProc.children[i]], transP, material, texture, length_s, length_t);
 
                 this.scene.popMatrix();
             }
-            if (nodeProc.texture != 'inherit' && nodeProc.texture != 'none') {
-                this.stored_length_s.pop();
-                this.stored_length_t.pop();
-            }
+
         }
 
     }
@@ -1384,12 +1377,23 @@ class MySceneGraph {
      * @param {mat4} texP - texture of the parent node
      * @param {mat4} texC - texture of the node
      */
-    updateTexture(texP, texC) {
-        if (texC != "inherit") {
-            return texC;
-        } else {
-            return texP;
+    updateTexture(texP, texC, lsP, ltP, lsC, ltC) {
+        var result = [];
+        if (texC == "inherit") {
+            result.push(texP);
+            result.push(lsP);
+            result.push(ltP);
+        } else if (texC == "none") {
+            result.push(null);
+            result.push(0);
+            result.push(0);
         }
+        else {
+            result.push(texC);
+            result.push(lsC);
+            result.push(ltC);
+        }
+        return result;
     }
 
 }
