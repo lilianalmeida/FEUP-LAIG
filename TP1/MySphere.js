@@ -44,6 +44,9 @@ class MySphere extends CGFobject {
 
                 //Vertices
                 this.vertices.push(nx * this.radius, ny * this.radius, nz * this.radius);
+                
+                //Texture Coordinates 
+                this.texCoords.push(i/this.slices, 0.5 + j/(2*this.stacks));
 
                 //Normal
                 this.normals.push(
@@ -56,6 +59,8 @@ class MySphere extends CGFobject {
                 if (j > 0) {
                     //Vertices
                     this.vertices.push(nx * this.radius, ny * this.radius, -nz * this.radius);
+                    //
+                    this.texCoords.push(i/this.slices, 0.5 - j/(2*this.stacks));
 
                     //Normal
                     this.normals.push(
@@ -65,8 +70,7 @@ class MySphere extends CGFobject {
                     );
                 }
 
-                //Texture Coordinates - TO DO!
-                this.texCoords.push(phi / (Math.PI * 2), phi);
+                
 
                 //Sphere poles don't repeat themselves for each slice
                 if (j == this.stacks) {
@@ -80,6 +84,7 @@ class MySphere extends CGFobject {
             //Next theta for next stack
             theta += deltaTheta;
         }
+
 
         //Normals normalization
         for (var n = 0; n < this.normals.length; n += 3) {
