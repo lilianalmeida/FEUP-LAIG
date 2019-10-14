@@ -259,7 +259,7 @@ class MySceneGraph {
         }
 
         this.log("Parsed views");
-
+        
         return null;
 
     }
@@ -271,6 +271,7 @@ class MySceneGraph {
     parsePerspectiveView(pNode) {
 
         var id = this.reader.getString(pNode, 'id');
+
         if (this.views[id] != null) {
             this.onXMLMinorError('ID ' + id + 'already in use')
         }
@@ -307,14 +308,7 @@ class MySceneGraph {
         }
 
         var newP = new CGFcamera(angle, near, far, from, to);
-
-        if (id == this.defaultView) {
-
-            this.scene.camera = newP;
-            this.scene.interface.setActiveCamera(this.scene.camera);
-        }
         this.views[id] = newP;
-
     }
 
     /**
@@ -350,7 +344,7 @@ class MySceneGraph {
 
         var from, to, up;
 
-
+        var children = [];
         children = oNode.children;
         for (var j = 0; j < children.length; j++) {
             if (children[j].nodeName == 'from') {
@@ -363,13 +357,15 @@ class MySceneGraph {
                 up = this.parseCoordinates3D(children[j], "up component for ortho view with ID " + id);
             }
             else {
-                this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
+                this.onXMLMinorError("unknown tag <" + children[j].nodeName + ">");
                 continue;
             }
         }
 
         var newO = new CGFcameraOrtho(left, right, bottom, top, near, far, from, to, up);
         this.views[id] = newO;
+
+
     }
 
     /**
@@ -472,8 +468,10 @@ class MySceneGraph {
                 var attributeIndex = nodeNames.indexOf(attributeNames[j]);
 
                 if (attributeIndex != -1) {
-                    if (attributeTypes[j] == "position")
+                    if (attributeTypes[j] == "position"){
                         var aux = this.parseCoordinates4D(grandChildren[attributeIndex], "light position for ID" + lightId);
+                        console.log(aux);
+                    }
                     else
                         var aux = this.parseColor(grandChildren[attributeIndex], attributeNames[j] + " illumination for ID" + lightId);
 
@@ -1291,12 +1289,15 @@ class MySceneGraph {
         var length_s = length_sP;
         var length_t = length_tP;
         var tex_plus_len = [];
+        var materialIndex = this.scene.materialsChange % nodeProc.materials.length;
 
 
         // Checks if it is a valid node
         if (nodeProc.id == null) {
             this.onXMLMinorError("invalid node");
         }
+
+
 
         // Primitive node
         if (nodeProc.isPrimitive == true) {
@@ -1328,8 +1329,9 @@ class MySceneGraph {
         }
         else    // Intermediate node
         {
+
             // Update properties considering the parents nodes properties
-            material = this.updateMaterial(material, nodeProc.materials[0]);
+            material = this.updateMaterial(material, nodeProc.materials[materialIndex]);
             transP = this.updateTransf(transP, nodeProc.transfMatrix);
             tex_plus_len = this.updateTexture(texture, nodeProc.texture, length_s, length_t, nodeProc.length_s, nodeProc.length_t);
             texture = tex_plus_len[0];

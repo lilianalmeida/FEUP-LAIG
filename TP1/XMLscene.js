@@ -97,8 +97,28 @@ class XMLscene extends CGFscene {
         this.setGlobalAmbientLight(this.graph.ambient[0], this.graph.ambient[1], this.graph.ambient[2], this.graph.ambient[3]);
 
         this.initLights();
-
+        this.interface.addCameraGroup();
+        this.interface.addLightGroup();
+        this.initView();
+        this.interface.initKeys();
+        this.materialsChange = 0;
         this.sceneInited = true;
+    }
+    initView() {
+        this.camera = this.graph.views[this.graph.defaultView];
+        this.interface.setActiveCamera(this.camera);
+    }
+    changeView() {
+        this.graph.defaultView = this.interface.cameraIndex;
+        this.camera = this.graph.views[this.graph.defaultView];
+        this.interface.setActiveCamera(this.camera);
+    }
+    checkKey() {
+        if (this.interface.isKeyPressed('KeyM')) {
+            this.materialsChange++;
+            console.log(this.materialsChange)
+
+        }
     }
 
     /**
@@ -129,7 +149,7 @@ class XMLscene extends CGFscene {
         if (this.sceneInited) {
             // Draw axis
             this.setDefaultAppearance();
-
+            this.checkKey();
             // Displays the scene (MySceneGraph function).
             this.graph.displayScene();
         }

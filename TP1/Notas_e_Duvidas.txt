@@ -22,9 +22,10 @@ Pontos principais a fazer:
 - Parser views e cameras----------------------(check)
 - Robustar a erros
 - Fazer interface com luzes e seleção da camara
+- confirmar q existe default view
 
 Perguntar ao professor:
 -Quadraticas, length_s/t obrigatorio quando nao se faz inherit ou none
--Se nao ha material, mas ha textura, cria-se um material nove para a textura?
+-Se nao ha material, mas ha textura, cria-se um material novo para a textura?
 
 
