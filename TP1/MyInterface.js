@@ -22,8 +22,6 @@ class MyInterface extends CGFinterface {
 
         // add a group of controls (and open/expand by default)
 
-
-
         this.initKeys();
 
         return true;
@@ -36,17 +34,14 @@ class MyInterface extends CGFinterface {
     }
 
     addLightGroup() {
+        var i = 0;
         for (var key in this.scene.graph.lights) {
-            if (this.scene.lights.hasOwnProperty(key)){
-            this.lightsEnabled[key] = this.scene.lights[key][0];
-           // this.lname = "lights["+key+"][0]";
-            //this.gui.add(this.scene, 'lights[key][0]').name(key);
-            this.gui.add(this.lightsEnabled, key);
-
+            if (this.scene.graph.lights.hasOwnProperty(key)) {
+                this.scene.lightsEnabled[i] = this.scene.graph.lights[key][0];
+                this.gui.add(this.scene.lightsEnabled, i).name(key);       
             }
-
+            i++;
         }
-
     }
 
     /**
@@ -59,12 +54,10 @@ class MyInterface extends CGFinterface {
     }
 
     processKeyDown(event) {
-        console.log(event.code);
         this.activeKeys[event.code] = true;
     };
 
     processKeyUp(event) {
-        console.log(event.code);
         this.activeKeys[event.code] = false;
 
     };

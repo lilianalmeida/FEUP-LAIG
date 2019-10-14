@@ -350,7 +350,7 @@ class MySceneGraph {
             if (children[j].nodeName == 'from') {
                 from = this.parseCoordinates3D(children[j], "from component for ortho view with ID " + id);
             }
-            if (children[j].nodeName == 'to') {
+            else if (children[j].nodeName == 'to') {
                 to = this.parseCoordinates3D(children[j], "to component for ortho view with ID " + id);
             }
             else if (children[j].nodeName == 'up') {
@@ -364,8 +364,6 @@ class MySceneGraph {
 
         var newO = new CGFcameraOrtho(left, right, bottom, top, near, far, from, to, up);
         this.views[id] = newO;
-
-
     }
 
     /**
@@ -952,7 +950,6 @@ class MySceneGraph {
 
         // Any number of components.
         for (var i = 0; i < children.length; i++) {
-            console.dir(children[i]);
             if (children[i].nodeName != "component") {
                 this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
                 continue;
