@@ -1,19 +1,17 @@
 <lxs>
     <scene root="root" axis_length="5"/>
 
-    <views default="defaultCamera">
-        <perspective id="defaultCamera" near="0.1" far="500" angle="90">
+    <views default="frontView">
+        <perspective id="frontView" near="0.1" far="500" angle="90">
             <from x="0" y="5.5" z="8" />
             <to x="0" y="1.5" z="0" />
         </perspective>
 
-        <!-- TODO: Definir parametros adequados para esta camara -->
-        <ortho id = "faceCamera" near = "0.1" far ="500" left = "10" right = "20" top ="20" bottom = "10">
-            <from x="0" y="5.5" z="8"/>
-            <to x="0" y="1.5" z="0" />
-            <up x="0" y="1.5" z="0" />
+        <ortho id="orthoSideView" near="0.1" far="70" left="-8.0" right="8.0" top="8.0" bottom="-8.0">
+            <from x="10.4" y="7.35" z="15.8" />
+            <to x="-0.4" y="3.88" z="-0.7" />
+            <up x="-0.1" y="1" z="-0.1" />
         </ortho>
-
 
     </views>
 
@@ -30,7 +28,7 @@
             <specular r="1.0" g="1.0" b="1.0" a="1.0" />
             <attenuation constant="0" linear="1" quadratic="0" />
         </omni>
-        <spot id="robotFaceLight" enabled="0" angle="10" exponent="1">
+        <spot id="robotFaceLight" enabled="1" angle="10" exponent="1">
             <location x="9.8" y="11.9" z="10" w="1.0" />
             <target x="0" y="0" z="0" />
             <ambient r="0.4" g="0.4" b="0.4" a="1.0" />
@@ -136,7 +134,7 @@
 
         <component id="robot">
             <transformation>
-                <!--<transformationref id="robotMove" />-->
+                <transformationref id="robotMove" />
             </transformation>
             <materials>
                 <material id="inherit" />
@@ -273,7 +271,7 @@
             <materials>
                 <material id="robotMaterialSpheres" />
             </materials>
-            <texture id="robotTexture"/>
+            <texture id="robotTexture" length_s = "1" length_t = "1"/>
             <children>
                 <primitiveref id = "robotSphere"/>
             </children>
@@ -376,7 +374,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" length_s="1" length_t ="1" />
+            <texture id="inherit"/>
             <children>
                 <primitiveref id = "robotRectangle"/>
             </children>
@@ -390,7 +388,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" length_s="1" length_t="1"/>
+            <texture id="inherit"/>
             <children>
                 <primitiveref id = "robotRectangle"/>
             </children>
@@ -571,7 +569,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="robotArmLeg"/>
+            <texture id="robotArmLeg" length_s = "1" length_t = "1"/>
             <children>
                 <primitiveref id= "robotCylinder"/>
             </children>
@@ -598,7 +596,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="robotTexture"/>
+            <texture id="robotTexture" length_s = "1" length_t = "1"/>
             <children>
                 <primitiveref id = "robotSphere"/>
             </children>

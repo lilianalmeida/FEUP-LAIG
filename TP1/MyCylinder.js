@@ -54,7 +54,7 @@ class MyCylinder extends CGFobject {
 				this.vertices.push(nx * radius, ny * radius, subHeight);
 
 				//Texture Coordinates - TO DO!
-				this.texCoords.push(i/this.slices,j/this.stacks);
+				this.texCoords.push(i / this.slices, j / this.stacks);
 
 				//Normal
 				var normal = [
@@ -91,8 +91,8 @@ class MyCylinder extends CGFobject {
 			}
 		}
 
-        
-		
+
+
 		this.primitiveType = this.scene.gl.TRIANGLES;
 		this.initGLBuffers();
 	}
@@ -104,12 +104,12 @@ class MyCylinder extends CGFobject {
 	 * @param {real} length_t - texture scale factor in t axis
 	 */
 	updateTexCoords(length_s, length_t) {
-		
+
 
 	}
 
 
-	
-        
-    
+
+
+
 }

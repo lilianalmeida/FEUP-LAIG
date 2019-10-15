@@ -231,19 +231,17 @@ class MySceneGraph {
         this.defaultView = this.reader.getString(viewsNode, 'default')
 
 
-        var children = viewsNode.children //perspective and ortho views
+        var children = viewsNode.children // Perspective and ortho views
 
         if (children.length < 1) {
-            //TODO: minor error?
             this.onXMLError('no valid views declared');
         }
 
         for (var i = 0; i < children.length; i++) {
-            console.log(children[i].nodeName)
-            if (children[i].nodeName == 'perspective') { //perspective type view
+            if (children[i].nodeName == 'perspective') { // Perspective type view
                 this.parsePerspectiveView(children[i]);
             }
-            else if (children[i].nodeName == 'ortho') {//ortho type view
+            else if (children[i].nodeName == 'ortho') { // Ortho type view
                 this.parseOrthoView(children[i]);
             }
             else {
@@ -259,7 +257,7 @@ class MySceneGraph {
         }
 
         this.log("Parsed views");
-        
+
         return null;
 
     }
@@ -342,7 +340,8 @@ class MySceneGraph {
         if (!(bottom != null && !isNaN(bottom)))
             return "unable to parse bottom of the ortho view for ID = " + id;
 
-        var from, to, up;
+        var from, to;
+        var up = vec3.fromValues(0, 1, 0);
 
         var children = [];
         children = oNode.children;
@@ -353,7 +352,7 @@ class MySceneGraph {
             else if (children[j].nodeName == 'to') {
                 to = this.parseCoordinates3D(children[j], "to component for ortho view with ID " + id);
             }
-            else if (children[j].nodeName == 'up') {
+            else if (children.length == 3 && children[j].nodeName == 'up') {
                 up = this.parseCoordinates3D(children[j], "up component for ortho view with ID " + id);
             }
             else {
@@ -429,8 +428,8 @@ class MySceneGraph {
                 continue;
             }
             else {
-                attributeNames.push(...["location", "ambient", "diffuse", "specular"]);
-                attributeTypes.push(...["position", "color", "color", "color"]);
+                attributeNames.push(...["location", "ambient", "diffuse", "specular", "attenuation"]);
+                attributeTypes.push(...["position", "color", "color", "color", "att"]);
             }
 
             // Get id of the current light.
@@ -466,9 +465,31 @@ class MySceneGraph {
                 var attributeIndex = nodeNames.indexOf(attributeNames[j]);
 
                 if (attributeIndex != -1) {
-                    if (attributeTypes[j] == "position"){
+                    if (attributeTypes[j] == "position") {
                         var aux = this.parseCoordinates4D(grandChildren[attributeIndex], "light position for ID" + lightId);
-                        console.log(aux);
+                    }
+                    else if (attributeTypes[j] == "att") {  // Parsing light's attenuation
+                        var cons = this.reader.getFloat(grandChildren[attributeIndex], 'constant');
+                        if (!(cons != null && !isNaN(cons)))
+                            return "unable to parse constant attenuation of the light for ID = " + lightId;
+
+                        var lin = this.reader.getFloat(grandChildren[attributeIndex], 'linear');
+                        if (!(lin != null && !isNaN(lin)))
+                            return "unable to parse linear attenuation of the light for ID = " + lightId;
+
+                        var quad = this.reader.getFloat(grandChildren[attributeIndex], 'quadratic');
+                        if (!(quad != null && !isNaN(quad)))
+                            return "unable to parse quadratic attenuation of the light for ID = " + lightId;
+
+                        if (cons == 1 && lin == 0 && quad == 0) {
+                            global.push("constant");
+                        } else if (cons == 0 && lin == 1 && quad == 0) {
+                            global.push("linear");
+                        } else if (cons == 0 && lin == 0 && quad == 1) {
+                            global.push("quadratic");
+                        } else {
+                            this.onXMLMinorError("unable to parse attenuation for light " + lightId);
+                        }
                     }
                     else
                         var aux = this.parseColor(grandChildren[attributeIndex], attributeNames[j] + " illumination for ID" + lightId);
@@ -508,6 +529,8 @@ class MySceneGraph {
 
                 global.push(...[angle, exponent, targetLight])
             }
+
+
 
             this.lights[lightId] = global;
             numLights++;
@@ -558,8 +581,6 @@ class MySceneGraph {
 
             if (textureSrc == null)
                 return "no file defined for texture";
-
-            //TODO: Check if image exists!
 
             //New texture
             var newTex = new CGFtexture(this.scene, textureSrc);
@@ -622,7 +643,6 @@ class MySceneGraph {
             var ambientIndex = nodeNames.indexOf("ambient");
             var diffuseIndex = nodeNames.indexOf("diffuse");
             var specularIndex = nodeNames.indexOf("specular");
-            // TODO: Check for other wrong properties?
 
             // Parsing each material property
             var emission = this.parseColor(grandChildren[emissionIndex], "emission for material " + materialID);
@@ -691,7 +711,6 @@ class MySceneGraph {
 
             // Specifications for the current transformation.
             var transfMat = mat4.create();
-            // TODO: separate function
             for (var j = 0; j < grandChildren.length; j++) {
                 switch (grandChildren[j].nodeName) {
                     case 'translate':
@@ -709,7 +728,6 @@ class MySceneGraph {
                         transfMat = mat4.scale(transfMat, transfMat, coordinates);
                         break;
                     case 'rotate':
-                        // TODO: check angulos entre 0 e 360?
                         var coordinates = this.parseAngularCoordinates(grandChildren[j], "rotate tranformation for ID " + transformationID);
                         if (!Array.isArray(coordinates))
                             return coordinates;
@@ -795,7 +813,6 @@ class MySceneGraph {
                 this.primitives[primitiveId] = rect;
             }
             else if (primitiveType == 'triangle') {
-                // TODO: Verificar se é posivel formar triangulo
                 //  First vertex
                 //  x1
                 var x1 = this.reader.getFloat(grandChildren[0], 'x1');
@@ -994,7 +1011,6 @@ class MySceneGraph {
                     nodeTransf = this.transformations[this.reader.getString(grandgrandChildren[transformationIndex], 'id')];
                 }
                 else {  // Several explicit transformations 
-                    // TODO: separar funcão
                     for (var j = 0; j < grandgrandChildren.length; j++) {
                         switch (grandgrandChildren[j].nodeName) {
                             case 'translate':
@@ -1037,7 +1053,6 @@ class MySceneGraph {
             if (grandgrandChildren.length < 1) {
                 this.onXMLMinorError("There must be at least one material at node " + this.reader.getString(children[i], 'id'));
             }
-            // TODO: aceitar mais q um material
 
             // Any number of materials.
             for (var j = 0; j < grandgrandChildren.length; j++) {
@@ -1070,10 +1085,7 @@ class MySceneGraph {
 
             nodeGraph.children = childrenGraph;
 
-
-
             // Texture
-
             if (grandChildren[textureIndex].nodeName != "texture") {
                 this.onXMLMinorError("unknown tag <" + grandChildren[textureIndex].nodeName + ">");
                 continue;
@@ -1081,7 +1093,7 @@ class MySceneGraph {
 
             nodeGraph.texture = this.reader.getString(grandChildren[textureIndex], 'id');
 
-            if (nodeGraph.texture != 'inherit' && nodeGraph.texture != 'none' && !hasQuadratic) {
+            if (nodeGraph.texture != 'inherit' && nodeGraph.texture != 'none') {
                 if (this.reader.getString(grandChildren[textureIndex], 'length_s') != null) {
                     nodeGraph.length_s = this.reader.getString(grandChildren[textureIndex], 'length_s');
                 }
@@ -1089,7 +1101,6 @@ class MySceneGraph {
                     nodeGraph.length_t = this.reader.getString(grandChildren[textureIndex], 'length_t');
                 }
             }
-
 
             // Adds node with all its properties defined to the graph
             this.nodesGraph[this.reader.getString(children[i], 'id')] = nodeGraph;
@@ -1334,6 +1345,7 @@ class MySceneGraph {
             texture = tex_plus_len[0];
             length_s = tex_plus_len[1];
             length_t = tex_plus_len[2];
+
             // Process each child node, keeping the transformation matrix of the current node in the stack of the scene
             for (var i = 0; i < nodeProc.children.length; i++) {
 

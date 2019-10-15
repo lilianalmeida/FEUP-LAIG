@@ -70,7 +70,7 @@ class MyTorus extends CGFobject {
                 this.normals.push(...normal);
 
                 //Texture Coordinates - TO DO!
-				this.texCoords.push(i/this.slices,j/this.loops);
+                this.texCoords.push(i / this.slices, j / this.loops);
 
                 //Next theta for next slice
                 theta += deltaTheta;

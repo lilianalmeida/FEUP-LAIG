@@ -38,7 +38,7 @@ class MyInterface extends CGFinterface {
         for (var key in this.scene.graph.lights) {
             if (this.scene.graph.lights.hasOwnProperty(key)) {
                 this.scene.lightsEnabled[i] = this.scene.graph.lights[key][0];
-                this.gui.add(this.scene.lightsEnabled, i).name(key);       
+                this.gui.add(this.scene.lightsEnabled, i).name(key);
             }
             i++;
         }
