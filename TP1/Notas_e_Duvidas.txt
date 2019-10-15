@@ -16,13 +16,13 @@ else
 no display, para o no raiz dar uma matriz identidade como antecessor das transformações, uma material e uma textura default
 
 Pontos principais a fazer:
-- Coordenadas de textura do cilindro, esfera e torus
+- Coordenadas de textura do cilindro, esfera e torus--------------check
 - Parser das texturas (com a cena dos length e que so podem ser postas quando n tem inherit nem none) ----(check)
-- Mudar materiais com teclinha
+- Mudar materiais com teclinha --------------check
 - Parser views e cameras----------------------(check)
 - Robustar a erros
-- Fazer interface com luzes e seleção da camara
-- confirmar q existe default view
+- Fazer interface com luzes e seleção da camara 
+- confirmar q existe default view ----------check
 
 Perguntar ao professor:
 -Quadraticas, length_s/t obrigatorio quando nao se faz inherit ou none
