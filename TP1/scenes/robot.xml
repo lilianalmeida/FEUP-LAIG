@@ -7,10 +7,10 @@
             <to x="0" y="1.5" z="0" />
         </perspective>
 
-        <ortho id="orthoSideView" near="0.1" far="70" left="-8.0" right="8.0" top="8.0" bottom="-8.0">
-            <from x="10.4" y="7.35" z="15.8" />
-            <to x="-0.4" y="3.88" z="-0.7" />
-            <up x="-0.1" y="1" z="-0.1" />
+        <ortho id="backView" near="0.1" far="70" left="-8.0" right="8.0" top="8.0" bottom="-8.0">
+            <from x="11.13" y="7.65" z="-16.9" />
+            <to x="1.96" y="3.35" z="0.18" />
+            <up x="-0.11" y="1" z="0.19" />
         </ortho>
 
     </views>
@@ -21,17 +21,17 @@
     </globals>
 
     <lights>
-        <omni id="robotLight" enabled="1">
-            <location x="0" y="0" z="0" w="1.0" />
+        <omni id="robotBackLight" enabled="0">
+            <location x="-0.5" y="0.5" z="0" w="1.0" />
             <ambient r="0" g="0" b="0" a="1.0" />
-            <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
-            <specular r="1.0" g="1.0" b="1.0" a="1.0" />
+            <diffuse r="0.2" g="0.0" b="1.0" a="1.0" />
+            <specular r="0.4" g="0.4" b="1.0" a="1.0" />
             <attenuation constant="0" linear="1" quadratic="0" />
         </omni>
-        <spot id="robotFaceLight" enabled="1" angle="10" exponent="1">
+        <spot id="robotFrontLight" enabled="1" angle="10" exponent="1">
             <location x="9.8" y="11.9" z="10" w="1.0" />
             <target x="0" y="0" z="0" />
-            <ambient r="0.4" g="0.4" b="0.4" a="1.0" />
+            <ambient r="0.35" g="0.35" b="0.35" a="1.0" />
             <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
             <specular r="1.0" g="1.0" b="1.0" a="1.0" />
             <attenuation constant="1" linear="0" quadratic="0" />
@@ -51,35 +51,35 @@
             <specular r="0.3" g="0.3" b="0.3" a="1.0" />
         </material>
 
-        <material id="robotMaterialMembers" shininess="10">
+        <material id="robotMaterialMembers" shininess="8">
             <emission r="0.0" g="0.0" b="0.0" a="1.0" />
             <ambient r="0.8" g="0.8" b="0.8" a="1.0" />
             <diffuse r="0.5" g="0.5" b="0.5" a="1.0" />
             <specular r="0.8" g="0.8" b="0.8" a="1.0" />
         </material>
 
-        <material id="robotMaterialSpheres" shininess="10">
+        <material id="robotMaterialSpheres" shininess="5">
             <emission r="0.0" g="0.0" b="0.0" a="1.0" />
             <ambient r="1.0" g="1.0" b="0.3" a="1.0" />
             <diffuse r="0.8" g="0.8" b="0.1" a="1.0" />
             <specular r="0.8" g="0.8" b="0.1" a="1.0" />
         </material>
 
-        <material id="robotMaterialMouth" shininess="10">
+        <material id="robotMaterialMouth" shininess="2">
             <emission r="0.0" g="0.0" b="0.0" a="1.0" />
             <ambient r="1.0" g="0.0" b="0.0" a="1.0" />
             <diffuse r="0.8" g="0.0" b="0.0" a="1.0" />
             <specular r="0.8" g="0.0" b="0.0" a="1.0" />
         </material>
 
-        <material id="robotMaterialEyes" shininess="10">
+        <material id="robotMaterialEyes" shininess="4">
             <emission r="0.0" g="0.0" b="0.0" a="1.0" />
             <ambient r="0.0" g="0.0" b="1.0" a="1.0" />
             <diffuse r="0.0" g="0.0" b="0.8" a="1.0" />
             <specular r="0.0" g="0.0" b="0.8" a="1.0" />
         </material>
 
-        <material id="robotMaterialNose" shininess="10">
+        <material id="robotMaterialNose" shininess="3">
             <emission r="0.0" g="0.0" b="0.0" a="1.0" />
             <ambient r="0.0" g="0.0" b="0.0" a="1.0" />
             <diffuse r="0.0" g="0.0" b="0.0" a="1.0" />
@@ -139,7 +139,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="robotTexture" length_s="1" length_t = "1"/>
+            <texture id="robotTexture" length_s="1" length_t = "1.15"/>
             <children>
                 <componentref id = "head"/>
                 <componentref id = "body"/>

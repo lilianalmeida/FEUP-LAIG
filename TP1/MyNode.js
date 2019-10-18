@@ -4,10 +4,6 @@
  * @param scene - Reference to MyScene object
  * @param id - node id
  * @param isPrimitive - true if the node is a leaf-node, false otherwise
- * @param transfMatrix - transformations matrix to apply to the node
- * @param materials - materials to apply
- * @param texture - texture to apply
- * @param children - children nodes
  */
 class MyNode extends CGFobject {
     constructor(scene, id, isPrimitive) {
@@ -19,5 +15,8 @@ class MyNode extends CGFobject {
         this.materials = [];
         this.texture = null;
         this.children = [];
+
+        this.length_s = null;
+        this.length_t = null;
     }
 }

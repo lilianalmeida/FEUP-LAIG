@@ -20,25 +20,32 @@ class MyInterface extends CGFinterface {
 
         this.gui = new dat.GUI();
 
-        // add a group of controls (and open/expand by default)
-
         this.initKeys();
 
         return true;
     }
 
+    /**
+     * Adds a dropdown box to select a ID view from all views available
+     */
     addCameraGroup() {
         this.viewsVec = Object.keys(this.scene.graph.views);
         this.cameraIndex = this.scene.graph.defaultView;
         this.gui.add(this, 'cameraIndex', this.viewsVec).name('View').onChange(this.scene.changeView.bind(this.scene));
     }
 
+    /**
+     * Adds a folder with checkboxes for all ligths IDs
+     */
     addLightGroup() {
+        var lightsGroup = this.gui.addFolder("Lights");
+        lightsGroup.close();
+
         var i = 0;
         for (var key in this.scene.graph.lights) {
             if (this.scene.graph.lights.hasOwnProperty(key)) {
                 this.scene.lightsEnabled[i] = this.scene.graph.lights[key][0];
-                this.gui.add(this.scene.lightsEnabled, i).name(key);
+                lightsGroup.add(this.scene.lightsEnabled, i).name(key);
             }
             i++;
         }

@@ -104,8 +104,6 @@ class MyCylinder extends CGFobject {
 	 * @param {real} length_t - texture scale factor in t axis
 	 */
 	updateTexCoords(length_s, length_t) {
-
-
 	}
 
 

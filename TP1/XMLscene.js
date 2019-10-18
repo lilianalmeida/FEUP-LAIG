@@ -11,6 +11,8 @@ class XMLscene extends CGFscene {
     constructor(myinterface) {
         super();
         this.interface = myinterface;
+        this.lightsEnabled = {};    // Saves the state of each light defined
+        this.materialsChange = 0;   // Increase to be made to each node material array index when processing nodes
     }
 
     /**
@@ -31,17 +33,17 @@ class XMLscene extends CGFscene {
         this.gl.enable(this.gl.CULL_FACE);
         this.gl.depthFunc(this.gl.LEQUAL);
 
-        this.lightsEnabled = {};
-
         this.axis = new CGFaxis(this);
         this.setUpdatePeriod(80);
     }
+    /**
+     * Checks key input at each period defined with setUpdatePeriod
+     */
     update() {
         if (this.sceneInited) {
             this.checkKey();
         }
     }
-
     /**
      * Initializes the scene cameras.
      */
@@ -68,6 +70,7 @@ class XMLscene extends CGFscene {
                 this.lights[i].setDiffuse(light[4][0], light[4][1], light[4][2], light[4][3]);
                 this.lights[i].setSpecular(light[5][0], light[5][1], light[5][2], light[5][3]);
 
+                // Reads ligth attenuation
                 if (light[6] == "constant") {
                     this.lights[i].setConstantAttenuation(1.0);
                 } else if (light[6] == "linear") {
@@ -94,7 +97,6 @@ class XMLscene extends CGFscene {
             }
         }
     }
-
     setDefaultAppearance() {
         this.setAmbient(0.2, 0.4, 0.8, 1.0);
         this.setDiffuse(0.2, 0.4, 0.8, 1.0);
@@ -112,30 +114,39 @@ class XMLscene extends CGFscene {
         this.setGlobalAmbientLight(this.graph.ambient[0], this.graph.ambient[1], this.graph.ambient[2], this.graph.ambient[3]);
 
         this.initLights();
+
+        // Initializes interface controllers
         this.interface.addCameraGroup();
         this.interface.addLightGroup();
-        this.initView();
         this.interface.initKeys();
-        this.materialsChange = 0;
+
+        this.initView();
+
         this.sceneInited = true;
     }
+    /**
+     * Initializes scene camera with the parsed default view
+     */
     initView() {
         this.camera = this.graph.views[this.graph.defaultView];
         this.interface.setActiveCamera(this.camera);
     }
+    /**
+     * Changes the scene camera when the current view is changed in the interface
+     */
     changeView() {
         this.graph.defaultView = this.interface.cameraIndex;
         this.camera = this.graph.views[this.graph.defaultView];
         this.interface.setActiveCamera(this.camera);
     }
+    /**
+     * Checks if key 'M' is pressed and increments the current array material index for each node
+     */
     checkKey() {
         if (this.interface.isKeyPressed('KeyM')) {
             this.materialsChange++;
-            console.log(this.materialsChange)
-
         }
     }
-
     /**
      * Displays the scene.
      */
@@ -156,6 +167,7 @@ class XMLscene extends CGFscene {
         this.pushMatrix();
         this.axis.display();
 
+        // Sets lights state (ON or OFF) and visibility according to its state in the interface
         for (var i = 0; i < this.lights.length; i++) {
             if (this.lightsEnabled[i]) {
                 this.lights[i].setVisible(true);

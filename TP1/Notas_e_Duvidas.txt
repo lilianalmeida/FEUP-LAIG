@@ -11,9 +11,9 @@ else
 		opop(mat)
 		opop(txt)
 		opop(trans)
+}
 
-
-no display, para o no raiz dar uma matriz identidade como antecessor das transformações, uma material e uma textura default
+No display, para o no raiz dar uma matriz identidade como antecessor das transformações, uma material e uma textura default
 
 Pontos principais a fazer:
 - Coordenadas de textura do cilindro, esfera e torus--------------check
@@ -23,9 +23,5 @@ Pontos principais a fazer:
 - Robustar a erros
 - Fazer interface com luzes e seleção da camara 
 - confirmar q existe default view ----------check
-
-Perguntar ao professor:
--Quadraticas, length_s/t obrigatorio quando nao se faz inherit ou none
--Se nao ha material, mas ha textura, cria-se um material novo para a textura?
 
 
