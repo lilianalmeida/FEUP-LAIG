@@ -46,7 +46,7 @@ class MySphere extends CGFobject {
                 this.vertices.push(nx * this.radius, ny * this.radius, nz * this.radius);
 
                 //Texture Coordinates 
-                this.texCoords.push(i / this.slices, 0.5 - j / (2 * this.stacks));
+                this.texCoords.push(i / this.slices, 0.5 + j / (2 * this.stacks));
 
                 //Normal
                 this.normals.push(
@@ -60,7 +60,7 @@ class MySphere extends CGFobject {
                     //Vertices
                     this.vertices.push(nx * this.radius, ny * this.radius, -nz * this.radius);
                     //
-                    this.texCoords.push(i / this.slices, 0.5 + j / (2 * this.stacks));
+                    this.texCoords.push(i / this.slices, 0.5 - j / (2 * this.stacks));
 
                     //Normal
                     this.normals.push(
