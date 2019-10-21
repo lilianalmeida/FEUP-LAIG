@@ -1315,6 +1315,8 @@ class MySceneGraph {
             if (texture != null && texture != 'none') {
                 matToApply.setTexture(this.textures[texture]);
                 matToApply.setTextureWrap('REPEAT', 'REPEAT');
+            }else{
+                matToApply.setTexture(null);
             }
 
             // Apllies material
