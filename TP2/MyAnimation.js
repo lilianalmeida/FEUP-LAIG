@@ -4,20 +4,18 @@
  * 
  */
 class MyAnimation {
-    constructor() {
-        this.keyframes = [];
+    constructor(id) {
+        this.id = id;
     }
     /**
      * Updates its state according to time passed
      */
-    update() { }
+    update(deltaTime) { }
 
     /**
      * Applies transformation to transformations matrix of the scene when needed
      */
-    apply() { }
-
-
+    apply() {}
 
 }
 

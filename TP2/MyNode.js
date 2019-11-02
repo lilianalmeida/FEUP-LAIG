@@ -12,6 +12,7 @@ class MyNode extends CGFobject {
         this.isPrimitive = isPrimitive;
 
         this.transfMatrix = null;
+        this.animation = null;
         this.materials = [];
         this.texture = null;
         this.children = [];

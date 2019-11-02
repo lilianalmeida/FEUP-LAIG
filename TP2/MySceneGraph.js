@@ -776,13 +776,15 @@ class MySceneGraph {
      * @param {animations block element} animationsNode 
      */
     parseAnimations(animationsNode) {
-        var children = animationsNode.children; //animations
-        var grandChildren = [];                 //keyframes
-        var grandgrandChildren = [];            //animation transformations
-        var animationID;
-        var nodeNames;
-        
+        var children = animationsNode.children; // Animations
+        var grandChildren = [];                 // Keyframes
+        var grandgrandChildren = [];            // Keyframes properties
+        var nodeNames;                          // Keyframes properties names
 
+        var keyframes = [];     // Array with each animation keyframes
+        this.animations = [];   // Array with all animations
+
+        // Any number of animations
         for (var i = 0; i < children.length; i++) {
 
             if (children[i].nodeName != "animation") {
@@ -790,17 +792,47 @@ class MySceneGraph {
                 continue;
             }
 
-            animationID = this.reader.getString(children[i], 'id');
+            // Gets if od current animation
+            var animationId = this.reader.getString(children[i], 'id');
+            if (animationId == null)
+                return "no ID defined for animation ID";
+
+            // Checks for repeated IDs.
+            if (this.animations[animationId] != null)
+                return "ID must be unique for each animation (conflict: ID = " + animationId + ")";
+
             grandChildren = children[i].children;
 
+            var keyframe0 = new MyKeyframe();
+            keyframe0.instant = 0;
+            keyframe0.translate = [0, 0, 0];
+            keyframe0.rotation = [0, 0, 0];
+            keyframe0.scale = [1, 1, 1];
+
+            keyframes.push(keyframe0);
+
+            // Any number of keyframes
             for (var j = 0; j < grandChildren.length; j++) {
 
-                var keyframe = new MyKeyframeAnimation();
                 if (grandChildren[j].nodeName != "keyframe") {
                     this.onXMLMinorError("unknown tag <" + grandChildren[J].nodeName + ">");
                     continue;
                 }
+
+                // New keyframe
+                var keyframe = new MyKeyframe();
+
+                // Gets keyframe's instant
                 keyframe.instant = this.reader.getFloat(grandChildren[j], 'instant');
+                if (!(keyframe.instant != null && !isNaN(keyframe.instant) && keyframe.instant > 0)) {
+                    this.onXMLError("unable to parse keyframe instant of the animation for ID = " + animationId);
+                    continue;
+                }
+
+                /*// Checks for repeated instants in the same animation
+                if (keyframes[keyframe.instant] != null)
+                    return "instant must be unique for each keyframe in a animation (conflict: ID = " + keyframe.instant + " for animation ID = " + animationId + ")";
+*/
                 grandgrandChildren = grandChildren[j].children;
 
                 // Fills nodeNames and saves keyframe properties index
@@ -813,14 +845,19 @@ class MySceneGraph {
                 var rotationIndex = nodeNames.indexOf("rotate");
                 var scaleIndex = nodeNames.indexOf("scale");
 
+                // Parses each keyframe transformation
                 keyframe.translate = this.parseCoordinates3D(grandgrandChildren[translateIndex], "translate transformation for keyframe at instant " + keyframe.instant);
                 keyframe.rotation = this.parseRotations(grandgrandChildren[rotationIndex], "rotation transformation for keyframe at instant " + keyframe.instant);
                 keyframe.scale = this.parseCoordinates3D(grandgrandChildren[scaleIndex], "scale transformation for keyframe at instant " + keyframe.instant);
 
+                // Adds new keyframe to the array
+                keyframes.push(keyframe);
             }
-
-
+            // Adds all animation keyframes
+            this.animations[animationId] = keyframes;
         }
+        this.log("Parsed animations");
+        return null;
     }
 
     /**
@@ -844,7 +881,7 @@ class MySceneGraph {
             // Gets id of the current primitive.
             var primitiveId = this.reader.getString(children[i], 'id');
             if (primitiveId == null)
-                return "no ID defined for texture";
+                return "no ID defined for primitive ID";
 
             // Checks for repeated IDs.
             if (this.primitives[primitiveId] != null)
@@ -1069,6 +1106,7 @@ class MySceneGraph {
             }
 
             var transformationIndex = nodeNames.indexOf("transformation");
+            var animationIndex = nodeNames.indexOf("animationref");
             var materialsIndex = nodeNames.indexOf("materials");
             var textureIndex = nodeNames.indexOf("texture");
             var childrenIndex = nodeNames.indexOf("children");
@@ -1116,6 +1154,28 @@ class MySceneGraph {
                 }
             }
             nodeGraph.transfMatrix = nodeTransf;
+
+            // Animation
+            // If animation bock is defined
+            if (animationIndex != -1) {
+                if (grandChildren[animationIndex].nodeName != "animationref") {
+                    this.onXMLMinorError("unknown tag <" + grandChildren[animationIndex].nodeName + ">");
+                    continue;
+                }
+
+                // Gets animation ID
+                var animationId = this.reader.getString(grandChildren[animationIndex], 'id');
+
+                // Checks whether an animation with this id exists or not
+                if (this.animations[animationId] == null) {
+                    this.onXMLMinorError("no animation for ID : " + animationId);
+                    continue;
+                }
+
+                // Creates new keyframe animation 
+                var kfAnimation = new MyKeyframeAnimation(animationId, this.animations[animationId]);
+                nodeGraph.animation = kfAnimation;
+            }
 
             // Materials
             if (grandChildren[materialsIndex].nodeName != "materials") {
@@ -1407,7 +1467,7 @@ class MySceneGraph {
             if (texture != null && texture != 'none') {
                 matToApply.setTexture(this.textures[texture]);
                 matToApply.setTextureWrap('REPEAT', 'REPEAT');
-            }else{
+            } else {
                 matToApply.setTexture(null);
             }
 
@@ -1429,7 +1489,7 @@ class MySceneGraph {
         {
             // Updates properties considering the parents nodes properties
             material = this.updateMaterial(material, nodeProc.materials[materialIndex]);
-            transP = this.updateTransf(transP, nodeProc.transfMatrix);
+            transP = this.updateTransf(transP, nodeProc.transfMatrix, nodeProc.animation);
             tex_plus_len = this.updateTexture(texture, nodeProc.texture, length_s, length_t, nodeProc.length_s, nodeProc.length_t);
             texture = tex_plus_len[0];
             length_s = tex_plus_len[1];
@@ -1462,9 +1522,16 @@ class MySceneGraph {
      * @param {mat4} transP - transformation matrix of the parent node
      * @param {mat4} transC - transformation matrix of the node
      */
-    updateTransf(transP, transC) {
+    updateTransf(transP, transC, animation) {
         var mout = mat4.create();
-        return mat4.multiply(mout, transP, transC);
+        mout = mat4.multiply(mout, mout, transP);
+        if (animation != null) {
+            if (animation.apply() != null) {
+                mout = mat4.multiply(mout, mout, animation.apply());
+            }
+        }
+        mout = mat4.multiply(mout, mout, transC);
+        return mout;
     }
 
     /**

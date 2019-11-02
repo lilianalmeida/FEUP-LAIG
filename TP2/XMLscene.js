@@ -13,6 +13,7 @@ class XMLscene extends CGFscene {
         this.interface = myinterface;
         this.lightsEnabled = {};    // Saves the state of each light defined
         this.materialsChange = 0;   // Increase to be made to each node material array index when processing nodes
+        this.lastTime = 0;
     }
 
     /**
@@ -39,10 +40,18 @@ class XMLscene extends CGFscene {
     /**
      * Checks key input at each period defined with setUpdatePeriod
      */
-    update() {
+    update(currentTime) {
+        var deltaTime = currentTime - this.lastTime;
+
         if (this.sceneInited) {
             this.checkKey();
         }
+
+        if (this.sceneInited) {
+            this.graph.nodesGraph["arms"].animation.update(deltaTime /1000);
+        }
+
+        this.lastTime = currentTime;
     }
     /**
      * Initializes the scene cameras.
@@ -160,7 +169,7 @@ class XMLscene extends CGFscene {
         // Initialize Model-View matrix as identity (no transformation
         this.updateProjectionMatrix();
         this.loadIdentity();
-
+        
         // Apply transformations corresponding to the camera position relative to the origin
         this.applyViewMatrix();
 

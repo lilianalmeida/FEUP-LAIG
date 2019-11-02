@@ -46,7 +46,7 @@ class MySphere extends CGFobject {
                 this.vertices.push(nx * this.radius, ny * this.radius, nz * this.radius);
 
                 //Texture Coordinates 
-                this.texCoords.push(i / this.slices, 0.5 + j / (2 * this.stacks));
+                    this.texCoords.push(i / this.slices, 0.5 + j / (2 * this.stacks));
 
                 //Normal
                 this.normals.push(
@@ -59,7 +59,8 @@ class MySphere extends CGFobject {
                 if (j > 0) {
                     //Vertices
                     this.vertices.push(nx * this.radius, ny * this.radius, -nz * this.radius);
-                    //
+                    
+                    //Texture Coordinates
                     this.texCoords.push(i / this.slices, 0.5 - j / (2 * this.stacks));
 
                     //Normal
@@ -70,12 +71,6 @@ class MySphere extends CGFobject {
                     );
                 }
 
-
-
-                //Sphere poles don't repeat themselves for each slice
-                if (j == this.stacks) {
-                    break;
-                }
 
                 //Next phi for next slice
                 phi += deltaPhi;
@@ -100,12 +95,12 @@ class MySphere extends CGFobject {
         }
 
         /* SPHERE SURFACE */
-        //Generates sphere surface except stacks near the poles
-        for (var j = 0; j < this.stacks - 1; j++) {
+        //Generates sphere surface
+        for (var j = 0; j < this.stacks ; j++) {
 
             //Sphere surface around de equator
             if (j == 0) {
-                for (var i = 0; i < this.slices; i++) {
+                for (var i = 0; i <= this.slices; i++) {
                     //Vertices indexes
                     var v1 = i;                                 //Vertex in loop = j and slice = i
                     var v2 = v1 + 1;                            //Vertex in loop = j and slice = i+1
@@ -123,7 +118,7 @@ class MySphere extends CGFobject {
             }
             //Sphere surface for the rest of the sphere
             else {
-                for (var i = 0; i < this.slices; i++) {
+                for (var i = 0; i <= this.slices; i++) {
                     //Vertices indexes
                     var v1 = (this.slices + 1) * (2 * j - 1) + 2 * i;   //Vertex in loop = j and slice = i
                     var v2 = v1 + 2;                                    //Vertex in loop = j and slice = i+1
@@ -141,21 +136,6 @@ class MySphere extends CGFobject {
             }
 
         }
-
-        //Generates sphere surface around the poles
-        //Poles vertices indexes
-        var vN = (this.stacks - 1) * (this.slices + 1) * 2 + this.slices + 1;   //North pole vertex
-        var vS = vN + 1;                                                        //South pole vertex
-
-        for (var i = 0; i < this.slices; i++) {
-            //Vertices indexes
-            var v1 = (this.slices + 1) * (2 * (this.stacks - 1) - 1) + 2 * i;   //Vertex in last loop (stacks - 1) and slice = i
-            var v2 = v1 + 2;                                                    //Vertex in last loop (stacks - 1) and slice = i+1
-
-            this.indices.push(v1, v2, vN);
-            this.indices.push(v2 + 1, v1 + 1, vS);
-        }
-        /* */
 
         this.primitiveType = this.scene.gl.TRIANGLES;
         this.initGLBuffers();
