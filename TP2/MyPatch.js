@@ -4,9 +4,8 @@
  * @param scene - Reference to MyScene object
  */
 class MyPatch extends CGFobject {
-    constructor(scene, id, npointsU, npointsV, npartsU, npartsV, controlPoints) {
+    constructor(scene, npointsU, npointsV, npartsU, npartsV, controlPoints) {
         super(scene);
-        this.id = id;
         this.npartsU = npartsU;
         this.npartsV = npartsV;
         this.npointsU = npointsU;

@@ -2,15 +2,13 @@
  * MySphere
  * @constructor
  * @param scene - Reference to MyScene object
- * @param id - id of the primitive
  * @param radius - Radius of the sphere
  * @param slices - Number of divisions between poles
  * @param stacks - Number of divisions around axis
  */
 class MySphere extends CGFobject {
-    constructor(scene, id, radius, slices, stacks) {
+    constructor(scene, radius, slices, stacks) {
         super(scene);
-        this.id = id;
         this.radius = radius;
         this.slices = slices;
         this.stacks = stacks;
@@ -46,7 +44,7 @@ class MySphere extends CGFobject {
                 this.vertices.push(nx * this.radius, ny * this.radius, nz * this.radius);
 
                 //Texture Coordinates 
-                    this.texCoords.push(i / this.slices, 0.5 + j / (2 * this.stacks));
+                this.texCoords.push(i / this.slices, 0.5 + j / (2 * this.stacks));
 
                 //Normal
                 this.normals.push(
@@ -59,7 +57,7 @@ class MySphere extends CGFobject {
                 if (j > 0) {
                     //Vertices
                     this.vertices.push(nx * this.radius, ny * this.radius, -nz * this.radius);
-                    
+
                     //Texture Coordinates
                     this.texCoords.push(i / this.slices, 0.5 - j / (2 * this.stacks));
 
@@ -96,7 +94,7 @@ class MySphere extends CGFobject {
 
         /* SPHERE SURFACE */
         //Generates sphere surface
-        for (var j = 0; j < this.stacks ; j++) {
+        for (var j = 0; j < this.stacks; j++) {
 
             //Sphere surface around de equator
             if (j == 0) {

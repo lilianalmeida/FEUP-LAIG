@@ -2,7 +2,6 @@
  * MyTriangle
  * @constructor
  * @param scene - Reference to MyScene object
- * @param id - id of the primitive
  * @param x1 - X coordinate of the first vertex 
  * @param x2 - X coordinate of the second vertex 
  * @param x3 - X coordinate of the third vertex 
@@ -14,9 +13,8 @@
  * @param z3 - Z coordinate of the third vertex 
  */
 class MyTriangle extends CGFobject {
-	constructor(scene, id, x1, x2, x3, y1, y2, y3, z1, z2, z3) {
+	constructor(scene, x1, x2, x3, y1, y2, y3, z1, z2, z3) {
 		super(scene);
-		this.id = id;
 		this.x1 = x1;
 		this.x2 = x2;
 		this.x3 = x3;

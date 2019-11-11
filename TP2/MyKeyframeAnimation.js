@@ -29,7 +29,7 @@ class MyKeyframeAnimation extends MyAnimation {
         var min = 0;
         this.animMatrix = mat4.create();
 
-        console.log("Elapsed " + this.elapsedTime);
+        //console.log("Elapsed " + this.elapsedTime);
 
         for (var i = 0; i < this.keyframes.length; i++) {
             if (this.keyframes[i].instant < this.elapsedTime) {
@@ -52,8 +52,8 @@ class MyKeyframeAnimation extends MyAnimation {
             }
         }
 
-        console.log("max = " + max);
-        console.log("min = " + min);
+        //console.log("max = " + max);
+        //console.log("min = " + min);
 
         // End of animation
         if (this.elapsedTime > this.maxKeyframe) {

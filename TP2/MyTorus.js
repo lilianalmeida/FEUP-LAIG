@@ -2,16 +2,14 @@
  * MyTorus
  * @constructor
  * @param scene - Reference to MyScene object
- * @param id - id of the primitive
  * @param inner - "tube" radius
  * @param outer - Radius of the "circular axis" of the torus
  * @param slices - Number of divisions around the inner radius
  * @param loops - Number of divisions around the "circular axis"
  */
 class MyTorus extends CGFobject {
-    constructor(scene, id, inner, outer, slices, loops) {
+    constructor(scene, inner, outer, slices, loops) {
         super(scene);
-        this.id = id;
         this.inner = inner;
         this.outer = outer;
         this.slices = slices;

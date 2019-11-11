@@ -2,7 +2,6 @@
  * MyCylinder
  * @constructor
  * @param scene - Reference to MyScene object
- * @param id - id of the primitive
  * @param base - Radius of the base (Z = 0)
  * @param top - Radius of the top (Z = height)
  * @param height - Size of the cylinder in the direction of the positive Z axis
@@ -10,9 +9,8 @@
  * @param stacks - Number of divisions along the Z direction
  */
 class MyCylinder extends CGFobject {
-	constructor(scene, id, base, top, height, slices, stacks) {
+	constructor(scene, base, top, height, slices, stacks) {
 		super(scene);
-		this.id = id;
 		this.base = base;
 		this.top = top;
 		this.height = height;

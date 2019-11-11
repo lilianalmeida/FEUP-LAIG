@@ -4,9 +4,8 @@
  * @param scene - Reference to MyScene object
  */
 class MyCylinder2 extends CGFobject {
-    constructor(scene, id, base, top, height, slices, stacks) {
+    constructor(scene, base, top, height, slices, stacks) {
         super(scene);
-        this.id = id;
         this.base = base;
         this.top = top;
         this.height = height;

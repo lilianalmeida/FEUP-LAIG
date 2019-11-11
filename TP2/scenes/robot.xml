@@ -135,7 +135,7 @@
         <primitive id="robotPlane">
             <plane npartsU="2" npartsV="2" />
         </primitive>
-        <primitive id="robotPatch">
+       <!-- <primitive id="robotPatch">
             <patch npointsU="3" npointsV="4" npartsU="20" npartsV="20">
                 <controlpoint x="-2" y="-2" z="1" />
                 <controlpoint x="-2" y="-1" z="-2" />
@@ -146,13 +146,13 @@
                 <controlpoint x="0" y="-1" z="-1" />
                 <controlpoint x="0" y="1" z="1.5" />
                 <controlpoint x="0" y="2" z="0" />
-                <!-- TODO: xx yy zz?? -->
+                 TODO: xx yy zz??
                 <controlpoint x="2" y="-2" z="-1" />
                 <controlpoint x="2" y="-1" z="2" />
                 <controlpoint x="2" y="1" z="-5" />
                 <controlpoint x="2" y="2" z="1" />
             </patch>
-        </primitive>
+        </primitive>-->
         <primitive id="robotCylinder2">
             <cylinder2 base="0.2" top="0.2" height="1.5" slices="10" stacks="10" />
         </primitive>

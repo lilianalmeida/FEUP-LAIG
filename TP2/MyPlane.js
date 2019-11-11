@@ -4,9 +4,8 @@
  * @param scene - Reference to MyScene object
  */
 class MyPlane extends CGFobject {
-    constructor(scene, id, npartsU, npartsV) {
+    constructor(scene, npartsU, npartsV) {
         super(scene);
-        this.id = id;
         this.npartsU = npartsU;
         this.npartsV = npartsV;
 

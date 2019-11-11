@@ -924,7 +924,7 @@ class MySceneGraph {
                     return "unable to parse y2 of the primitive coordinates for ID = " + primitiveId;
 
                 // New rectangle
-                var rect = new MyRectangle(this.scene, primitiveId, x1, x2, y1, y2);
+                var rect = new MyRectangle(this.scene, x1, x2, y1, y2);
                 this.primitives[primitiveId] = rect;
             }
             else if (primitiveType == 'triangle') {
@@ -977,7 +977,7 @@ class MySceneGraph {
                     return "unable to parse z3 of the primitive coordinates for ID = " + primitiveId;
 
                 // New triangle
-                var triangle = new MyTriangle(this.scene, primitiveId, x1, x2, x3, y1, y2, y3, z1, z2, z3);
+                var triangle = new MyTriangle(this.scene, x1, x2, x3, y1, y2, y3, z1, z2, z3);
                 this.primitives[primitiveId] = triangle;
             }
             else if (primitiveType == 'cylinder' || primitiveType == 'cylinder2') {
@@ -1008,11 +1008,11 @@ class MySceneGraph {
 
                 if (primitiveType == 'cylinder') {
                     // New cylinder
-                    var cylinder = new MyCylinder(this.scene, primitiveId, base, top, height, slices, stacks);
+                    var cylinder = new MyCylinder(this.scene, base, top, height, slices, stacks);
                     this.primitives[primitiveId] = cylinder;
                 } else {
                     // New cylinder2
-                    var cylinder2 = new MyCylinder2(this.scene, primitiveId, base, top, height, slices, stacks);
+                    var cylinder2 = new MyCylinder2(this.scene, base, top, height, slices, stacks);
                     this.primitives[primitiveId] = cylinder2;
                 }
 
@@ -1034,7 +1034,7 @@ class MySceneGraph {
                     return "unable to parse stacks of the primitive for ID = " + primitiveId;
 
                 // New sphere
-                var sphere = new MySphere(this.scene, primitiveId, radius, slices, stacks);
+                var sphere = new MySphere(this.scene, radius, slices, stacks);
                 this.primitives[primitiveId] = sphere;
             }
             else if (primitiveType == 'torus') {
@@ -1059,7 +1059,7 @@ class MySceneGraph {
                     return "unable to parse loops of the primitive for ID = " + primitiveId;
 
                 // New Torus
-                var torus = new MyTorus(this.scene, primitiveId, inner, outer, slices, loops);
+                var torus = new MyTorus(this.scene, inner, outer, slices, loops);
                 this.primitives[primitiveId] = torus;
             }
             else if (primitiveType == 'plane') {
@@ -1074,7 +1074,7 @@ class MySceneGraph {
                     return "unable to parse number of v parts of the primitive for ID = " + primitiveId;
 
                 // New Plane
-                var plane = new MyPlane(this.scene, primitiveId, npartsU, npartsV);
+                var plane = new MyPlane(this.scene, npartsU, npartsV);
                 this.primitives[primitiveId] = plane;
             }
             else if (primitiveType == 'patch') {
@@ -1125,7 +1125,7 @@ class MySceneGraph {
                 }
 
                 // New Patch
-                var patch = new MyPatch(this.scene, primitiveId, npointsU, npointsV, npartsU, npartsV, controlPoints);
+                var patch = new MyPatch(this.scene, npointsU, npointsV, npartsU, npartsV, controlPoints);
                 this.primitives[primitiveId] = patch;
             }
 

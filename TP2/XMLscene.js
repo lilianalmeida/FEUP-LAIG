@@ -34,8 +34,11 @@ class XMLscene extends CGFscene {
         this.gl.enable(this.gl.CULL_FACE);
         this.gl.depthFunc(this.gl.LEQUAL);
 
+        this.rttTexture = new CGFtextureRTT(this, this.gl.canvas.width, this.gl.canvas.height);
+
         this.axis = new CGFaxis(this);
-        this.setUpdatePeriod(1000/60);
+        this.setUpdatePeriod(1000 / 60);
+        this.initShader();
     }
     /**
      * Checks key input at each period defined with setUpdatePeriod
@@ -48,7 +51,7 @@ class XMLscene extends CGFscene {
         }
 
         if (this.sceneInited) {
-            this.graph.nodesGraph["arms"].animation.update(deltaTime /1000);
+            this.graph.nodesGraph["arms"].animation.update(deltaTime / 1000);
         }
 
         this.lastTime = currentTime;
@@ -58,6 +61,7 @@ class XMLscene extends CGFscene {
      */
     initCameras() {
         this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
+        this.cameraRTT = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
     }
     /**
      * Initializes the scene lights with the values read from the XML file.
@@ -130,8 +134,14 @@ class XMLscene extends CGFscene {
         this.interface.initKeys();
 
         this.initView();
-       
+
+
         this.sceneInited = true;
+    }
+    initShader(){
+        this.securityCamera = new MySecurityCamera(this);
+
+       // this.securityCameraShader.setUniformsValues({uSampler2: 0});
     }
     /**
      * Initializes scene camera with the parsed default view
@@ -160,16 +170,31 @@ class XMLscene extends CGFscene {
      * Displays the scene.
      */
     display() {
-        // ---- BEGIN Background, camera and axis setup
+        
+        this.rttTexture.attachToFrameBuffer();
+        this.render(this.camera);
+        this.rttTexture.detachFromFrameBuffer();
+        this.render(this.camera);
 
+        this.gl.disable(this.gl.DEPTH_TEST);
+        this.securityCamera.display(this.rttTexture);
+        this.gl.enable(this.gl.DEPTH_TEST);
+    }
+
+    render(camera) {
+        // ---- BEGIN Background, camera and axis setup
+        
         // Clear image and depth buffer everytime we update the scene
         this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 
+      /*  this.camera = camera;
+        this.interface.setActiveCamera(this.camera);*/
+
         // Initialize Model-View matrix as identity (no transformation
         this.updateProjectionMatrix();
         this.loadIdentity();
-        
+
         // Apply transformations corresponding to the camera position relative to the origin
         this.applyViewMatrix();
 
