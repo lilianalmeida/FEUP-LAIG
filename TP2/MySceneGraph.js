@@ -893,8 +893,9 @@ class MySceneGraph {
             if (grandChildren.length != 1 ||
                 (grandChildren[0].nodeName != 'rectangle' && grandChildren[0].nodeName != 'triangle' &&
                     grandChildren[0].nodeName != 'cylinder' && grandChildren[0].nodeName != 'sphere' &&
-                    grandChildren[0].nodeName != 'torus')) {
-                return "There must be exactly 1 primitive type (rectangle, triangle, cylinder, sphere or torus)";
+                    grandChildren[0].nodeName != 'torus' && grandChildren[0].nodeName != 'plane' &&
+                    grandChildren[0].nodeName != 'patch' && grandChildren[0].nodeName != 'cylinder2')) {
+                return "There must be exactly 1 primitive type (rectangle, triangle, cylinder, sphere, torus, plane, patch or cylinder2)";
             }
 
             // Specifications for the current primitive.
@@ -979,7 +980,7 @@ class MySceneGraph {
                 var triangle = new MyTriangle(this.scene, primitiveId, x1, x2, x3, y1, y2, y3, z1, z2, z3);
                 this.primitives[primitiveId] = triangle;
             }
-            else if (primitiveType == 'cylinder') {
+            else if (primitiveType == 'cylinder' || primitiveType == 'cylinder2') {
                 // Base
                 var base = this.reader.getFloat(grandChildren[0], 'base');
                 if (!(base != null && !isNaN(base)))
@@ -1005,9 +1006,16 @@ class MySceneGraph {
                 if (!(stacks != null && !isNaN(stacks)))
                     return "unable to parse stacks of the primitive for ID = " + primitiveId;
 
-                // New cylinder
-                var cylinder = new MyCylinder(this.scene, primitiveId, base, top, height, slices, stacks);
-                this.primitives[primitiveId] = cylinder;
+                if (primitiveType == 'cylinder') {
+                    // New cylinder
+                    var cylinder = new MyCylinder(this.scene, primitiveId, base, top, height, slices, stacks);
+                    this.primitives[primitiveId] = cylinder;
+                } else {
+                    // New cylinder2
+                    var cylinder2 = new MyCylinder2(this.scene, primitiveId, base, top, height, slices, stacks);
+                    this.primitives[primitiveId] = cylinder2;
+                }
+
             }
             else if (primitiveType == 'sphere') {
                 // Radius
@@ -1054,9 +1062,75 @@ class MySceneGraph {
                 var torus = new MyTorus(this.scene, primitiveId, inner, outer, slices, loops);
                 this.primitives[primitiveId] = torus;
             }
+            else if (primitiveType == 'plane') {
+                // NpartsU
+                var npartsU = this.reader.getInteger(grandChildren[0], 'npartsU');
+                if (!(npartsU != null && !isNaN(npartsU)))
+                    return "unable to parse number of u parts of the primitive for ID = " + primitiveId;
+
+                // NpartsV
+                var npartsV = this.reader.getInteger(grandChildren[0], 'npartsV');
+                if (!(npartsV != null && !isNaN(npartsV)))
+                    return "unable to parse number of v parts of the primitive for ID = " + primitiveId;
+
+                // New Plane
+                var plane = new MyPlane(this.scene, primitiveId, npartsU, npartsV);
+                this.primitives[primitiveId] = plane;
+            }
+            else if (primitiveType == 'patch') {
+                var grandgrandChildren = [];            // Control points
+
+                // NpointsU
+                var npointsU = this.reader.getInteger(grandChildren[0], 'npointsU');
+                if (!(npointsU != null && !isNaN(npointsU)))
+                    return "unable to parse number of u points of the primitive for ID = " + primitiveId;
+
+                // NpointsV
+                var npointsV = this.reader.getInteger(grandChildren[0], 'npointsV');
+                if (!(npointsV != null && !isNaN(npointsV)))
+                    return "unable to parse number of v points of the primitive for ID = " + primitiveId;
+
+                // NpartsU
+                var npartsU = this.reader.getInteger(grandChildren[0], 'npartsU');
+                if (!(npartsU != null && !isNaN(npartsU)))
+                    return "unable to parse number of u parts of the primitive for ID = " + primitiveId;
+
+                // NpartsV
+                var npartsV = this.reader.getInteger(grandChildren[0], 'npartsV');
+                if (!(npartsV != null && !isNaN(npartsV)))
+                    return "unable to parse number of v parts of the primitive for ID = " + primitiveId;
+
+                // Control Points
+                grandgrandChildren = grandChildren[0].children;   // Patch control points
+                var controlPoints = [];
+
+                if (grandgrandChildren.length != npointsU * npointsV) {
+                    return "the number of control points must be npointU * npointsV in primitive for ID = " + primitiveId;
+                }
+
+                for (var j = 0; j < npointsU; j++) {
+                    var controlPointsU = [];
+                    for (var k = 0; k < npointsV; k++) {
+                        if (grandgrandChildren[j * npointsV + k].nodeName != 'controlpoint'){
+                            return "unknown tag <" + grandgrandChildren[j * npointsV + k].nodeName + ">";
+                        }
+
+                        var coordinates = this.parseCoordinates3D(grandgrandChildren[j * npointsV + k], "control point for patch primitive");
+                        if (!Array.isArray(coordinates))
+                            return coordinates;
+
+                        controlPointsU.push([coordinates[0], coordinates[1], coordinates[2], 1.0]);
+                    }
+                    controlPoints.push(controlPointsU);
+                }
+
+                // New Patch
+                var patch = new MyPatch(this.scene, primitiveId, npointsU, npointsV, npartsU, npartsV, controlPoints);
+                this.primitives[primitiveId] = patch;
+            }
 
             // Adds the primitive as a new node of the graph
-            var nodeGraph = new MyNode(this.scene, primitiveId, true);
+            var nodeGraph = new MyNode(this.scene, primitiveId, true);  
             this.nodesGraph[primitiveId] = nodeGraph;
         }
         this.log("Parsed primitives");

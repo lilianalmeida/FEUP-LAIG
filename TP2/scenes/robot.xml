@@ -104,9 +104,9 @@
     <animations>
         <animation id="armMovement">
             <keyframe instant="5">
-                <translate x="0.5" y="0.2" z="0.1" />
+                <translate x="0" y="0" z="0" />
                 <rotate angle_x="90" angle_y="45" angle_z="5" />
-                <scale x="1" y="1" z="1" />
+                <scale x="3" y="1" z="1" />
             </keyframe>
             <keyframe instant="10">
                 <translate x="0" y="0" z="0" />
@@ -132,6 +132,30 @@
         <primitive id="robotTorus">
             <torus inner="0.25" outer="0.5" slices="20" loops="20" />
         </primitive>
+        <primitive id="robotPlane">
+            <plane npartsU="2" npartsV="2" />
+        </primitive>
+        <primitive id="robotPatch">
+            <patch npointsU="3" npointsV="4" npartsU="20" npartsV="20">
+                <controlpoint x="-2" y="-2" z="1" />
+                <controlpoint x="-2" y="-1" z="-2" />
+                <controlpoint x="-2" y="1" z="5" />
+                <controlpoint x="-2" y="2" z="-1" />
+
+                <controlpoint x="0" y="-2" z="0" />
+                <controlpoint x="0" y="-1" z="-1" />
+                <controlpoint x="0" y="1" z="1.5" />
+                <controlpoint x="0" y="2" z="0" />
+                <!-- TODO: xx yy zz?? -->
+                <controlpoint x="2" y="-2" z="-1" />
+                <controlpoint x="2" y="-1" z="2" />
+                <controlpoint x="2" y="1" z="-5" />
+                <controlpoint x="2" y="2" z="1" />
+            </patch>
+        </primitive>
+        <primitive id="robotCylinder2">
+            <cylinder2 base="0.2" top="0.2" height="1.5" slices="10" stacks="10" />
+        </primitive>
     </primitives>
 
     <components>
@@ -145,6 +169,33 @@
             <texture id="none"/>
             <children>
                 <componentref id="robot" />
+                <!--  <componentref id="standingPlane" /> -->
+               <!-- <componentref id="wave" />  -->
+            </children>
+        </component>
+
+        <!--   <component id="standingPlane">
+            <transformation>
+                <scale x = "10" y = "10" z= "10"/>
+            </transformation>
+            <materials>
+                <material id="robotMaterialBody" />
+            </materials>
+            <texture id="none" />
+            <children>
+                <primitiveref id="robotPlane"/>
+            </children>
+        </component> -->
+
+        <component id="wave">
+            <transformation>
+            </transformation>
+            <materials>
+                <material id="robotMaterialBody" />
+            </materials>
+            <texture id="robotTexture" length_s="1" length_t = "1"/>
+            <children>
+                <primitiveref id="robotPatch"/>
             </children>
         </component>
 

@@ -35,7 +35,7 @@ class XMLscene extends CGFscene {
         this.gl.depthFunc(this.gl.LEQUAL);
 
         this.axis = new CGFaxis(this);
-        this.setUpdatePeriod(80);
+        this.setUpdatePeriod(1000/60);
     }
     /**
      * Checks key input at each period defined with setUpdatePeriod
@@ -43,7 +43,7 @@ class XMLscene extends CGFscene {
     update(currentTime) {
         var deltaTime = currentTime - this.lastTime;
 
-        if (this.sceneInited) {
+        if (currentTime % 2 == 0 && this.sceneInited) {
             this.checkKey();
         }
 
@@ -130,7 +130,7 @@ class XMLscene extends CGFscene {
         this.interface.initKeys();
 
         this.initView();
-
+       
         this.sceneInited = true;
     }
     /**

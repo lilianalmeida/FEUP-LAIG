@@ -10,6 +10,7 @@ class MyKeyframeAnimation extends MyAnimation {
         this.elapsedTime = 0;
         this.maxKeyframe = 0;
         this.maxKeyframeIndex = 0;
+        this.scaling = [1,1,1];
         this.initAnimation();
     }
     initAnimation() {
@@ -84,20 +85,15 @@ class MyKeyframeAnimation extends MyAnimation {
         this.animMatrix = mat4.rotate(this.animMatrix, this.animMatrix, rotation[2], [0, 0, 1]);
 
         //  Scale
-        var ratioX = Math.pow(this.keyframes[maxIndex].scale[0] / this.keyframes[minIndex].scale[0], 1 / this.keyframes[maxIndex].instant);
-        var ratioY = Math.pow(this.keyframes[maxIndex].scale[1] / this.keyframes[minIndex].scale[1], 1 / this.keyframes[maxIndex].instant);
-        var ratioZ = Math.pow(this.keyframes[maxIndex].scale[2] / this.keyframes[minIndex].scale[2], 1 / this.keyframes[maxIndex].instant);
+        var ratioX = Math.pow(this.keyframes[maxIndex].scale[0] / this.keyframes[minIndex].scale[0], 1 / ((this.keyframes[maxIndex].instant- this.keyframes[minIndex].instant)/(1/60)));
+        var ratioY = Math.pow(this.keyframes[maxIndex].scale[1] / this.keyframes[minIndex].scale[1], 1 / ((this.keyframes[maxIndex].instant- this.keyframes[minIndex].instant)/(1/60)));
+        var ratioZ = Math.pow(this.keyframes[maxIndex].scale[2] / this.keyframes[minIndex].scale[2], 1 / ((this.keyframes[maxIndex].instant- this.keyframes[minIndex].instant)/(1/60)));
 
-        var scaling = [];
-        scaling[0] = this.keyframes[minIndex].scale[0] * Math.pow(ratioX, this.elapsedTime);
-        scaling[1] = this.keyframes[minIndex].scale[1] * Math.pow(ratioY, this.elapsedTime);
-        scaling[2] = this.keyframes[minIndex].scale[2] * Math.pow(ratioZ, this.elapsedTime);
+        this.scaling[0] *= ratioX;
+        this.scaling[1] *= ratioY;
+        this.scaling[2] *= ratioZ;
 
-
-
-        this.animMatrix = mat4.translate(this.animMatrix, this.animMatrix, vec3.fromValues(-translation[0], -translation[1], -translation[2]));
-        this.animMatrix = mat4.scale(this.animMatrix, this.animMatrix, scaling);
-        this.animMatrix = mat4.translate(this.animMatrix, this.animMatrix, translation);
+        this.animMatrix = mat4.scale(this.animMatrix, this.animMatrix, this.scaling);
 
     }
 
