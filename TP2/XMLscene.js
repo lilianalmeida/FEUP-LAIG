@@ -60,8 +60,10 @@ class XMLscene extends CGFscene {
      * Initializes the scene cameras.
      */
     initCameras() {
-        this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
-        this.cameraRTT = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
+        this.cameraDefault = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
+        this.cameraRTT = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(-15, -10, -15), vec3.fromValues(0, 0, 0));
+
+        this.camera = this.cameraDefault;
     }
     /**
      * Initializes the scene lights with the values read from the XML file.
@@ -138,10 +140,10 @@ class XMLscene extends CGFscene {
 
         this.sceneInited = true;
     }
-    initShader(){
+    initShader() {
         this.securityCamera = new MySecurityCamera(this);
 
-       // this.securityCameraShader.setUniformsValues({uSampler2: 0});
+        // this.securityCameraShader.setUniformsValues({uSampler2: 0});
     }
     /**
      * Initializes scene camera with the parsed default view
@@ -156,7 +158,7 @@ class XMLscene extends CGFscene {
     changeView() {
         this.graph.defaultView = this.interface.cameraIndex;
         this.camera = this.graph.views[this.graph.defaultView];
-        this.interface.setActiveCamera(this.camera);
+        this.interface.setActiveCamera(this.cameraDefault);
     }
     /**
      * Checks if key 'M' is pressed and increments the current array material index for each node
@@ -170,11 +172,17 @@ class XMLscene extends CGFscene {
      * Displays the scene.
      */
     display() {
-        
+
         this.rttTexture.attachToFrameBuffer();
-        this.render(this.camera);
+        // aplies camera non-active
+        this.camera = this.cameraRTT;
+        this.render(this.cameraRTT);
         this.rttTexture.detachFromFrameBuffer();
-        this.render(this.camera);
+
+        //aplies active camera
+        this.camera = this.cameraDefault;
+        this.interface.setActiveCamera(this.camera);
+        this.render(this.cameraDefault);
 
         this.gl.disable(this.gl.DEPTH_TEST);
         this.securityCamera.display(this.rttTexture);
@@ -183,13 +191,12 @@ class XMLscene extends CGFscene {
 
     render(camera) {
         // ---- BEGIN Background, camera and axis setup
-        
+
         // Clear image and depth buffer everytime we update the scene
         this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 
-      /*  this.camera = camera;
-        this.interface.setActiveCamera(this.camera);*/
+
 
         // Initialize Model-View matrix as identity (no transformation
         this.updateProjectionMatrix();
