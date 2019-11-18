@@ -49,10 +49,16 @@ class XMLscene extends CGFscene {
         if (currentTime % 2 == 0 && this.sceneInited) {
             this.checkKey();
         }
-
-        if (this.sceneInited) {
-            this.graph.nodesGraph["arms"].animation.update(deltaTime / 1000);
+        
+        if(this.sceneInited){
+            for(var node in this.graph.nodesGraph){
+               if( this.graph.nodesGraph[node].animation != null){
+                this.graph.nodesGraph[node].animation.update(deltaTime/1000);
+               }
+            }
         }
+
+        this.securityCamera.update(currentTime);
 
         this.lastTime = currentTime;
     }
@@ -61,7 +67,7 @@ class XMLscene extends CGFscene {
      */
     initCameras() {
         this.cameraDefault = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
-        this.cameraRTT = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(-15, -10, -15), vec3.fromValues(0, 0, 0));
+        this.cameraRTT = this.cameraDefault;
 
         this.camera = this.cameraDefault;
     }
@@ -137,7 +143,6 @@ class XMLscene extends CGFscene {
 
         this.initView();
 
-
         this.sceneInited = true;
     }
     initShader() {
@@ -149,7 +154,8 @@ class XMLscene extends CGFscene {
      * Initializes scene camera with the parsed default view
      */
     initView() {
-        this.camera = this.graph.views[this.graph.defaultView];
+        this.cameraDefault = this.graph.views[this.graph.defaultView];
+        this.cameraRTT = this.graph.views[this.graph.defaultView];
         this.interface.setActiveCamera(this.camera);
     }
     /**
@@ -157,8 +163,9 @@ class XMLscene extends CGFscene {
      */
     changeView() {
         this.graph.defaultView = this.interface.cameraIndex;
-        this.camera = this.graph.views[this.graph.defaultView];
+        this.cameraDefault = this.graph.views[this.graph.defaultView];
         this.interface.setActiveCamera(this.cameraDefault);
+        this.cameraRTT = this.graph.views[this.interface.securityCameraIndex];
     }
     /**
      * Checks if key 'M' is pressed and increments the current array material index for each node
