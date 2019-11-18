@@ -241,6 +241,7 @@ class MySceneGraph {
      */
     parseView(viewsNode) {
         this.views = [];                    // Array with parsed views
+        this.securityCameras = [];
         var children = viewsNode.children   // Perspective and ortho views
 
         this.defaultView = this.reader.getString(viewsNode, 'default')  // Dedault view
@@ -321,7 +322,9 @@ class MySceneGraph {
 
         // Creates a new perspective view and adds it to the array
         var newP = new CGFcamera(angle, near, far, from, to);
+        var newP2 = new CGFcamera(angle, near, far, from, to);
         this.views[id] = newP;
+        this.securityCameras[id] = newP2;
     }
 
     /**
@@ -388,7 +391,9 @@ class MySceneGraph {
 
         // Creates a new ortho view and adds it to the array
         var newO = new CGFcameraOrtho(left, right, bottom, top, near, far, from, to, up);
+        var newO2 = new CGFcameraOrtho(left, right, bottom, top, near, far, from, to, up);
         this.views[id] = newO;
+        this.securityCameras[id] = newO2;
     }
 
     /**
@@ -1111,7 +1116,7 @@ class MySceneGraph {
                 for (var j = 0; j < npointsU; j++) {
                     var controlPointsU = [];
                     for (var k = 0; k < npointsV; k++) {
-                        if (grandgrandChildren[j * npointsV + k].nodeName != 'controlpoint'){
+                        if (grandgrandChildren[j * npointsV + k].nodeName != 'controlpoint') {
                             return "unknown tag <" + grandgrandChildren[j * npointsV + k].nodeName + ">";
                         }
 
@@ -1130,7 +1135,7 @@ class MySceneGraph {
             }
 
             // Adds the primitive as a new node of the graph
-            var nodeGraph = new MyNode(this.scene, primitiveId, true);  
+            var nodeGraph = new MyNode(this.scene, primitiveId, true);
             this.nodesGraph[primitiveId] = nodeGraph;
         }
         this.log("Parsed primitives");

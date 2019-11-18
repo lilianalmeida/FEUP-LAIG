@@ -67,7 +67,7 @@ class XMLscene extends CGFscene {
      */
     initCameras() {
         this.cameraDefault = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
-        this.cameraRTT = this.cameraDefault;
+        this.cameraRTT = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
 
         this.camera = this.cameraDefault;
     }
@@ -155,7 +155,8 @@ class XMLscene extends CGFscene {
      */
     initView() {
         this.cameraDefault = this.graph.views[this.graph.defaultView];
-        this.cameraRTT = this.graph.views[this.graph.defaultView];
+        this.cameraRTT = this.graph.securityCameras[this.graph.defaultView];
+        this.camera = this.cameraDefault;
         this.interface.setActiveCamera(this.camera);
     }
     /**
@@ -164,8 +165,9 @@ class XMLscene extends CGFscene {
     changeView() {
         this.graph.defaultView = this.interface.cameraIndex;
         this.cameraDefault = this.graph.views[this.graph.defaultView];
-        this.interface.setActiveCamera(this.cameraDefault);
-        this.cameraRTT = this.graph.views[this.interface.securityCameraIndex];
+        this.camera = this.cameraDefault;
+        this.interface.setActiveCamera(this.camera);
+        this.cameraRTT = this.graph.securityCameras[this.interface.securityCameraIndex];
     }
     /**
      * Checks if key 'M' is pressed and increments the current array material index for each node

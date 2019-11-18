@@ -30,11 +30,13 @@ class MyInterface extends CGFinterface {
      */
     addCameraGroup() {
         this.viewsVec = Object.keys(this.scene.graph.views);
+        this.securityViewsVec = Object.keys(this.scene.graph.securityCameras);
+        
         this.cameraIndex = this.scene.graph.defaultView;
         this.securityCameraIndex = this.scene.graph.defaultView;
 
         this.gui.add(this, 'cameraIndex', this.viewsVec).name('View').onChange(this.scene.changeView.bind(this.scene));
-        this.gui.add(this, 'securityCameraIndex', this.viewsVec).name('SC View').onChange(this.scene.changeView.bind(this.scene));
+        this.gui.add(this, 'securityCameraIndex', this.securityViewsVec).name('SC View').onChange(this.scene.changeView.bind(this.scene));
     }
 
     /**
