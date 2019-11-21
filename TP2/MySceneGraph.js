@@ -323,6 +323,7 @@ class MySceneGraph {
         // Creates a new perspective view and adds it to the array
         var newP = new CGFcamera(angle, near, far, from, to);
         var newP2 = new CGFcamera(angle, near, far, from, to);
+
         this.views[id] = newP;
         this.securityCameras[id] = newP2;
     }
@@ -335,7 +336,8 @@ class MySceneGraph {
         var children = [];  // Properties 'from', 'to' and 'up' of perpective view
 
         var from, to;
-        var up = vec3.fromValues(0, 1, 0);  // Property 'up' initialized with default value
+        var up = vec3.fromValues(0, 1, 0);  // Property 'up' initialized with default value for default camera
+        var upSC = vec3.fromValues(0, 1, 0);  // Property 'up' initialized with default value for security camera
 
         // Gets perspective view id
         var id = this.reader.getString(oNode, 'id');
@@ -382,6 +384,7 @@ class MySceneGraph {
             }
             else if (children.length == 3 && children[j].nodeName == 'up') {
                 up = this.parseCoordinates3D(children[j], "up component for ortho view with ID " + id);
+                upSC = this.parseCoordinates3D(children[j], "up component for ortho view with ID " + id);
             }
             else {
                 this.onXMLMinorError("unknown tag <" + children[j].nodeName + ">");
@@ -391,9 +394,10 @@ class MySceneGraph {
 
         // Creates a new ortho view and adds it to the array
         var newO = new CGFcameraOrtho(left, right, bottom, top, near, far, from, to, up);
-        var newO2 = new CGFcameraOrtho(left, right, bottom, top, near, far, from, to, up);
         this.views[id] = newO;
-        this.securityCameras[id] = newO2;
+
+        var newOrthoCamera = new CGFcameraOrtho(left, right, bottom, top, near, far, from, to, upSC);
+        this.securityCameras[id] = newOrthoCamera;
     }
 
     /**

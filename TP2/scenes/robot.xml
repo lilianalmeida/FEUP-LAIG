@@ -13,6 +13,11 @@
             <up x="-0.11" y="1" z="0.19" />
         </ortho>
 
+        <ortho id="otherView" near="0.1" far="70" left="-8.0" right="8.0" top="8.0" bottom="-8.0">
+            <from x="5.13" y="10.65" z="-10.9" />
+            <to x="5.96" y="2.35" z="1.18" />
+            <up x="-0.11" y="1" z="0.19" />
+        </ortho>
     </views>
 
     <globals>
@@ -135,7 +140,7 @@
         <primitive id="robotPlane">
             <plane npartsU="2" npartsV="2" />
         </primitive>
-       <!-- <primitive id="robotPatch">
+        <!-- <primitive id="robotPatch">
             <patch npointsU="3" npointsV="4" npartsU="20" npartsV="20">
                 <controlpoint x="-2" y="-2" z="1" />
                 <controlpoint x="-2" y="-1" z="-2" />
@@ -170,7 +175,7 @@
             <children>
                 <componentref id="robot" />
                 <!--  <componentref id="standingPlane" /> -->
-               <!-- <componentref id="wave" />  -->
+                <!-- <componentref id="wave" />  -->
             </children>
         </component>
 

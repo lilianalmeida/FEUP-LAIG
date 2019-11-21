@@ -35,10 +35,10 @@ class XMLscene extends CGFscene {
         this.gl.depthFunc(this.gl.LEQUAL);
 
         this.rttTexture = new CGFtextureRTT(this, this.gl.canvas.width, this.gl.canvas.height);
+        this.securityCamera = new MySecurityCamera(this);
 
         this.axis = new CGFaxis(this);
         this.setUpdatePeriod(1000 / 60);
-        this.initShader();
     }
     /**
      * Checks key input at each period defined with setUpdatePeriod
@@ -49,12 +49,12 @@ class XMLscene extends CGFscene {
         if (currentTime % 2 == 0 && this.sceneInited) {
             this.checkKey();
         }
-        
-        if(this.sceneInited){
-            for(var node in this.graph.nodesGraph){
-               if( this.graph.nodesGraph[node].animation != null){
-                this.graph.nodesGraph[node].animation.update(deltaTime/1000);
-               }
+
+        if (this.sceneInited) {
+            for (var node in this.graph.nodesGraph) {
+                if (this.graph.nodesGraph[node].animation != null) {
+                    this.graph.nodesGraph[node].animation.update(deltaTime / 1000);
+                }
             }
         }
 
@@ -141,32 +141,22 @@ class XMLscene extends CGFscene {
         this.interface.addLightGroup();
         this.interface.initKeys();
 
-        this.initView();
+        this.initViews();
 
         this.sceneInited = true;
-    }
-    initShader() {
-        this.securityCamera = new MySecurityCamera(this);
-
-        // this.securityCameraShader.setUniformsValues({uSampler2: 0});
     }
     /**
      * Initializes scene camera with the parsed default view
      */
-    initView() {
+    initViews() {
         this.cameraDefault = this.graph.views[this.graph.defaultView];
         this.cameraRTT = this.graph.securityCameras[this.graph.defaultView];
-        this.camera = this.cameraDefault;
-        this.interface.setActiveCamera(this.camera);
     }
     /**
      * Changes the scene camera when the current view is changed in the interface
      */
     changeView() {
-        this.graph.defaultView = this.interface.cameraIndex;
-        this.cameraDefault = this.graph.views[this.graph.defaultView];
-        this.camera = this.cameraDefault;
-        this.interface.setActiveCamera(this.camera);
+        this.cameraDefault = this.graph.views[this.interface.cameraIndex];
         this.cameraRTT = this.graph.securityCameras[this.interface.securityCameraIndex];
     }
     /**
@@ -181,23 +171,18 @@ class XMLscene extends CGFscene {
      * Displays the scene.
      */
     display() {
-
         this.rttTexture.attachToFrameBuffer();
-        // aplies camera non-active
-        this.camera = this.cameraRTT;
         this.render(this.cameraRTT);
         this.rttTexture.detachFromFrameBuffer();
-
-        //aplies active camera
-        this.camera = this.cameraDefault;
-        this.interface.setActiveCamera(this.camera);
         this.render(this.cameraDefault);
 
         this.gl.disable(this.gl.DEPTH_TEST);
         this.securityCamera.display(this.rttTexture);
         this.gl.enable(this.gl.DEPTH_TEST);
     }
-
+    /**
+     * Renders the scene applying the camera given.
+     */
     render(camera) {
         // ---- BEGIN Background, camera and axis setup
 
@@ -205,7 +190,8 @@ class XMLscene extends CGFscene {
         this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 
-
+        this.camera = camera;
+        this.interface.setActiveCamera(this.camera);
 
         // Initialize Model-View matrix as identity (no transformation
         this.updateProjectionMatrix();

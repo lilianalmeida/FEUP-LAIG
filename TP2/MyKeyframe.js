@@ -1,7 +1,6 @@
 /**
  * MyKeyframe
  * @constructor
- * 
  */
 class MyKeyframe {
     constructor() {

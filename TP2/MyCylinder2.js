@@ -2,6 +2,11 @@
  * MyCylinder2
  * @constructor
  * @param scene - Reference to MyScene object
+ * @param base - Radius of the base (Z = 0)
+ * @param top - Radius of the top (Z = height)
+ * @param height - Size of the cylinder in the direction of the positive Z axis
+ * @param slices - Number of divisions around the circumference
+ * @param stacks - Number of divisions along the Z direction
  */
 class MyCylinder2 extends CGFobject {
     constructor(scene, base, top, height, slices, stacks) {
@@ -42,16 +47,26 @@ class MyCylinder2 extends CGFobject {
         ];
 
         var nurbsSurface = new CGFnurbsSurface(3, 1, controlPoints);
-        this.cylinderUpper = new CGFnurbsObject(this.scene, this.slices, this.stacks, nurbsSurface);
+        this.semiCylinder = new CGFnurbsObject(this.scene, this.slices, this.stacks, nurbsSurface);
     }
+    /**
+     * @method display
+     * Applies transformations and displays two semicylinders to form one cylinder
+     */
     display() {
         this.scene.pushMatrix();
-        this.cylinderUpper.display();
+        this.semiCylinder.display();
         this.scene.rotate(Math.PI, 0, 0, 1);
-        this.cylinderUpper.display();
+        this.semiCylinder.display();
         this.scene.popMatrix();
-
     }
+
+    /**
+	 * @method updateTexCoords
+	 * Updates the list of texture coordinates of the cylinder
+	 * @param {real} length_s - texture scale factor in s axis
+	 * @param {real} length_t - texture scale factor in t axis
+	 */
     updateTexCoords(length_s, length_t) {
     }
 }

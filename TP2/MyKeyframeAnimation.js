@@ -1,7 +1,8 @@
 /**
  * MyKeyframeAnimation
  * @constructor
- * 
+ * @param id - Animation id
+ * @param keyframes - Animation keyframes vector
  */
 class MyKeyframeAnimation extends MyAnimation {
     constructor(id, keyframes) {
@@ -10,7 +11,7 @@ class MyKeyframeAnimation extends MyAnimation {
         this.elapsedTime = 0;
         this.maxKeyframe = 0;
         this.maxKeyframeIndex = 0;
-        this.scaling = [1,1,1];
+        this.scaling = [1, 1, 1];
         this.initAnimation();
     }
     initAnimation() {
@@ -21,6 +22,10 @@ class MyKeyframeAnimation extends MyAnimation {
             }
         }
     }
+
+    /**
+     * Updates animation state according to time passed
+     */
     update(deltaTime) {
         this.elapsedTime += deltaTime;
         var minIndex = 0;
@@ -85,9 +90,9 @@ class MyKeyframeAnimation extends MyAnimation {
         this.animMatrix = mat4.rotate(this.animMatrix, this.animMatrix, rotation[2], [0, 0, 1]);
 
         //  Scale
-        var ratioX = Math.pow(this.keyframes[maxIndex].scale[0] / this.keyframes[minIndex].scale[0], 1 / ((this.keyframes[maxIndex].instant- this.keyframes[minIndex].instant)/(1/60)));
-        var ratioY = Math.pow(this.keyframes[maxIndex].scale[1] / this.keyframes[minIndex].scale[1], 1 / ((this.keyframes[maxIndex].instant- this.keyframes[minIndex].instant)/(1/60)));
-        var ratioZ = Math.pow(this.keyframes[maxIndex].scale[2] / this.keyframes[minIndex].scale[2], 1 / ((this.keyframes[maxIndex].instant- this.keyframes[minIndex].instant)/(1/60)));
+        var ratioX = Math.pow(this.keyframes[maxIndex].scale[0] / this.keyframes[minIndex].scale[0], 1 / ((this.keyframes[maxIndex].instant - this.keyframes[minIndex].instant) / (1 / 60)));
+        var ratioY = Math.pow(this.keyframes[maxIndex].scale[1] / this.keyframes[minIndex].scale[1], 1 / ((this.keyframes[maxIndex].instant - this.keyframes[minIndex].instant) / (1 / 60)));
+        var ratioZ = Math.pow(this.keyframes[maxIndex].scale[2] / this.keyframes[minIndex].scale[2], 1 / ((this.keyframes[maxIndex].instant - this.keyframes[minIndex].instant) / (1 / 60)));
 
         this.scaling[0] *= ratioX;
         this.scaling[1] *= ratioY;
@@ -97,7 +102,9 @@ class MyKeyframeAnimation extends MyAnimation {
 
     }
 
-
+    /**
+     * Applies transformation to transformations matrix of the scene when needed
+     */
     apply() {
         return this.animMatrix;
     }
