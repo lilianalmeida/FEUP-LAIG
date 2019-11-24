@@ -36,7 +36,7 @@ class MyCylinder2 extends CGFobject {
             ],
             // U = 2
             [ // V = 0..1
-                [this.base, yHeightTop, this.height, 1],
+                [this.top, yHeightTop, this.height, 1],
                 [this.base, yHeightBase, 0.0, 1]
             ],
             // U = 3

@@ -790,7 +790,6 @@ class MySceneGraph {
         var grandgrandChildren = [];            // Keyframes properties
         var nodeNames;                          // Keyframes properties names
 
-        var keyframes = [];     // Array with each animation keyframes
         this.animations = [];   // Array with all animations
 
         // Any number of animations
@@ -811,6 +810,7 @@ class MySceneGraph {
                 return "ID must be unique for each animation (conflict: ID = " + animationId + ")";
 
             grandChildren = children[i].children;
+            var keyframes = [];     // Array with each animation keyframes
 
             var keyframe0 = new MyKeyframe();
             keyframe0.instant = 0;
@@ -1124,7 +1124,7 @@ class MySceneGraph {
                             return "unknown tag <" + grandgrandChildren[j * npointsV + k].nodeName + ">";
                         }
 
-                        var coordinates = this.parseCoordinates3D(grandgrandChildren[j * npointsV + k], "control point for patch primitive");
+                        var coordinates = this.parseCoordinatesDuplicated3D(grandgrandChildren[j * npointsV + k], "control point for patch primitive");
                         if (!Array.isArray(coordinates))
                             return coordinates;
 
@@ -1387,6 +1387,34 @@ class MySceneGraph {
      * @param {block element} node
      * @param {message to be displayed in case of error} messageError
      */
+    parseCoordinatesDuplicated3D(node, messageError) {
+        var position = [];
+
+        // xx
+        var x = this.reader.getFloat(node, 'xx');
+        if (!(x != null && !isNaN(x)))
+            return "unable to parse x-coordinate of the " + messageError;
+
+        // yy
+        var y = this.reader.getFloat(node, 'yy');
+        if (!(y != null && !isNaN(y)))
+            return "unable to parse y-coordinate of the " + messageError;
+
+        // zz
+        var z = this.reader.getFloat(node, 'zz');
+        if (!(z != null && !isNaN(z)))
+            return "unable to parse z-coordinate of the " + messageError;
+
+        position.push(...[x, y, z]);
+
+        return position;
+    }
+
+    /**
+     * Parse the coordinates from a node with ID = id
+     * @param {block element} node
+     * @param {message to be displayed in case of error} messageError
+     */
     parseCoordinates4D(node, messageError) {
         var position = [];
 
@@ -1608,12 +1636,12 @@ class MySceneGraph {
     updateTransf(transP, transC, animation) {
         var mout = mat4.create();
         mout = mat4.multiply(mout, mout, transP);
+        mout = mat4.multiply(mout, mout, transC);
         if (animation != null) {
             if (animation.apply() != null) {
                 mout = mat4.multiply(mout, mout, animation.apply());
             }
         }
-        mout = mat4.multiply(mout, mout, transC);
         return mout;
     }
 

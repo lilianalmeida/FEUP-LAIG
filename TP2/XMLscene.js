@@ -1,4 +1,5 @@
 var DEGREE_TO_RAD = Math.PI / 180;
+var UPDATE_RATE = 1000 / 60;
 
 /**
  * XMLscene class, representing the scene that is to be rendered.
@@ -38,7 +39,7 @@ class XMLscene extends CGFscene {
         this.securityCamera = new MySecurityCamera(this);
 
         this.axis = new CGFaxis(this);
-        this.setUpdatePeriod(1000 / 60);
+        this.setUpdatePeriod(UPDATE_RATE);
     }
     /**
      * Checks key input at each period defined with setUpdatePeriod

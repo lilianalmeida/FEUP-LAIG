@@ -29,14 +29,17 @@ class MyInterface extends CGFinterface {
      * Adds a dropdown box to select a ID view from all views available
      */
     addCameraGroup() {
+        var camerasGroup = this.gui.addFolder("Cameras");
+        camerasGroup.open();
+
         this.viewsVec = Object.keys(this.scene.graph.views);
         this.securityViewsVec = Object.keys(this.scene.graph.securityCameras);
 
         this.cameraIndex = this.scene.graph.defaultView;
         this.securityCameraIndex = this.scene.graph.defaultView;
 
-        this.gui.add(this, 'cameraIndex', this.viewsVec).name('View').onChange(this.scene.changeView.bind(this.scene));
-        this.gui.add(this, 'securityCameraIndex', this.securityViewsVec).name('SC View').onChange(this.scene.changeView.bind(this.scene));
+        camerasGroup.add(this, 'cameraIndex', this.viewsVec).name('View').onChange(this.scene.changeView.bind(this.scene));
+        camerasGroup.add(this, 'securityCameraIndex', this.securityViewsVec).name('SC View').onChange(this.scene.changeView.bind(this.scene));
     }
 
     /**

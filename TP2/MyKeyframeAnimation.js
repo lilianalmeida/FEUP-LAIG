@@ -34,8 +34,6 @@ class MyKeyframeAnimation extends MyAnimation {
         var min = 0;
         this.animMatrix = mat4.create();
 
-        //console.log("Elapsed " + this.elapsedTime);
-
         for (var i = 0; i < this.keyframes.length; i++) {
             if (this.keyframes[i].instant < this.elapsedTime) {
                 if (this.keyframes[i].instant >= min) {
@@ -57,9 +55,6 @@ class MyKeyframeAnimation extends MyAnimation {
             }
         }
 
-        //console.log("max = " + max);
-        //console.log("min = " + min);
-
         // End of animation
         if (this.elapsedTime > this.maxKeyframe) {
             this.animMatrix = mat4.translate(this.animMatrix, this.animMatrix, this.keyframes[this.maxKeyframeIndex].translate);
@@ -73,7 +68,6 @@ class MyKeyframeAnimation extends MyAnimation {
         var delta = (this.keyframes[maxIndex].instant - this.keyframes[minIndex].instant);
 
         // Translate
-        // (initialTime - keyFrame.min.instant) * delta_translate /  delta
         var translation = [];
         translation[0] = this.keyframes[minIndex].translate[0] + (this.elapsedTime - this.keyframes[minIndex].instant) * (this.keyframes[maxIndex].translate[0] - this.keyframes[minIndex].translate[0]) / delta;
         translation[1] = this.keyframes[minIndex].translate[1] + (this.elapsedTime - this.keyframes[minIndex].instant) * (this.keyframes[maxIndex].translate[1] - this.keyframes[minIndex].translate[1]) / delta;
@@ -89,17 +83,16 @@ class MyKeyframeAnimation extends MyAnimation {
         this.animMatrix = mat4.rotate(this.animMatrix, this.animMatrix, rotation[1], [0, 1, 0]);
         this.animMatrix = mat4.rotate(this.animMatrix, this.animMatrix, rotation[2], [0, 0, 1]);
 
-        //  Scale
-        var ratioX = Math.pow(this.keyframes[maxIndex].scale[0] / this.keyframes[minIndex].scale[0], 1 / ((this.keyframes[maxIndex].instant - this.keyframes[minIndex].instant) / (1 / 60)));
-        var ratioY = Math.pow(this.keyframes[maxIndex].scale[1] / this.keyframes[minIndex].scale[1], 1 / ((this.keyframes[maxIndex].instant - this.keyframes[minIndex].instant) / (1 / 60)));
-        var ratioZ = Math.pow(this.keyframes[maxIndex].scale[2] / this.keyframes[minIndex].scale[2], 1 / ((this.keyframes[maxIndex].instant - this.keyframes[minIndex].instant) / (1 / 60)));
+        //  Scale    
+        var ratioX = Math.pow(this.keyframes[maxIndex].scale[0] / this.keyframes[minIndex].scale[0], 1 / (this.keyframes[maxIndex].instant - this.keyframes[minIndex].instant));
+        var ratioY = Math.pow(this.keyframes[maxIndex].scale[1] / this.keyframes[minIndex].scale[1], 1 / (this.keyframes[maxIndex].instant - this.keyframes[minIndex].instant));
+        var ratioZ = Math.pow(this.keyframes[maxIndex].scale[2] / this.keyframes[minIndex].scale[2], 1 / (this.keyframes[maxIndex].instant - this.keyframes[minIndex].instant));
 
-        this.scaling[0] *= ratioX;
-        this.scaling[1] *= ratioY;
-        this.scaling[2] *= ratioZ;
+        this.scaling[0] = Math.pow(ratioX, (this.elapsedTime - this.keyframes[minIndex].instant)) * this.keyframes[minIndex].scale[0];
+        this.scaling[1] = Math.pow(ratioY, (this.elapsedTime - this.keyframes[minIndex].instant)) * this.keyframes[minIndex].scale[1];
+        this.scaling[2] = Math.pow(ratioZ, (this.elapsedTime - this.keyframes[minIndex].instant)) * this.keyframes[minIndex].scale[2];
 
         this.animMatrix = mat4.scale(this.animMatrix, this.animMatrix, this.scaling);
-
     }
 
     /**

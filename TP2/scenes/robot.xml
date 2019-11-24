@@ -2,18 +2,18 @@
     <scene root="root" axis_length="5"/>
 
     <views default="frontView">
-        <perspective id="frontView" near="0.1" far="500" angle="90">
-            <from x="0" y="5.5" z="8" />
+        <perspective id="frontView" near="0.005" far="500" angle="45">
+            <from x="0" y="65.5" z="90.5" />
             <to x="0" y="1.5" z="0" />
         </perspective>
 
-        <ortho id="backView" near="0.1" far="70" left="-8.0" right="8.0" top="8.0" bottom="-8.0">
+        <ortho id="backView" near="0.005" far="500" left="-8.0" right="8.0" top="8.0" bottom="-8.0">
             <from x="11.13" y="7.65" z="-16.9" />
             <to x="1.96" y="3.35" z="0.18" />
             <up x="-0.11" y="1" z="0.19" />
         </ortho>
 
-        <ortho id="otherView" near="0.1" far="70" left="-8.0" right="8.0" top="8.0" bottom="-8.0">
+        <ortho id="otherView" near="0.005" far="500" left="-8.0" right="8.0" top="8.0" bottom="-8.0">
             <from x="5.13" y="10.65" z="-10.9" />
             <to x="5.96" y="2.35" z="1.18" />
             <up x="-0.11" y="1" z="0.19" />
@@ -22,21 +22,21 @@
 
     <globals>
         <ambient r="0.2" g="0.2" b="0.2" a="1.0" />
-        <background r="1.0" g="1.0" b="1.0" a="1.0" />
+        <background r="0.0" g="0.0" b="0.0" a="1.0" />
     </globals>
 
     <lights>
-        <omni id="robotBackLight" enabled="0">
+        <!--<omni id="robotBackLight" enabled="0">
             <location x="-0.5" y="0.5" z="0" w="1.0" />
             <ambient r="0" g="0" b="0" a="1.0" />
             <diffuse r="0.2" g="0.0" b="1.0" a="1.0" />
             <specular r="0.4" g="0.4" b="1.0" a="1.0" />
             <attenuation constant="0" linear="1" quadratic="0" />
-        </omni>
+        </omni>-->
         <spot id="robotFrontLight" enabled="1" angle="10" exponent="1">
             <location x="9.8" y="11.9" z="10" w="1.0" />
             <target x="0" y="0" z="0" />
-            <ambient r="0.35" g="0.35" b="0.35" a="1.0" />
+            <ambient r="0.75" g="0.75" b="0.75" a="1.0" />
             <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
             <specular r="1.0" g="1.0" b="1.0" a="1.0" />
             <attenuation constant="1" linear="0" quadratic="0" />
@@ -44,37 +44,42 @@
     </lights>
 
     <textures>
-        <texture id="robotTexture" file="scenes/images/square.png" />
-        <texture id="robotArmLeg" file="scenes/images/square2.jpg" />
+        <texture id="crumpledPaper" file="scenes/images/paperCrumpled.jpg" />
+        <texture id="wheels" file="scenes/images/tireTex.jpg" />
+        <texture id="bodyFront" file="scenes/images/walleFront.jpg" />
+        <texture id="bodySide" file="scenes/images/walleSide.jpg" />
+        <texture id="bodyTop" file="scenes/images/walleTop.jpg" />
+        <texture id="bodyBottom" file="scenes/images/walleBottom.jpg" />
+        <texture id="bodyBack" file="scenes/images/walleBack.jpg" />
+        <texture id="bodySide2" file="scenes/images/walleSide2.jpg" />
+        <texture id="eyes" file="scenes/images/walleEyes.jpg" />
+        <texture id="eyeballs" file="scenes/images/eyes.jpg" />
+        <texture id="roomLeft" file="scenes/images/LeftSpace.png" />
+        <texture id="roomRight" file="scenes/images/rightSpace.png" />
+        <texture id="roomTop" file="scenes/images/UpSpace.png" />
+        <texture id="roomBottom" file="scenes/images/DownSpace.png" />
+        <texture id="roomBack" file="scenes/images/BackSpace.png" />
+        <texture id="roomFront" file="scenes/images/FrontSpace.png" />
+        <texture id="moonSurfaceText" file="scenes/images/moonSurface.jpg" />
+        <texture id="cokeCan" file="scenes/images/cokeCan.jpg" />
+        <texture id="cokeCanTop" file="scenes/images/cokeCanTop.jpg" />
+        <texture id="cokeCanBottom" file="scenes/images/cokeCanBottom.jpg" />
+        <texture id="trashText" file="scenes/images/trash.jpg" />
     </textures>
 
     <materials>
-        <material id="robotMaterialBody" shininess="10">
+        <material id="whiteMaterial" shininess="10">
             <emission r="0.0" g="0.0" b="0.0" a="1.0" />
-            <ambient r="0.4" g="0.5" b="0.5" a="1.0" />
-            <diffuse r="0.2" g="0.3" b="0.3" a="1.0" />
-            <specular r="0.3" g="0.3" b="0.3" a="1.0" />
+            <ambient r="0.9" g="0.9" b="0.9" a="1.0" />
+            <diffuse r="0.9" g="0.9" b="0.9" a="1.0" />
+            <specular r="0.9" g="0.9" b="0.9" a="1.0" />
         </material>
 
-        <material id="robotMaterialMembers" shininess="8">
+        <material id="yellowMaterial" shininess="5">
             <emission r="0.0" g="0.0" b="0.0" a="1.0" />
-            <ambient r="0.8" g="0.8" b="0.8" a="1.0" />
-            <diffuse r="0.5" g="0.5" b="0.5" a="1.0" />
-            <specular r="0.8" g="0.8" b="0.8" a="1.0" />
-        </material>
-
-        <material id="robotMaterialSpheres" shininess="5">
-            <emission r="0.0" g="0.0" b="0.0" a="1.0" />
-            <ambient r="1.0" g="1.0" b="0.3" a="1.0" />
-            <diffuse r="0.8" g="0.8" b="0.1" a="1.0" />
-            <specular r="0.8" g="0.8" b="0.1" a="1.0" />
-        </material>
-
-        <material id="robotMaterialMouth" shininess="2">
-            <emission r="0.0" g="0.0" b="0.0" a="1.0" />
-            <ambient r="1.0" g="0.0" b="0.0" a="1.0" />
-            <diffuse r="0.8" g="0.0" b="0.0" a="1.0" />
-            <specular r="0.8" g="0.0" b="0.0" a="1.0" />
+            <ambient r="0.97254" g="0.6667" b="0.0863" a="1.0" />
+            <diffuse r="0.9" g="0.66" b="0.08" a="1.0" />
+            <specular r="0.9" g="0.66" b="0.08" a="1.0" />
         </material>
 
         <material id="robotMaterialEyes" shininess="4">
@@ -83,37 +88,236 @@
             <diffuse r="0.0" g="0.0" b="0.8" a="1.0" />
             <specular r="0.0" g="0.0" b="0.8" a="1.0" />
         </material>
-
-        <material id="robotMaterialNose" shininess="3">
-            <emission r="0.0" g="0.0" b="0.0" a="1.0" />
-            <ambient r="0.0" g="0.0" b="0.0" a="1.0" />
-            <diffuse r="0.0" g="0.0" b="0.0" a="1.0" />
-            <specular r="0.0" g="0.0" b="0.0" a="1.0" />
-        </material>
-
     </materials>
 
     <transformations>
-        <transformation id="robotMove">
+        <transformation id="robotInitialPos">
             <translate x="0" y="0" z="1.5" />
             <scale x="1.5" y="1.5" z="1.5" />
         </transformation>
-        <transformation id= "antennaTrans">
-            <translate x="0" y="4.25" z="0" />
-            <scale x="0.5" y="0.5" z="0.5" />
-            <rotate axis="z" angle = "90"/>
-        </transformation>
     </transformations>
 
-
     <animations>
-        <animation id="armMovement">
+        <animation id="moveRobot">
+            <keyframe instant="2">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="0" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
             <keyframe instant="5">
                 <translate x="0" y="0" z="0" />
-                <rotate angle_x="90" angle_y="45" angle_z="5" />
-                <scale x="3" y="1" z="1" />
+                <rotate angle_x="0" angle_y="18.4" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="7">
+                <translate x="5" y="-0.5" z="15" />
+                <rotate angle_x="0" angle_y="18.4" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="13">
+                <translate x="5" y="-0.5" z="15" />
+                <rotate angle_x="0" angle_y="18.4" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="17">
+                <translate x="5" y="-0.5" z="15" />
+                <rotate angle_x="0" angle_y="-161.6" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="19">
+                <translate x="2" y="0.0" z="1.5" />
+                <rotate angle_x="0" angle_y="-161.6" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="22">
+                <translate x="-1" y="-0.15" z="-12" />
+                <rotate angle_x="0" angle_y="-161.6" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+        </animation>
+
+        <animation id="leftWheelRotation">
+            <keyframe instant="2">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="0" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="5">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="100" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="7">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="-80" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="13">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="-80" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="17">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="-420" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="22">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="-780" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+        </animation>
+
+        <animation id="rightWheelRotation">
+            <keyframe instant="2">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="0" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="5">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="100" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="7">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="280" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="13">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="280" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="17">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="-100" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="22">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="260" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+        </animation>
+
+        <animation id="reachLeftArm">
+            <keyframe instant="7">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="0" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
             </keyframe>
             <keyframe instant="10">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="0" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="3.05" />
+            </keyframe>
+            <keyframe instant="13">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="0" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="22">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="0" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="25">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="0" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="28">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="0" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+        </animation>
+
+        <animation id="reachLeftHand">
+            <keyframe instant="7">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="0" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="10">
+                <translate x="0" y="0" z="7.6" />
+                <rotate angle_x="0" angle_y="11.25" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="13">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="0" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="22">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="0" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="25">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="0" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="28">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="0" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+        </animation>
+
+        <animation id="rotateAllLeftArm">
+            <keyframe instant="7">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="0" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="10">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="40" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="13">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="0" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="22">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="0" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="25">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="20" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="28">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="20" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+        </animation>
+
+        <animation id="moveCan">
+            <keyframe instant="10">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="0" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="13">
+                <translate x="0" y="9.2" z="0" />
+                <rotate angle_x="0" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="25">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="0" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="28">
                 <translate x="0" y="0" z="0" />
                 <rotate angle_x="0" angle_y="0" angle_z="0" />
                 <scale x="1" y="1" z="1" />
@@ -129,138 +333,145 @@
             <triangle x1="0.5" y1="0.0" z1="0.0" x2="0" y2="0.5625" z2="0.0" x3="-0.5" y3="0.0" z3="0.0" />
         </primitive>
         <primitive id="robotCylinder">
-            <cylinder base="0.2" top="0.2" height="1.5" slices="10" stacks="10" />
+            <cylinder base="1" top="1" height="1" slices="10" stacks="10" />
         </primitive>
         <primitive id="robotSphere">
-            <sphere radius="0.5" slices="20" stacks="20" />
+            <sphere radius="1" slices="20" stacks="20" />
         </primitive>
         <primitive id="robotTorus">
-            <torus inner="0.25" outer="0.5" slices="20" loops="20" />
+            <torus inner="0.15" outer="0.5" slices="20" loops="20" />
         </primitive>
-        <primitive id="robotPlane">
+        <primitive id="plane">
             <plane npartsU="2" npartsV="2" />
         </primitive>
-        <!-- <primitive id="robotPatch">
-            <patch npointsU="3" npointsV="4" npartsU="20" npartsV="20">
-                <controlpoint x="-2" y="-2" z="1" />
-                <controlpoint x="-2" y="-1" z="-2" />
-                <controlpoint x="-2" y="1" z="5" />
-                <controlpoint x="-2" y="2" z="-1" />
+        <primitive id="cylinderBase">
+            <patch npointsU="2" npointsV="4" npartsU="10" npartsV="10">
+                <controlpoint xx="-1" yy="0.0" zz="0" />
+                <controlpoint xx="-1" yy="1.3333" zz="0" />
+                <controlpoint xx="1" yy="1.3333" zz="0" />
+                <controlpoint xx="1" yy="0.0" zz="0" />
 
-                <controlpoint x="0" y="-2" z="0" />
-                <controlpoint x="0" y="-1" z="-1" />
-                <controlpoint x="0" y="1" z="1.5" />
-                <controlpoint x="0" y="2" z="0" />
-                 TODO: xx yy zz??
-                <controlpoint x="2" y="-2" z="-1" />
-                <controlpoint x="2" y="-1" z="2" />
-                <controlpoint x="2" y="1" z="-5" />
-                <controlpoint x="2" y="2" z="1" />
+                <controlpoint xx="-1" yy="0.0" zz="0" />
+                <controlpoint xx="-1" yy="-1.3333" zz="0" />
+                <controlpoint xx="1" yy="-1.3333" zz="0" />
+                <controlpoint xx="1" yy="0.0" zz="0" /> 
             </patch>
-        </primitive>-->
+        </primitive>
+        <primitive id="moonSurface">
+            <patch npointsU="3" npointsV="3" npartsU="10" npartsV="10">
+                <controlpoint xx="-1" yy="-1" zz="0" />
+                <controlpoint xx="-1" yy="0" zz="0.25" />
+                <controlpoint xx="-1" yy="1" zz="0" />
+
+                <controlpoint xx="0" yy="-1" zz="0.25" />
+                <controlpoint xx="0" yy="0" zz="0.25" />
+                <controlpoint xx="0" yy="1" zz="0.25" />
+
+                <controlpoint xx="1" yy="-1" zz="0" />
+                <controlpoint xx="1" yy="0" zz="0.25" />
+                <controlpoint xx="1" yy="1" zz="0" />
+            </patch>
+        </primitive>
         <primitive id="robotCylinder2">
             <cylinder2 base="0.2" top="0.2" height="1.5" slices="10" stacks="10" />
         </primitive>
     </primitives>
 
     <components>
-
         <component id="root">
             <transformation>
             </transformation>
             <materials>
-                <material id="robotMaterialBody" />
+                <material id="whiteMaterial" />
             </materials>
             <texture id="none"/>
             <children>
+                <componentref id="room" />
                 <componentref id="robot" />
-                <!--  <componentref id="standingPlane" /> -->
-                <!-- <componentref id="wave" />  -->
-            </children>
-        </component>
-
-        <!--   <component id="standingPlane">
-            <transformation>
-                <scale x = "10" y = "10" z= "10"/>
-            </transformation>
-            <materials>
-                <material id="robotMaterialBody" />
-            </materials>
-            <texture id="none" />
-            <children>
-                <primitiveref id="robotPlane"/>
-            </children>
-        </component> -->
-
-        <component id="wave">
-            <transformation>
-            </transformation>
-            <materials>
-                <material id="robotMaterialBody" />
-            </materials>
-            <texture id="robotTexture" length_s="1" length_t = "1"/>
-            <children>
-                <primitiveref id="robotPatch"/>
+                <componentref id="cokeCan" />
+                <componentref id="trashHeap" />
             </children>
         </component>
 
         <component id="robot">
             <transformation>
-                <transformationref id="robotMove" />
+                <transformationref id="robotInitialPos" />
+            </transformation>
+            <animationref id = "moveRobot"/>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="none"/>
+            <children>
+                <componentref id = "neck"/>
+                <componentref id = "body"/>
+            </children>
+        </component>
+
+        <!-- Neck -->
+        <component id="neck">
+            <transformation>
             </transformation>
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="robotTexture" length_s="1" length_t = "1.15"/>
+            <texture id="bodyTop" length_s="1" length_t = "1"/>
             <children>
+                <componentref id = "neckPrim"/>
                 <componentref id = "head"/>
-                <componentref id = "body"/>
-                <componentref id = "legs"/>
+            </children>
+        </component>
+
+        <component id="neckPrim">
+            <transformation>
+                <translate x= "0" y = "2.5" z = "0"/>
+                <rotate axis="x" angle = "-90"/>
+                <scale x= "0.5" y = "0.5" z = "2.5"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <primitiveref id = "robotCylinder" />
             </children>
         </component>
 
         <!-- Head -->
-
         <component id="head">
             <transformation>
             </transformation>
             <materials>
                 <material id="inherit" />
-                <material id = "robotMaterialMouth"/>
-                <material id = "robotMaterialEyes"/>
             </materials>
             <texture id="inherit"/>
             <children>
                 <componentref id = "eyes"/>
-                <componentref id = "nose"/>
-                <componentref id = "mouth"/>
-                <componentref id = "antenna"/>
                 <componentref id = "headPrism"/>
             </children>
         </component>
 
         <component id="headPrism">
             <transformation>
-                <translate x="0" y="3.75" z="0" />
-                <scale x = "1" y = "1" z= "0.75"/>
+                <translate x="-0.75" y="5" z="0" />
+                <rotate axis="y" angle = "90"/>
+                <scale x = "0.5" y = "0.5" z= "1.5"/>
             </transformation>
             <materials>
                 <material id="inherit" />
             </materials>
             <texture id="inherit"/>
             <children>
-                <componentref id = "prism"/>
+                <componentref id = "robotCylinder"/>
             </children>
         </component>
 
         <!-- Head Children -->
-
         <component id="eyes">
             <transformation>
-                <translate x="0" y="0" z="0.376" />
             </transformation>
             <materials>
-                <material id="robotMaterialEyes" />
+                <material id="whiteMaterial" />
             </materials>
             <texture id="inherit"/>
             <children>
@@ -271,104 +482,120 @@
 
         <component id="leftEye">
             <transformation>
-                <translate x="0.25" y="4" z="0" />
+                <translate x="1.25" y="5" z="0" />
             </transformation>
             <materials>
                 <material id="inherit" />
             </materials>
             <texture id="inherit"/>
             <children>
+                <componentref id = "eyeCylinder"/>
                 <componentref id = "eyeball"/>
+            </children>
+        </component>
+
+        <component id="eyeCylinder">
+            <transformation>
+                <translate x="0" y="0" z="-0.75" />
+                <scale x="1" y="1" z="1.5" />
+            </transformation>
+            <materials>
+                <material id="yellowMaterial" />
+            </materials>
+            <texture id="eyes" length_s="1" length_t = "1"/>
+            <children>
+                <primitiveref id= "robotCylinder"/>
+                <componentref id = "eyeCylinderTop"/>
+                <componentref id = "eyeCylinderBottom"/>
+            </children>
+        </component>
+
+        <component id="eyeCylinderTop">
+            <transformation>
+                <translate x="0" y="0" z="1" />
+            </transformation>
+            <materials>
+                <material id="whiteMaterial" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <primitiveref id= "cylinderBase"/>
+            </children>
+        </component>
+
+        <component id="eyeCylinderBottom">
+            <transformation>
+                <rotate axis="x" angle = "180"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <primitiveref id= "cylinderBase"/>
             </children>
         </component>
 
         <component id="eyeball">
             <transformation>
-                <scale x="0.15" y="0.15" z="0.15" />
+                <translate x="0" y="0" z="0.75" />
+                <scale x="1" y="1" z="1" />
             </transformation>
             <materials>
-                <material id="inherit" />
+                <material id="yellowMaterial" />
             </materials>
-            <texture id="inherit"/>
+            <texture id="eyes" length_s="1" length_t = "1" />
             <children>
+                <componentref id = "iris"/>
                 <primitiveref id= "robotTorus"/>
             </children>
         </component>
 
-        <component id="rightEye">
+        <component id="iris">
             <transformation>
-                <translate x="-0.25" y="4" z="0" />
+                <scale x="0.5" y="0.5" z="0.5" />
+                <rotate axis = "y" angle = "90" />
             </transformation>
             <materials>
-                <material id="inherit" />
+                <material id="whiteMaterial" />
             </materials>
-            <texture id="inherit"/>
-            <children>
-                <componentref id = "eyeball"/>
-            </children>
-        </component>
-
-        <component id="nose">
-            <transformation>
-                <translate x="0" y="3.85" z="0.376" />
-                <scale x="0.25" y="0.25" z="0.25" />
-            </transformation>
-            <materials>
-                <material id="robotMaterialSpheres" />
-            </materials>
-            <texture id="robotTexture" length_s = "1" length_t = "1"/>
-            <children>
-                <primitiveref id = "robotTriangle"/>
-            </children>
-        </component>
-
-        <component id="mouth">
-            <transformation>
-                <translate x="0" y="3.7" z="0.376" />
-                <scale x="0.5" y="0.2" z="0.5" />
-            </transformation>
-            <materials>
-                <material id="robotMaterialMouth" />
-            </materials>
-            <texture id="robotTexture" length_s = "1" length_t = "1"/>
-            <children>
-                <primitiveref id = "robotRectangle"/>
-            </children>
-        </component>
-
-        <component id="antenna">
-            <transformation>
-                <transformationref id="antennaTrans" />
-            </transformation>
-            <materials>
-                <material id="robotMaterialSpheres" />
-            </materials>
-            <texture id="robotTexture" length_s = "1" length_t = "1"/>
+            <texture id="eyeballs" length_s="1" length_t = "1"/>
             <children>
                 <primitiveref id = "robotSphere"/>
             </children>
         </component>
 
-        <!-- Body -->
+        <component id="rightEye">
+            <transformation>
+                <translate x="-1.25" y="5" z="0" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <componentref id = "eyeCylinder"/>
+                <componentref id = "eyeball"/>
+            </children>
+        </component>
 
+        <!-- Body -->
         <component id="body">
             <transformation>
             </transformation>
             <materials>
                 <material id="inherit" />
-                <material id = "robotMaterialMouth"/>
             </materials>
             <texture id="inherit"/>
             <children>
                 <componentref id = "arms"/>
+                <componentref id = "legs"/>
                 <componentref id = "bodyPrism"/>
             </children>
         </component>
 
         <component id="bodyPrism">
             <transformation>
-                <translate x="0" y="2.75" z="0" />
-                <scale x="1.5" y="1.5" z="1.25" />
             </transformation>
             <materials>
                 <material id="inherit" />
@@ -381,7 +608,6 @@
 
         <component id="prism">
             <transformation>
-
             </transformation>
             <materials>
                 <material id="inherit" />
@@ -399,13 +625,14 @@
 
         <component id="prismLeft">
             <transformation>
-                <translate x="-0.5" y="0" z="0" />
+                <translate x="-2.5" y="0" z="0" />
                 <rotate axis="y" angle="-90" />
+                <scale x="5" y="5" z="5"/>
             </transformation>
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit"/>
+            <texture id="bodySide" length_s="1" length_t = "1"/>
             <children>
                 <primitiveref id = "robotRectangle"/>
             </children>
@@ -413,13 +640,14 @@
 
         <component id="prismRight">
             <transformation>
-                <translate x="0.5" y="0" z="0" />
+                <translate x="2.5" y="0" z="0" />
                 <rotate axis="y" angle="90" />
+                <scale x="5" y="5" z="5"/>
             </transformation>
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit"/>
+            <texture id="bodySide2" length_s="1" length_t = "1"/>
             <children>
                 <primitiveref id = "robotRectangle"/>
             </children>
@@ -427,12 +655,13 @@
 
         <component id="prismFront">
             <transformation>
-                <translate x="0" y="0" z="0.5" />
+                <translate x="0" y="0" z="2.5" />
+                <scale x="5" y="5" z="5"/>
             </transformation>
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit"/>
+            <texture id="bodyFront" length_s="1" length_t = "1"/>
             <children>
                 <primitiveref id = "robotRectangle"/>
             </children>
@@ -440,13 +669,14 @@
 
         <component id="prismBack">
             <transformation>
-                <translate x="0" y="0" z="-0.5" />
+                <translate x="0" y="0" z="-2.5" />
                 <rotate axis="y" angle="180" />
+                <scale x="5" y="5" z="5"/>
             </transformation>
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit"/>
+            <texture id="bodyBack" length_s="1" length_t = "1"/>
             <children>
                 <primitiveref id = "robotRectangle"/>
             </children>
@@ -454,13 +684,14 @@
 
         <component id="prismTop">
             <transformation>
-                <translate x="0" y="0.5" z="0" />
+                <translate x="0" y="2.5" z="0" />
                 <rotate axis="x" angle="-90" />
+                <scale x="5" y="5" z="5"/>
             </transformation>
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit"/>
+            <texture id="bodyTop" length_s="1" length_t = "1"/>
             <children>
                 <primitiveref id = "robotRectangle"/>
             </children>
@@ -468,66 +699,96 @@
 
         <component id="prismBottom">
             <transformation>
-                <translate x="0" y="-0.5" z="0" />
+                <translate x="0" y="-2.5" z="0" />
                 <rotate axis="x" angle="90" />
+                <scale x="5" y="5" z="5"/>
             </transformation>
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" length_s="1" length_t="1"/>
+            <texture id="bodyBottom" length_s="1" length_t="1"/>
             <children>
                 <primitiveref id = "robotRectangle"/>
             </children>
         </component>
 
         <!-- Arm -->
-
         <component id="arms">
             <transformation>
             </transformation>
-            <animationref id = "armMovement"/>
             <materials>
-                <material id="robotMaterialMembers" />
+                <material id="inherit" />
+            </materials>
+            <texture id="bodyTop" length_s="1" length_t = "1"/>
+            <children>
+                <componentref id = "leftShoulder"/>
+                <componentref id = "rightShoulder"/>
+            </children>
+        </component>
+
+        <component id="leftShoulder">
+            <transformation>
+                <translate x="3" y="0" z="0"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
             </materials>
             <texture id="inherit"/>
             <children>
-                <componentref id = "leftArm"/>
-                <componentref id = "rightArm"/>
+                <componentref id = "letfShoulderPrim" />
+                <componentref id = "leftArm"/> 
+            </children>
+        </component>
+
+        <component id="letfShoulderPrim">
+            <transformation>
+                <translate x="0" y="1.25" z="-1.5" /> 
+                <scale x="0.8" y="0.8" z="0.8"/>
+            </transformation>
+            <animationref id = "rotateAllLeftArm"/>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id = "inherit"/>
+            <children>
+                <primitive id = "robotSphere"/>
             </children>
         </component>
 
         <component id="leftArm">
             <transformation>
-
+                <translate x="0.2" y="0" z="-0.4" />
+                <rotate axis="y" angle="11.25" />
             </transformation>
             <materials>
                 <material id="inherit" />
             </materials>
             <texture id="inherit"/>
             <children>
-                <componentref id = "leftArmMov"/>
+                <componentref id = "leftArmAux"/>
+            </children>
+        </component>
+
+        <component id="leftArmAux">
+            <transformation>
+               <translate x="0" y="1.25" z="-1" />
+            </transformation>
+            <animationref id = "rotateAllLeftArm"/>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <componentref id = "leftArmPrim"/>
                 <componentref id = "leftHand"/>
             </children>
         </component>
 
-        <component id="leftArmMov">
+        <component id="leftArmPrim">
             <transformation>
-                <translate x="0.75" y="2.75" z="0" />
-                <rotate axis="y" angle="90" />
+                <scale x="0.5" y="0.5" z="3" />
             </transformation>
-            <materials>
-                <material id="inherit" />
-            </materials>
-            <texture id="inherit"/>
-            <children>
-                <componentref id = "armPrim"/>
-            </children>
-        </component>
-
-        <component id="armPrim">
-            <transformation>
-                <scale x="1" y="1" z="0.75" />
-            </transformation>
+            <animationref id = "reachLeftArm"/>
             <materials>
                 <material id="inherit" />
             </materials>
@@ -539,82 +800,122 @@
 
         <component id="leftHand">
             <transformation>
-                <translate x="1.875" y="2.75" z="0" />
-                <rotate axis = "z" angle = "0"/>
-            </transformation>
-            <materials>
-                <material id="robotMaterialSpheres" />
-            </materials>
-            <texture id="inherit"/>
-            <children>
-                <componentref id = "handsPrim"/>
-            </children>
-        </component>
-
-        <component id="handsPrim">
-            <transformation>
-                <scale x="0.5" y="0.5" z="0.5" />
+                <translate x="0" y="0" z="3" />
             </transformation>
             <materials>
                 <material id="inherit" />
             </materials>
             <texture id="inherit"/>
+            <children>
+                <componentref id = "leftHandsPrim"/>
+            </children>
+        </component>
+
+        <component id="leftHandsPrim">
+            <transformation>
+                <scale x="0.75" y="0.75" z="0.75" />
+            </transformation>
+            <animationref id = "reachLeftHand"/>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="eyes" length_s="1" length_t = "1"/>
             <children>
                 <primitiveref id = "robotSphere"/>
             </children>
         </component>
 
-        <component id="rightArm">
+        <component id="rightShoulder">
             <transformation>
+                <translate x="-3" y="0" z="0"/>
             </transformation>
             <materials>
                 <material id="inherit" />
             </materials>
             <texture id="inherit"/>
             <children>
-                <componentref id = "rightArmMov"/>
+                <componentref id = "rightShoulderPrim" />
+                <componentref id = "rightArm"/> 
+            </children>
+        </component>
+
+        <component id="rightShoulderPrim">
+            <transformation>
+                <translate x="0" y="1.25" z="-1.5" /> 
+                <scale x="0.8" y="0.8" z="0.8"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id = "inherit"/>
+            <children>
+                <primitive id = "robotSphere"/>
+            </children>
+        </component>
+
+        <component id="rightArm">
+            <transformation>
+               <translate x="-0.2" y="0" z="-0.4" />
+                <rotate axis="y" angle="-11.25" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <componentref id = "rightArmPrim"/>
                 <componentref id = "rightHand"/>
             </children>
         </component>
 
-
-        <component id="rightArmMov">
+        <component id="rightArmPrim">
             <transformation>
-                <translate x="-1.85" y="2.75" z="0" />
-                <rotate axis="y" angle="90" />
+                <translate x="0" y="1.25" z="-1" />
+                <scale x="0.5" y="0.5" z="3" />
             </transformation>
             <materials>
                 <material id="inherit" />
             </materials>
             <texture id="inherit"/>
             <children>
-                <componentref id = "armPrim"/>
+                <primitiveref id= "robotCylinder"/>
             </children>
         </component>
 
         <component id="rightHand">
             <transformation>
-                <translate x="-1.875" y="2.75" z="0" />
-                <rotate axis = "z" angle = "180"/>
+                 <translate x="0" y="1.25" z="2" />
             </transformation>
             <materials>
-                <material id="robotMaterialSpheres" />
+                <material id="inherit" />
             </materials>
             <texture id="inherit"/>
             <children>
-                <componentref id = "handsPrim"/>
+                <componentref id = "rightHandsPrim"/>
+            </children>
+        </component>
+
+        <component id="rightHandsPrim">
+            <transformation>
+                <scale x="0.75" y="0.75" z="0.75" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="eyes" length_s="1" length_t = "1"/>
+            <children>
+                <primitiveref id = "robotSphere"/>
             </children>
         </component>
 
         <!-- Legs -->
-
         <component id="legs">
             <transformation>
             </transformation>
             <materials>
-                <material id="robotMaterialMembers" />
+                <material id="inherit" />
             </materials>
-            <texture id="inherit"/>
+            <texture id="bodyTop" length_s="1" length_t = "1"/>
             <children>
                 <componentref id = "leftLeg"/>
                 <componentref id = "rightLeg"/>
@@ -623,84 +924,558 @@
 
         <component id="leftLeg">
             <transformation>
-                <translate x="0.35" y="0.5" z="0" />
             </transformation>
             <materials>
                 <material id="inherit" />
             </materials>
             <texture id="inherit"/>
             <children>
-                <componentref id = "legPrim"/>
-                <componentref id = "leftFoot"/>
+                <componentref id = "leftAxis"/>
             </children>
         </component>
 
-        <component id="legPrim">
+        <component id="leftAxis">
             <transformation>
-                <rotate axis="x" angle="-90" />
+                <translate x = "1.35" y = "-3.5" z= "0"/>
             </transformation>
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="robotArmLeg" length_s = "1" length_t = "1"/>
+            <texture id="inherit"/>
+            <children>
+                <componentref id = "axisVertical"/>
+                <componentref id = "axisJoint"/>
+                <componentref id = "leftAxisHorizontal"/>
+                <componentref id = "leftWheel" />
+            </children>
+        </component>
+
+        <component id="axisVertical">
+            <transformation>
+                <rotate axis="x" angle="-90" />
+                <scale x = "0.5" y = "0.5" z= "1"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
             <children>
                 <primitiveref id= "robotCylinder"/>
             </children>
         </component>
 
-        <component id="leftFoot">
+        <component id="axisJoint">
             <transformation>
-                <translate x="0" y="-0.25" z="0" />
-                <rotate axis="z" angle = "90"/>
-            </transformation>
-            <materials>
-                <material id="robotMaterialSpheres" />
-            </materials>
-            <texture id="inherit"/>
-            <children>
-                <componentref id = "footPrim"/>
-            </children>
-        </component>
-
-        <component id="footPrim">
-            <transformation>
-                <scale x="0.5" y="0.5" z="0.5" />
+                <scale x = "0.5" y = "0.5" z= "0.5"/>
             </transformation>
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="robotTexture" length_s = "1" length_t = "1"/>
+            <texture id="inherit"/>
             <children>
-                <primitiveref id = "robotSphere"/>
+                <primitiveref id= "robotSphere"/>
+            </children>
+        </component>
+
+        <component id="leftAxisHorizontal">
+            <transformation>
+                <translate x = "0.05" y = "0" z= "0"/>
+                <rotate axis = "y" angle = "90"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <componentref id= "axisHorizontal"/> 
+            </children>
+        </component>
+
+        <component id="axisHorizontal">
+            <transformation>
+                <scale x = "0.5" y = "0.5" z= "1.5"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <primitiveref id= "robotCylinder"/>
+            </children>
+        </component>
+
+        <component id="leftWheel">
+            <transformation>
+                <translate x = "2.15" y = "0" z= "0"/>
+                <rotate axis = "y" angle = "180"/>
+            </transformation>
+            <animationref id = "leftWheelRotation"/>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <componentref id= "wheel"/>
+            </children>
+        </component>
+
+        <component id="wheel">
+            <transformation>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <componentref id= "wheelSphere"/>
+                <componentref id= "wheelTorus"/>
+            </children>
+        </component>
+
+        <component id="wheelSphere">
+            <transformation>
+                <scale x = "0.5" y = "2" z= "2"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <primitiveref id= "robotSphere"/>
+            </children>
+        </component>
+
+        <component id="wheelTorus">
+            <transformation>
+                <scale x = "6" y = "4" z= "4"/>
+                <rotate axis = "y" angle = "90" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="wheels" length_s="1" length_t = "1"/>
+            <children>
+                <primitiveref id= "robotTorus"/>
             </children>
         </component>
 
         <component id="rightLeg">
             <transformation>
-                <translate x="-0.35" y="0.5" z="0" />
             </transformation>
             <materials>
                 <material id="inherit" />
             </materials>
             <texture id="inherit"/>
             <children>
-                <componentref id = "legPrim"/>
-                <componentref id = "rightFoot"/>
+                <componentref id = "rightAxis"/>
             </children>
         </component>
 
-        <component id="rightFoot">
+        <component id="rightAxis">
             <transformation>
-                <translate x="0" y="-0.25" z="0" />
-                <rotate axis="z" angle = "90"/>
+                <translate x = "-1.35" y = "-3.5" z= "0"/>
             </transformation>
             <materials>
-                <material id="robotMaterialSpheres" />
+                <material id="inherit" />
             </materials>
             <texture id="inherit"/>
             <children>
-                <componentref id = "footPrim"/>
+                <componentref id = "axisVertical"/>
+                <componentref id = "axisJoint"/>
+                <componentref id = "rightAxisHorizontal"/>
+                <componentref id = "rightWheel" />
             </children>
         </component>
+
+        <component id="rightAxisHorizontal">
+            <transformation>
+                <translate x = "-0.05" y = "0" z= "0"/>
+                <rotate axis = "y" angle = "-90"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <componentref id= "axisHorizontal"/>
+            </children>
+        </component>
+
+        <component id="rightWheel">
+            <transformation>
+                <translate x = "-2.15" y = "0" z= "0"/>
+            </transformation>
+            <animationref id = "rightWheelRotation"/>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <componentref id= "wheel"/>
+            </children>
+        </component>
+
+        <component id="room">
+            <transformation>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <componentref id = "roomLeft"/>
+                <componentref id = "roomRight"/>
+                <componentref id = "roomFront"/>
+                <componentref id = "roomBack"/>
+                <componentref id = "roomTop"/>
+                <componentref id = "roomBottom"/>
+                <componentref id = "surface"/>
+            </children>
+        </component>
+
+        <component id="roomRight">
+            <transformation>
+                <translate x="50" y="0" z="0" />
+                <rotate axis="z" angle="90" />
+                <rotate axis="y" angle="-90" />
+                <scale x="100" y="100" z="100"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="roomRight" length_s="1" length_t = "1"/>
+            <children>
+                <primitiveref id = "plane"/>
+            </children>
+        </component>
+
+        <component id="roomLeft">
+            <transformation>
+                <translate x="-50" y="0" z="0" />
+                <rotate axis= "z" angle = "-90"/>
+                <rotate axis="y" angle="90" />
+                <scale x="100" y="100" z="100"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="roomLeft" length_s="1" length_t = "1"/>
+            <children>
+                <primitiveref id = "plane"/>
+            </children>
+        </component>
+
+        <component id="roomBack">
+            <transformation>
+                <translate x="0" y="0" z="-50" />
+                <rotate axis="x" angle="90" />
+                <scale x="100" y="100" z="100"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="roomBack" length_s="1" length_t = "1"/>
+            <children>
+                <primitiveref id = "plane"/>
+            </children>
+        </component>
+
+        <component id="roomFront">
+            <transformation>
+                <translate x="0" y="0" z="50" />   
+                <rotate axis="x" angle="-90" />
+                <rotate axis="y" angle="180" />
+                <scale x="100" y="100" z="100"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="roomFront" length_s="1" length_t = "1"/>
+            <children>
+                <primitiveref id = "plane"/>
+            </children>
+        </component>
+
+        <component id="roomBottom">
+            <transformation>
+                <translate x="0" y="-50" z="0" />
+                <rotate axis="y" angle="180" />
+                <scale x="100" y="100" z="100"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="roomBottom" length_s="1" length_t = "1"/>
+            <children>
+                <primitiveref id = "plane"/>
+            </children>
+        </component>
+
+        <component id="roomTop">
+            <transformation>
+                <translate x="0" y="50" z="0" />
+                <rotate axis="z" angle="180" />
+                <scale x="100" y="100" z="100"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="roomTop" length_s="1" length_t="1"/>
+            <children>
+                <primitiveref id = "plane"/>
+            </children>
+        </component>
+
+        <component id="surface">
+            <transformation>
+                <translate x="0" y="-18.2" z="0" />
+                <rotate axis="x" angle="-90" />
+                <scale x="50" y="50" z="50"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="moonSurfaceText" length_s="1" length_t = "1"/>
+            <children>
+                <primitiveref id = "moonSurface"/>
+            </children>
+        </component>
+
+        <component id="cokeCan">
+            <transformation>
+                <translate x="16" y="-10.3" z="30" />
+            </transformation>
+            
+            <animationref id = "moveCan"/>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="bodySide" length_s="1" length_t = "1"/>
+            <children>
+                <componentref id = "canCylinder" />
+                <componentref id = "canBottom" />
+                <componentref id = "canTop" />
+            </children>
+        </component>
+
+        <component id="canCylinder">
+            <transformation>
+                <rotate axis= "x" angle="-90" />
+                <scale x="0.5" y="0.5" z="2"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="cokeCan" length_s="1" length_t = "1"/>
+            <children>
+                <primitiveref id = "robotCylinder"/>
+            </children>
+        </component>
+
+        <component id="canBottom">
+            <transformation>
+                <rotate axis= "x" angle="90" />
+                <scale x="0.5" y="0.5" z="2"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="cokeCanBottom" length_s="1" length_t = "1"/>
+            <children>
+                <primitiveref id = "cylinderBase"/>
+            </children>
+        </component>
+
+        <component id="canTop">
+            <transformation>
+                <translate x="0" y="2" z="0"/>
+                <rotate axis= "x" angle="-90" />
+                <scale x="0.5" y="0.5" z="2"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="cokeCanTop" length_s="1" length_t = "1"/>
+            <children>
+                <primitiveref id = "cylinderBase"/>
+            </children>
+        </component>
+
+        <component id="canTop">
+            <transformation>
+                <translate x="0" y="2" z="0"/>
+                <rotate axis= "x" angle="-90" />
+                <scale x="0.5" y="0.5" z="2"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="cokeCanTop" length_s="1" length_t = "1"/>
+            <children>
+                <primitiveref id = "cylinderBase"/>
+            </children>
+        </component>
+
+        <component id="trashHeap">
+            <transformation>
+                <translate x="-10" y="-8.5" z="-25"/>
+                <scale x="0.5" y="0.5" z="0.5"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="trashText" length_s="1" length_t = "1"/>
+            <children>
+                <primitiveref id = "trashCubeLeft"/>
+                <primitiveref id = "trashCubeRight"/>
+                <primitiveref id = "trashCubeTop"/> -->
+            </children>
+        </component>
+
+        <component id="trashCubeLeft">
+            <transformation>
+                <translate x="-2.5" y="0" z="0"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="trashText" length_s="1" length_t = "1"/>
+            <children>
+                <componentref id = "cube"/>
+            </children>
+        </component>
+
+        <component id="trashCubeRight">
+            <transformation>
+                <translate x="2.5" y="0" z="0"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="trashText" length_s="1" length_t = "1"/>
+            <children>
+                <componentref id = "cube"/>
+            </children>
+        </component>
+
+        <component id="trashCubeTop">
+            <transformation>
+                <translate x="0" y="5" z="0"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="trashText" length_s="1" length_t = "1"/>
+            <children>
+                <componentref id = "cube"/>
+            </children>
+        </component>
+
+        <component id="cube">
+            <transformation>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="trashText" length_s="1" length_t = "1"/>
+            <children>
+                <componentref id = "cubeLeft"/>
+                <componentref id = "cubeRight"/>
+                <componentref id = "cubeFront"/>
+                <componentref id = "cubeBack"/>
+                <componentref id = "cubeTop"/>
+                <componentref id = "cubeBottom"/>
+            </children>
+        </component>
+
+         <component id="cubeLeft">
+            <transformation>
+                <translate x="-2.5" y="0" z="0" />
+                <rotate axis="y" angle="-90" />
+                <scale x="5" y="5" z="5"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <primitiveref id = "robotRectangle"/>
+            </children>
+        </component>
+
+        <component id="cubeRight">
+            <transformation>
+                <translate x="2.5" y="0" z="0" />
+                <rotate axis="y" angle="90" />
+                <scale x="5" y="5" z="5"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <primitiveref id = "robotRectangle"/>
+            </children>
+        </component>
+
+        <component id="cubeFront">
+            <transformation>
+                <translate x="0" y="0" z="2.5" />
+                <scale x="5" y="5" z="5"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <primitiveref id = "robotRectangle"/>
+            </children>
+        </component>
+
+        <component id="cubeBack">
+            <transformation>
+                <translate x="0" y="0" z="-2.5" />
+                <rotate axis="y" angle="180" />
+                <scale x="5" y="5" z="5"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <primitiveref id = "robotRectangle"/>
+            </children>
+        </component>
+
+        <component id="cubeTop">
+            <transformation>
+                <translate x="0" y="2.5" z="0" />
+                <rotate axis="x" angle="-90" />
+                <scale x="5" y="5" z="5"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <primitiveref id = "robotRectangle"/>
+            </children>
+        </component>
+
+        <component id="cubeBottom">
+            <transformation>
+                <translate x="0" y="-2.5" z="0" />
+                <rotate axis="x" angle="90" />
+                <scale x="5" y="5" z="5"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <primitiveref id = "robotRectangle"/>
+            </children>
+        </component>
+
     </components>
 </lxs>
