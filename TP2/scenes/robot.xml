@@ -3,20 +3,19 @@
 
     <views default="frontView">
         <perspective id="frontView" near="0.005" far="500" angle="45">
-            <from x="0" y="65.5" z="90.5" />
-            <to x="0" y="1.5" z="0" />
+            <from x="-36.51693" y="31.88" z="81.03266" />
+            <to x="11.032926" y="11.12998" z="-0.97875" />
         </perspective>
 
-        <ortho id="backView" near="0.005" far="500" left="-8.0" right="8.0" top="8.0" bottom="-8.0">
-            <from x="11.13" y="7.65" z="-16.9" />
-            <to x="1.96" y="3.35" z="0.18" />
-            <up x="-0.11" y="1" z="0.19" />
-        </ortho>
+        <perspective id="backView" near="0.005" far="500" angle="45">
+            <from x="32.78656" y="20.2126" z="-36.1661" />
+            <to x="15.85186" y="9.59353" z="-6.89674" />
+        </perspective>
 
-        <ortho id="otherView" near="0.005" far="500" left="-8.0" right="8.0" top="8.0" bottom="-8.0">
-            <from x="5.13" y="10.65" z="-10.9" />
-            <to x="5.96" y="2.35" z="1.18" />
-            <up x="-0.11" y="1" z="0.19" />
+        <ortho id="upperView" near="0.005" far="500" left="-55.0" right="55.0" top="55.0" bottom="-55.0">
+            <from x="-10.3043" y="95.3137" z="-28.44524" />
+            <to x="0" y="0" z="0" />
+            <up x="0.01346" y="0.13817" z="0.990317" />
         </ortho>
     </views>
 
@@ -26,20 +25,20 @@
     </globals>
 
     <lights>
-        <!--<omni id="robotBackLight" enabled="0">
-            <location x="-0.5" y="0.5" z="0" w="1.0" />
-            <ambient r="0" g="0" b="0" a="1.0" />
-            <diffuse r="0.2" g="0.0" b="1.0" a="1.0" />
-            <specular r="0.4" g="0.4" b="1.0" a="1.0" />
-            <attenuation constant="0" linear="1" quadratic="0" />
-        </omni>-->
-        <spot id="robotFrontLight" enabled="1" angle="10" exponent="1">
-            <location x="9.8" y="11.9" z="10" w="1.0" />
-            <target x="0" y="0" z="0" />
-            <ambient r="0.75" g="0.75" b="0.75" a="1.0" />
-            <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
-            <specular r="1.0" g="1.0" b="1.0" a="1.0" />
+        <omni id="ambientLight" enabled="1">
+            <location x="0" y="25" z="50" w="1.0" />
+            <ambient r="0.65" g="0.65" b="0.65" a="1.0" />
+            <diffuse r="0.2" g="0.2" b="0.2" a="1.0" />
+            <specular r="0.2" g="0.2" b="0.2" a="1.0" />
             <attenuation constant="1" linear="0" quadratic="0" />
+        </omni>
+        <spot id="trashLight" enabled="0" angle="10" exponent="1">
+            <location x="14.325" y="-9" z="25" w="1.0"/>
+            <target x="0" y="10" z="0" />
+            <ambient r="0.9" g="0.9" b="0.9" a="1.0" />
+            <diffuse r="0.9" g="0.9" b="0.9" a="1.0" />
+            <specular r="0.9" g="0.9" b="0.9" a="1.0" />
+            <attenuation constant="0" linear="1" quadratic="0" />
         </spot>
     </lights>
 
@@ -64,7 +63,7 @@
         <texture id="cokeCan" file="scenes/images/cokeCan.jpg" />
         <texture id="cokeCanTop" file="scenes/images/cokeCanTop.jpg" />
         <texture id="cokeCanBottom" file="scenes/images/cokeCanBottom.jpg" />
-        <texture id="trashText" file="scenes/images/trash.jpg" />
+        <texture id="trashText" file="scenes/images/rusty.jpg" />
     </textures>
 
     <materials>
@@ -91,8 +90,7 @@
     </materials>
 
     <transformations>
-        <transformation id="robotInitialPos">
-            <translate x="0" y="0" z="1.5" />
+        <transformation id="robotInit">
             <scale x="1.5" y="1.5" z="1.5" />
         </transformation>
     </transformations>
@@ -110,31 +108,46 @@
                 <scale x="1" y="1" z="1" />
             </keyframe>
             <keyframe instant="7">
-                <translate x="5" y="-0.5" z="15" />
+                <translate x="1.67" y="-0.5" z="5" />
                 <rotate angle_x="0" angle_y="18.4" angle_z="0" />
                 <scale x="1" y="1" z="1" />
             </keyframe>
             <keyframe instant="13">
-                <translate x="5" y="-0.5" z="15" />
+                <translate x="1.67" y="-0.5" z="5" />
                 <rotate angle_x="0" angle_y="18.4" angle_z="0" />
                 <scale x="1" y="1" z="1" />
             </keyframe>
             <keyframe instant="17">
-                <translate x="5" y="-0.5" z="15" />
+                <translate x="4.496" y="-0.5" z="13.5" />
+                <rotate angle_x="0" angle_y="18.4" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="23">
+                <translate x="4.496" y="-0.5" z="13.5" />
+                <rotate angle_x="0" angle_y="18.4" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="25">
+                <translate x="3.33" y="-0.5" z="10" />
+                <rotate angle_x="0" angle_y="18.4" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="30">
+                <translate x="3.33" y="-0.5" z="10" />
                 <rotate angle_x="0" angle_y="-161.6" angle_z="0" />
                 <scale x="1" y="1" z="1" />
             </keyframe>
-            <keyframe instant="19">
-                <translate x="2" y="0.0" z="1.5" />
+            <keyframe instant="32">
+                <translate x="0" y="0" z="0" />
                 <rotate angle_x="0" angle_y="-161.6" angle_z="0" />
                 <scale x="1" y="1" z="1" />
             </keyframe>
-            <keyframe instant="22">
-                <translate x="-1" y="-0.15" z="-12" />
-                <rotate angle_x="0" angle_y="-161.6" angle_z="0" />
+            <keyframe instant="35">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="0" angle_y="0" angle_z="0" />
                 <scale x="1" y="1" z="1" />
             </keyframe>
-        </animation>
+        </animation>       
 
         <animation id="leftWheelRotation">
             <keyframe instant="2">
@@ -159,12 +172,32 @@
             </keyframe>
             <keyframe instant="17">
                 <translate x="0" y="0" z="0" />
-                <rotate angle_x="-420" angle_y="0" angle_z="0" />
+                <rotate angle_x="-320" angle_y="0" angle_z="0" />
                 <scale x="1" y="1" z="1" />
             </keyframe>
-            <keyframe instant="22">
+            <keyframe instant="23">
                 <translate x="0" y="0" z="0" />
-                <rotate angle_x="-780" angle_y="0" angle_z="0" />
+                <rotate angle_x="-320" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="25">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="-200" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="30">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="-540" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="32">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="-680" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+           <keyframe instant="35">
+                 <translate x="0" y="0" z="0" />
+                <rotate angle_x="-480" angle_y="0" angle_z="0" />
                 <scale x="1" y="1" z="1" />
             </keyframe>
         </animation>
@@ -192,12 +225,32 @@
             </keyframe>
             <keyframe instant="17">
                 <translate x="0" y="0" z="0" />
-                <rotate angle_x="-100" angle_y="0" angle_z="0" />
+                <rotate angle_x="520" angle_y="0" angle_z="0" />
                 <scale x="1" y="1" z="1" />
             </keyframe>
-            <keyframe instant="22">
+            <keyframe instant="23">
                 <translate x="0" y="0" z="0" />
-                <rotate angle_x="260" angle_y="0" angle_z="0" />
+                <rotate angle_x="520" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="25">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="400" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="30">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="60" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="32">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="200" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+           <keyframe instant="35">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="400" angle_y="0" angle_z="0" />
                 <scale x="1" y="1" z="1" />
             </keyframe>
         </animation>
@@ -218,17 +271,17 @@
                 <rotate angle_x="0" angle_y="0" angle_z="0" />
                 <scale x="1" y="1" z="1" />
             </keyframe>
-            <keyframe instant="22">
+            <keyframe instant="17">
                 <translate x="0" y="0" z="0" />
                 <rotate angle_x="0" angle_y="0" angle_z="0" />
                 <scale x="1" y="1" z="1" />
             </keyframe>
-            <keyframe instant="25">
+            <keyframe instant="20">
                 <translate x="0" y="0" z="0" />
                 <rotate angle_x="0" angle_y="0" angle_z="0" />
-                <scale x="1" y="1" z="1" />
+                <scale x="1" y="1" z="1.9" />
             </keyframe>
-            <keyframe instant="28">
+            <keyframe instant="23">
                 <translate x="0" y="0" z="0" />
                 <rotate angle_x="0" angle_y="0" angle_z="0" />
                 <scale x="1" y="1" z="1" />
@@ -251,24 +304,24 @@
                 <rotate angle_x="0" angle_y="0" angle_z="0" />
                 <scale x="1" y="1" z="1" />
             </keyframe>
-            <keyframe instant="22">
+            <keyframe instant="17">
                 <translate x="0" y="0" z="0" />
                 <rotate angle_x="0" angle_y="0" angle_z="0" />
                 <scale x="1" y="1" z="1" />
             </keyframe>
-            <keyframe instant="25">
-                <translate x="0" y="0" z="0" />
-                <rotate angle_x="0" angle_y="0" angle_z="0" />
+            <keyframe instant="20">
+                <translate x="0" y="0" z="4" />
+                <rotate angle_x="0" angle_y="11.25" angle_z="0" />
                 <scale x="1" y="1" z="1" />
             </keyframe>
-            <keyframe instant="28">
+            <keyframe instant="23">
                 <translate x="0" y="0" z="0" />
                 <rotate angle_x="0" angle_y="0" angle_z="0" />
                 <scale x="1" y="1" z="1" />
             </keyframe>
         </animation>
 
-        <animation id="rotateAllLeftArm">
+        <animation id="rotateLeftShoulder">
             <keyframe instant="7">
                 <translate x="0" y="0" z="0" />
                 <rotate angle_x="0" angle_y="0" angle_z="0" />
@@ -276,7 +329,7 @@
             </keyframe>
             <keyframe instant="10">
                 <translate x="0" y="0" z="0" />
-                <rotate angle_x="40" angle_y="0" angle_z="0" />
+                <rotate angle_x="35" angle_y="0" angle_z="0" />
                 <scale x="1" y="1" z="1" />
             </keyframe>
             <keyframe instant="13">
@@ -284,19 +337,75 @@
                 <rotate angle_x="0" angle_y="0" angle_z="0" />
                 <scale x="1" y="1" z="1" />
             </keyframe>
-            <keyframe instant="22">
+            <keyframe instant="17">
                 <translate x="0" y="0" z="0" />
                 <rotate angle_x="0" angle_y="0" angle_z="0" />
                 <scale x="1" y="1" z="1" />
             </keyframe>
-            <keyframe instant="25">
+            <keyframe instant="20">
                 <translate x="0" y="0" z="0" />
-                <rotate angle_x="20" angle_y="0" angle_z="0" />
+                <rotate angle_x="23" angle_y="0" angle_z="0" />
                 <scale x="1" y="1" z="1" />
             </keyframe>
-            <keyframe instant="28">
+            <keyframe instant="23">
                 <translate x="0" y="0" z="0" />
-                <rotate angle_x="20" angle_y="0" angle_z="0" />
+                <rotate angle_x="0" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+        </animation>
+
+        <animation id="rotateLeftArmHand">
+            <keyframe instant="7">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="0" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="10">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="35" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="13">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="0" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="17">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="0" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="20">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="23" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="23">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="0" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+        </animation>
+
+        <animation id="moveCan2">
+            <keyframe instant="10">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="0" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="13">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="110" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="17">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="110" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe>
+            <keyframe instant="20">
+                <translate x="0" y="0" z="0" />
+                <rotate angle_x="110" angle_y="0" angle_z="0" />
                 <scale x="1" y="1" z="1" />
             </keyframe>
         </animation>
@@ -308,18 +417,18 @@
                 <scale x="1" y="1" z="1" />
             </keyframe>
             <keyframe instant="13">
-                <translate x="0" y="9.2" z="0" />
-                <rotate angle_x="0" angle_y="0" angle_z="0" />
+                <translate x="-3" y="3.75" z="-2.3" />
+                <rotate angle_x="-110" angle_y="0" angle_z="11.25" />
                 <scale x="1" y="1" z="1" />
             </keyframe>
-            <keyframe instant="25">
-                <translate x="0" y="0" z="0" />
-                <rotate angle_x="0" angle_y="0" angle_z="0" />
+            <keyframe instant="17">
+                <translate x="1.31" y="3.75" z="10.5" />
+                <rotate angle_x="-110" angle_y="0" angle_z="11.25" />
                 <scale x="1" y="1" z="1" />
             </keyframe>
-            <keyframe instant="28">
-                <translate x="0" y="0" z="0" />
-                <rotate angle_x="0" angle_y="0" angle_z="0" />
+            <keyframe instant="20">
+                <translate x="2.9" y="0.5" z="14" />
+                <rotate angle_x="-110" angle_y="0" angle_z="11.25" />
                 <scale x="1" y="1" z="1" />
             </keyframe>
         </animation>
@@ -388,16 +497,16 @@
             <children>
                 <componentref id="room" />
                 <componentref id="robot" />
-                <componentref id="cokeCan" />
                 <componentref id="trashHeap" />
+                <componentref id="cokeCanAnim" />
             </children>
         </component>
 
         <component id="robot">
             <transformation>
-                <transformationref id="robotInitialPos" />
+                <transformationref id="robotInit" /> 
             </transformation>
-            <animationref id = "moveRobot"/>
+           <animationref id = "moveRobot"/>
             <materials>
                 <material id="inherit" />
             </materials>
@@ -745,7 +854,7 @@
                 <translate x="0" y="1.25" z="-1.5" /> 
                 <scale x="0.8" y="0.8" z="0.8"/>
             </transformation>
-            <animationref id = "rotateAllLeftArm"/>
+            <animationref id = "rotateLeftShoulder"/>
             <materials>
                 <material id="inherit" />
             </materials>
@@ -765,15 +874,15 @@
             </materials>
             <texture id="inherit"/>
             <children>
-                <componentref id = "leftArmAux"/>
+                <componentref id = "leftArmAnim"/>
             </children>
         </component>
 
-        <component id="leftArmAux">
+        <component id="leftArmAnim">
             <transformation>
                <translate x="0" y="1.25" z="-1" />
             </transformation>
-            <animationref id = "rotateAllLeftArm"/>
+            <animationref id = "rotateLeftArmHand"/>
             <materials>
                 <material id="inherit" />
             </materials>
@@ -1228,7 +1337,7 @@
 
         <component id="surface">
             <transformation>
-                <translate x="0" y="-18.2" z="0" />
+                <translate x="0" y="-18.6" z="0" />
                 <rotate axis="x" angle="-90" />
                 <scale x="50" y="50" z="50"/>
             </transformation>
@@ -1241,16 +1350,29 @@
             </children>
         </component>
 
-        <component id="cokeCan">
+        <component id="cokeCanAnim">
             <transformation>
-                <translate x="16" y="-10.3" z="30" />
+                <translate x="6" y="-8" z="11" /> 
             </transformation>
-            
             <animationref id = "moveCan"/>
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="bodySide" length_s="1" length_t = "1"/>
+            <texture id="none"/>
+            <children>
+                <componentref id = "cokeCan" />
+            </children>
+        </component>
+
+        <component id="cokeCan">
+            <transformation>
+                <translate x="5.3" y="-1.3" z="2.4" />
+            </transformation>
+            <animationref id = "moveCan2"/>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="none"/>
             <children>
                 <componentref id = "canCylinder" />
                 <componentref id = "canBottom" />
@@ -1318,7 +1440,7 @@
 
         <component id="trashHeap">
             <transformation>
-                <translate x="-10" y="-8.5" z="-25"/>
+                <translate x="14.325" y="-9" z="25"/>
                 <scale x="0.5" y="0.5" z="0.5"/>
             </transformation>
             <materials>
