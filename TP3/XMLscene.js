@@ -231,10 +231,9 @@ class XMLscene extends CGFscene {
             // Draw axis
             this.setDefaultAppearance();
             // Displays the scene (MySceneGraph function).
-            //this.graph.displayScene();
+            this.graph.displayScene();
         }
         this.defaultMaterial.apply();
-        this.scale(10,10,10);
         this.board.display();
         this.popMatrix();
         // ---- END Background, camera and axis setup
