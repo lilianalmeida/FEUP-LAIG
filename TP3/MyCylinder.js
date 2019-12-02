@@ -88,9 +88,7 @@ class MyCylinder extends CGFobject {
 				this.indices.push(i + 1, i + this.slices + 1, i + this.slices + 2);
 			}
 		}
-
-
-
+		
 		this.primitiveType = this.scene.gl.TRIANGLES;
 		this.initGLBuffers();
 	}

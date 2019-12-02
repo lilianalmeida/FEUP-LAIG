@@ -510,14 +510,14 @@
 
         <component id="cylinderPiece">
             <transformation>
-                <translate x="1" y="0.5" z="1" />
+                <translate x="-10" y="0.2" z="5" />
                 <rotate axis="x" angle="-90" />
                 <scale x="0.45" y="0.45" z="1"/>
             </transformation>
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="wood" length_s="1" length_t = "1"/>
+            <texture id="rectanglboardTexturee" length_s="1" length_t = "1"/>
             <children>
                 <primitiveref id = "cylinder"/>
             </children>
@@ -525,13 +525,13 @@
 
         <component id="cubePiece">
             <transformation>
-                <translate x="1" y="1" z="3" />
+                <translate x="-10" y="0.7" z="7" />
                 <scale x="0.2" y="0.2" z="0.2"/>
             </transformation>
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="wood" length_s="1" length_t = "1"/>
+            <texture id="rectanglboardTexturee" length_s="1" length_t = "1"/>
             <children>
                 <componentref id = "prism"/>
             </children>
@@ -539,13 +539,13 @@
 
         <component id="spherePiece">
             <transformation>
-                <translate x="-3" y="1" z="1" />
+                <translate x="-10" y="0.7" z="9" />
                 <scale x="0.5" y="0.5" z="0.5"/>
             </transformation>
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="wood" length_s="1" length_t = "1"/>
+            <texture id="rectanglboardTexturee" length_s="1" length_t = "1"/>
             <children>
                 <primitiveref id = "sphere"/>
             </children>
@@ -553,14 +553,14 @@
 
         <component id="conePiece">
             <transformation>
-                <translate x="-3" y="0.5" z="3" />
+                <translate x="-10" y="0.2" z="10.5" />
                 <rotate axis="x" angle="-90" />
                 <scale x="0.45" y="0.45" z="1"/>
             </transformation>
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="wood" length_s="1" length_t = "1"/>
+            <texture id="rectanglboardTexturee" length_s="1" length_t = "1"/>
             <children>
                 <primitiveref id = "cone"/>
             </children>

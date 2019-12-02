@@ -1159,6 +1159,7 @@ class MySceneGraph {
         var nodeNames = [];                     // Component properties names
 
         var nodeTransf;                         // Transformation matrix of a component
+        var nodeTransf2;                         // Transformation matrix of a component
         var materialIds = [];                   // Component materials
         var childrenGraph = [];                 // Component children
 
@@ -1179,6 +1180,11 @@ class MySceneGraph {
                 return "ID must be unique for each component (conflict: ID = " + componentID + ")";
 
             var nodeGraph = new MyNode(this.scene, this.reader.getString(children[i], 'id'), false);    // New not primitive type node
+
+            if (componentID == "spherePiece" || componentID == "conePiece" || componentID == "cubePiece" || componentID == "cylinderPiece") {
+                var nodeGraph2 = new MyNode(this.scene, this.reader.getString(children[i], 'id') + '2', false);
+            }
+
             // nodeTransf, materialIds, "", childrenGraph);
             grandChildren = children[i].children;
 
@@ -1201,7 +1207,8 @@ class MySceneGraph {
             }
 
             grandgrandChildren = grandChildren[transformationIndex].children;   // Transformations of this component
-            nodeTransf = mat4.create();                                     // Resets matrix to identity matrix           
+            nodeTransf = mat4.create();                                         // Resets matrix to identity matrix           
+            nodeTransf2 = mat4.create();                                         // Resets matrix to identity matrix  
 
             if (grandgrandChildren.length != 0) {   // If there is at least one transformation block
                 // Reference to a transformation previously declared
@@ -1217,6 +1224,7 @@ class MySceneGraph {
                                     return coordinates;
 
                                 nodeTransf = mat4.translate(nodeTransf, nodeTransf, coordinates);
+                                nodeTransf2 = mat4.translate(nodeTransf2, nodeTransf2, coordinates);
 
                                 break;
                             case 'scale':
@@ -1225,19 +1233,25 @@ class MySceneGraph {
                                     return coordinates;
 
                                 nodeTransf = mat4.scale(nodeTransf, nodeTransf, coordinates);
+                                nodeTransf2 = mat4.scale(nodeTransf2, nodeTransf2, coordinates);
                                 break;
                             case 'rotate':
                                 var coordinates = this.parseAngularCoordinates(grandgrandChildren[j], "rotate tranformation for node ID " + this.reader.getString(children[i], 'id'));
                                 if (!Array.isArray(coordinates))
                                     return coordinates;
                                 nodeTransf = mat4.rotate(nodeTransf, nodeTransf, coordinates[1], coordinates[0]);
+                                nodeTransf2 = mat4.rotate(nodeTransf2, nodeTransf2, coordinates[1], coordinates[0]);
                                 break;
                         }
                     }
                 }
             }
             nodeGraph.transfMatrix = nodeTransf;
-
+            
+            if (componentID == "spherePiece" || componentID == "conePiece" || componentID == "cubePiece" || componentID == "cylinderPiece") {
+                nodeTransf2 = mat4.translate(nodeTransf2, nodeTransf2, [5,0,0]);
+                nodeGraph2.transfMatrix = nodeTransf2;
+            }
             // Animation
             // If animation bock is defined
             if (animationIndex != -1) {
@@ -1257,6 +1271,9 @@ class MySceneGraph {
 
                 // Creates new keyframe animation 
                 var kfAnimation = new MyKeyframeAnimation(animationId, this.animations[animationId]);
+                if (componentID == "spherePiece" || componentID == "conePiece" || componentID == "cubePiece" || componentID == "cylinderPiece") {
+                    nodeGraph2.animation = kfAnimation;
+                }
                 nodeGraph.animation = kfAnimation;
             }
 
@@ -1279,6 +1296,9 @@ class MySceneGraph {
                 materialIds.push(this.reader.getString(grandgrandChildren[j], 'id'));
             }
 
+            if (componentID == "spherePiece" || componentID == "conePiece" || componentID == "cubePiece" || componentID == "cylinderPiece") {
+                nodeGraph2.materials = materialIds;
+            }
             nodeGraph.materials = materialIds;
 
             // Texture
@@ -1288,15 +1308,24 @@ class MySceneGraph {
             }
 
             // Gets texture id
+            if (componentID == "spherePiece" || componentID == "conePiece" || componentID == "cubePiece" || componentID == "cylinderPiece") {
+                nodeGraph2.texture = this.reader.getString(grandChildren[textureIndex], 'id');
+            }
             nodeGraph.texture = this.reader.getString(grandChildren[textureIndex], 'id');
 
             // Gets texture scale factors if defined texture is not 'inherit' nor 'none'
             if (nodeGraph.texture != 'inherit' && nodeGraph.texture != 'none') {
                 if (this.reader.getString(grandChildren[textureIndex], 'length_s') != null) {
                     nodeGraph.length_s = this.reader.getString(grandChildren[textureIndex], 'length_s');
+                    if (componentID == "spherePiece" || componentID == "conePiece" || componentID == "cubePiece" || componentID == "cylinderPiece") {
+                        nodeGraph2.length_s = this.reader.getString(grandChildren[textureIndex], 'length_s');
+                    }
                 }
                 if (this.reader.getString(grandChildren[textureIndex], 'length_t') != null) {
                     nodeGraph.length_t = this.reader.getString(grandChildren[textureIndex], 'length_t');
+                    if (componentID == "spherePiece" || componentID == "conePiece" || componentID == "cubePiece" || componentID == "cylinderPiece") {
+                        nodeGraph2.length_t = this.reader.getString(grandChildren[textureIndex], 'length_t');
+                    }
                 }
             }
 
@@ -1316,14 +1345,25 @@ class MySceneGraph {
 
             // Any number of children
             for (var j = 0; j < grandgrandChildren.length; j++) {
-                childrenGraph.push(this.reader.getString(grandgrandChildren[j], 'id'));
+                var childrenID = this.reader.getString(grandgrandChildren[j], 'id');
+                childrenGraph.push(childrenID);
+                if (childrenID == "spherePiece" || childrenID == "conePiece" || childrenID == "cubePiece" || childrenID == "cylinderPiece") {
+                    childrenGraph.push(this.reader.getString(grandgrandChildren[j], 'id') + '2');
+                }
             }
 
+            if (componentID == "spherePiece" || componentID == "conePiece" || componentID == "cubePiece" || componentID == "cylinderPiece") {
+                nodeGraph2.children = childrenGraph;
+            }
             nodeGraph.children = childrenGraph;
 
             // Adds node with all its properties defined to the graph
             this.nodesGraph[this.reader.getString(children[i], 'id')] = nodeGraph;
+            if (componentID == "spherePiece" || componentID == "conePiece" || componentID == "cubePiece" || componentID == "cylinderPiece") {
+                this.nodesGraph[this.reader.getString(children[i], 'id') + '2'] = nodeGraph2;
+            }
         }
+        console.log(this.nodesGraph);
         this.log("Parsed components");
         return null;
     }
