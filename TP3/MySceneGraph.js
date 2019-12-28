@@ -1017,7 +1017,7 @@ class MySceneGraph {
 
                 if (primitiveType == 'cylinder') {
                     // New cylinder
-                    var cylinder = new MyCylinder(this.scene, base, top, height, slices, stacks);
+                    var cylinder = new MyCylinderBase(this.scene, base, top, height, slices, stacks);
                     this.primitives[primitiveId] = cylinder;
                 } else {
                     // New cylinder2
