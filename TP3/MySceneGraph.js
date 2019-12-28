@@ -1139,7 +1139,7 @@ class MySceneGraph {
             }
 
             // Adds the primitive as a new node of the graph
-            var nodeGraph = new MyNode(this.scene, primitiveId, true);
+            var nodeGraph = new MyNode(this.scene, primitiveId, true, true);
             this.nodesGraph[primitiveId] = nodeGraph;
         }
         this.log("Parsed primitives");
@@ -1179,10 +1179,18 @@ class MySceneGraph {
             if (this.components[componentID] != null)
                 return "ID must be unique for each component (conflict: ID = " + componentID + ")";
 
-            var nodeGraph = new MyNode(this.scene, this.reader.getString(children[i], 'id'), false);    // New not primitive type node
+            var visibility = this.reader.getBoolean(children[i], 'visibility');
+            if (visibility == null)
+                return "no value defined for visibility";
+
+            var selectable = this.reader.getBoolean(children[i], 'selectable');
+            if (selectable == null)
+                return "no value defined for selectable field";
+
+            var nodeGraph = new MyNode(this.scene, this.reader.getString(children[i], 'id'), false, visibility, selectable);    // New not primitive type node
 
             if (componentID == "spherePiece" || componentID == "conePiece" || componentID == "cubePiece" || componentID == "cylinderPiece") {
-                var nodeGraph2 = new MyNode(this.scene, this.reader.getString(children[i], 'id') + '2', false);
+                var nodeGraph2 = new MyNode(this.scene, this.reader.getString(children[i], 'id') + '2', false, visibility, selectable);
             }
 
             // nodeTransf, materialIds, "", childrenGraph);
@@ -1247,9 +1255,9 @@ class MySceneGraph {
                 }
             }
             nodeGraph.transfMatrix = nodeTransf;
-            
+
             if (componentID == "spherePiece" || componentID == "conePiece" || componentID == "cubePiece" || componentID == "cylinderPiece") {
-                nodeTransf2 = mat4.translate(nodeTransf2, nodeTransf2, [5,0,0]);
+                nodeTransf2 = mat4.translate(nodeTransf2, nodeTransf2, [15, 0, 0]);
                 nodeGraph2.transfMatrix = nodeTransf2;
             }
             // Animation
@@ -1577,7 +1585,7 @@ class MySceneGraph {
         this.defaultMaterial.setSpecular(0.9, 0.9, 0.9, 1);
         this.defaultMaterial.setShininess(10.0);
 
-        this.processNode(actualNode, matTrans, null, 'none', 1, 1);
+        this.processNode(actualNode, matTrans, null, 'none', 1, 1, 0, true, false);
     }
 
     /**
@@ -1589,11 +1597,13 @@ class MySceneGraph {
      * @param {float} length_sP - texture scale factor s inherited by the node parent
      * @param {float} length_tP - texture scale factor t inherited by the node parent
      */
-    processNode(nodeProc, transP, matP, texP, length_sP, length_tP) {
+    processNode(nodeProc, transP, matP, texP, length_sP, length_tP, id, visibility, selectable) {
         var material = matP;
         var texture = texP;
         var length_s = length_sP;
         var length_t = length_tP;
+        var visible = visibility;
+        var select = selectable;
 
         var tex_plus_len = [];  // Node texture properties updated
         var materialIndex = this.scene.materialsChange % nodeProc.materials.length; // Array index of node material to be used on this instance
@@ -1605,36 +1615,46 @@ class MySceneGraph {
 
         // Primitive node
         if (nodeProc.isPrimitive == true) {
-            var matToApply = null;
+            if (this.scene.pickMode == false && visible) {
+                var matToApply = null;
 
-            // Saves the material if there is one defined or a default material otherwise
-            if (material != null) {
-                matToApply = this.materials[material];
-            } else {
-                matToApply = this.defaultMaterial;
+                // Saves the material if there is one defined or a default material otherwise
+                if (material != null) {
+                    matToApply = this.materials[material];
+                } else {
+                    matToApply = this.defaultMaterial;
+                }
+
+                // Applies texture to the material if there is one defined
+                if (texture != null && texture != 'none') {
+                    matToApply.setTexture(this.textures[texture]);
+                    matToApply.setTextureWrap('REPEAT', 'REPEAT');
+                } else {
+                    matToApply.setTexture(null);
+                }
+
+                // Apllies material
+                matToApply.apply();
+
+                // Updates primitive texture coordinates according to the parent's texture coordinates 
+                if (length_s != 0 && length_t != 0) {
+                    this.primitives[nodeProc.id].updateTexCoords(length_s, length_t);
+                }
+
+                // Applies transformation matrix
+                this.scene.multMatrix(transP);
+
+                //i++;
+                // Primitive display
+                this.primitives[nodeProc.id].display();
+            } else if (this.scene.pickMode && select) {
+                // Applies transformation matrix
+                this.scene.multMatrix(transP);
+
+                //i++;
+                // Primitive display
+                this.primitives[nodeProc.id].display();
             }
-
-            // Applies texture to the material if there is one defined
-            if (texture != null && texture != 'none') {
-                matToApply.setTexture(this.textures[texture]);
-                matToApply.setTextureWrap('REPEAT', 'REPEAT');
-            } else {
-                matToApply.setTexture(null);
-            }
-
-            // Apllies material
-            matToApply.apply();
-
-            // Updates primitive texture coordinates according to the parent's texture coordinates 
-            if (length_s != 0 && length_t != 0) {
-                this.primitives[nodeProc.id].updateTexCoords(length_s, length_t);
-            }
-
-            // Applies transformation matrix
-            this.scene.multMatrix(transP);
-
-            // Primitive display
-            this.primitives[nodeProc.id].display();
         }
         else  // Intermediate node
         {
@@ -1645,13 +1665,18 @@ class MySceneGraph {
             texture = tex_plus_len[0];
             length_s = tex_plus_len[1];
             length_t = tex_plus_len[2];
-
+            visible = nodeProc.visibility;
+            if (nodeProc.selectable) {
+                select = nodeProc.selectable;
+            }
             // Process each child node, keeping the transformation matrix of the current node in the stack of the scene
             for (var i = 0; i < nodeProc.children.length; i++) {
+                id++;
                 this.scene.pushMatrix();
-                this.processNode(this.nodesGraph[nodeProc.children[i]], transP, material, texture, length_s, length_t);
+                this.processNode(this.nodesGraph[nodeProc.children[i]], transP, material, texture, length_s, length_t, id + 1, visible, select);
                 this.scene.popMatrix();
             }
+
         }
     }
 

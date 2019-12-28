@@ -6,7 +6,7 @@
  * @param isPrimitive - true if the node is a leaf-node, false otherwise
  */
 class MyNode extends CGFobject {
-    constructor(scene, id, isPrimitive) {
+    constructor(scene, id, isPrimitive, visibility, selectable) {
         super(scene);
         this.id = id;
         this.isPrimitive = isPrimitive;
@@ -16,6 +16,9 @@ class MyNode extends CGFobject {
         this.materials = [];
         this.texture = null;
         this.children = [];
+
+        this.visibility = visibility;
+        this.selectable = selectable;
 
         this.length_s = null;
         this.length_t = null;
