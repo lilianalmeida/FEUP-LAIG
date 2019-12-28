@@ -37,11 +37,13 @@ class XMLscene extends CGFscene {
 
         this.rttTexture = new CGFtextureRTT(this, this.gl.canvas.width, this.gl.canvas.height);
         this.securityCamera = new MySecurityCamera(this);
-        this.board = new MyBoard(this);
+        this.board = new MyBoard(this,-4,4,-4,4);
 
+        this.indexForPick = 1;
         this.axis = new CGFaxis(this);
         this.setUpdatePeriod(UPDATE_RATE);
 
+        this.setPickEnabled(true);
 
         this.defaultMaterial = new CGFappearance(this);
         this.defaultMaterial.setAmbient(0.9, 0.9, 0.9, 1);
@@ -179,6 +181,22 @@ class XMLscene extends CGFscene {
             this.materialsChange++;
         }
     }
+
+    logPicking() {
+		if (this.pickMode == false) {
+			if (this.pickResults != null && this.pickResults.length > 0) {
+				for (var i = 0; i < this.pickResults.length; i++) {
+					var obj = this.pickResults[i][0];
+					if (obj) {
+						var customId = this.pickResults[i][1];
+						console.log("Picked object: " + obj + ", with pick id " + customId);						
+					}
+				}
+				this.pickResults.splice(0, this.pickResults.length);
+			}
+		}
+    }
+    
     /**
      * Displays the scene.
      */
@@ -214,7 +232,10 @@ class XMLscene extends CGFscene {
 
         this.pushMatrix();
         this.axis.display();
-
+        
+        this.logPicking();
+        this.clearPickRegistration();
+        this.indexForPick = 1;
         // Sets lights state (ON or OFF) and visibility according to its state in the interface
         for (var i = 0; i < this.lights.length; i++) {
             if (this.lightsEnabled[i]) {
@@ -226,7 +247,7 @@ class XMLscene extends CGFscene {
             }
             this.lights[i].update();
         }
-
+        var i = 0;
         if (this.sceneInited) {
             // Draw axis
             this.setDefaultAppearance();
