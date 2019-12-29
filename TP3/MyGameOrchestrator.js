@@ -12,7 +12,7 @@ class MyGameOrchestrator{
         //this.animator = new MyAnimator(…);
         this.gameboard = new MyBoard(this.scene, -4, 4, -4, 4);
         this.theme = new MySceneGraph(filename, this.scene);
-        //this.prolog = new MyPrologInterface(…);
+        this.prolog = new MyPrologInterface();
         this.gameState = GameState.FirstPick;
     }
     update(time) {
