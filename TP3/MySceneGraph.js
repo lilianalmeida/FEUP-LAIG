@@ -22,9 +22,8 @@ class MySceneGraph {
     constructor(filename, scene) {
         this.loadedOk = null;
 
-        // Establish bidirectional references between scene and graph.
+        // Establish reference to scene.
         this.scene = scene;
-        scene.graph = this;
 
         this.nodesGraph = [];               // Array with all nodes
         this.idRoot = null;                 // The id of the root element.
@@ -1017,7 +1016,7 @@ class MySceneGraph {
 
                 if (primitiveType == 'cylinder') {
                     // New cylinder
-                    var cylinder = new MyCylinderBase(this.scene, base, top, height, slices, stacks);
+                    var cylinder = new MyCylinder(this.scene, base, top, height, slices, stacks);
                     this.primitives[primitiveId] = cylinder;
                 } else {
                     // New cylinder2
@@ -1139,7 +1138,7 @@ class MySceneGraph {
             }
 
             // Adds the primitive as a new node of the graph
-            var nodeGraph = new MyNode(this.scene, primitiveId, true, true);
+            var nodeGraph = new MyNode(this.scene, primitiveId, true);
             this.nodesGraph[primitiveId] = nodeGraph;
         }
         this.log("Parsed primitives");
@@ -1159,7 +1158,6 @@ class MySceneGraph {
         var nodeNames = [];                     // Component properties names
 
         var nodeTransf;                         // Transformation matrix of a component
-        var nodeTransf2;                         // Transformation matrix of a component
         var materialIds = [];                   // Component materials
         var childrenGraph = [];                 // Component children
 
@@ -1179,20 +1177,7 @@ class MySceneGraph {
             if (this.components[componentID] != null)
                 return "ID must be unique for each component (conflict: ID = " + componentID + ")";
 
-            var visibility = this.reader.getBoolean(children[i], 'visibility');
-            if (visibility == null)
-                return "no value defined for visibility";
-
-            var selectable = this.reader.getBoolean(children[i], 'selectable');
-            if (selectable == null)
-                return "no value defined for selectable field";
-
-            var nodeGraph = new MyNode(this.scene, this.reader.getString(children[i], 'id'), false, visibility, selectable);    // New not primitive type node
-
-            if (componentID == "spherePiece" || componentID == "conePiece" || componentID == "cubePiece" || componentID == "cylinderPiece") {
-                var nodeGraph2 = new MyNode(this.scene, this.reader.getString(children[i], 'id') + '2', false, visibility, selectable);
-            }
-
+            var nodeGraph = new MyNode(this.scene, this.reader.getString(children[i], 'id'), false);    // New not primitive type node
             // nodeTransf, materialIds, "", childrenGraph);
             grandChildren = children[i].children;
 
@@ -1215,8 +1200,7 @@ class MySceneGraph {
             }
 
             grandgrandChildren = grandChildren[transformationIndex].children;   // Transformations of this component
-            nodeTransf = mat4.create();                                         // Resets matrix to identity matrix           
-            nodeTransf2 = mat4.create();                                         // Resets matrix to identity matrix  
+            nodeTransf = mat4.create();                                     // Resets matrix to identity matrix           
 
             if (grandgrandChildren.length != 0) {   // If there is at least one transformation block
                 // Reference to a transformation previously declared
@@ -1232,7 +1216,6 @@ class MySceneGraph {
                                     return coordinates;
 
                                 nodeTransf = mat4.translate(nodeTransf, nodeTransf, coordinates);
-                                nodeTransf2 = mat4.translate(nodeTransf2, nodeTransf2, coordinates);
 
                                 break;
                             case 'scale':
@@ -1241,14 +1224,12 @@ class MySceneGraph {
                                     return coordinates;
 
                                 nodeTransf = mat4.scale(nodeTransf, nodeTransf, coordinates);
-                                nodeTransf2 = mat4.scale(nodeTransf2, nodeTransf2, coordinates);
                                 break;
                             case 'rotate':
                                 var coordinates = this.parseAngularCoordinates(grandgrandChildren[j], "rotate tranformation for node ID " + this.reader.getString(children[i], 'id'));
                                 if (!Array.isArray(coordinates))
                                     return coordinates;
                                 nodeTransf = mat4.rotate(nodeTransf, nodeTransf, coordinates[1], coordinates[0]);
-                                nodeTransf2 = mat4.rotate(nodeTransf2, nodeTransf2, coordinates[1], coordinates[0]);
                                 break;
                         }
                     }
@@ -1256,10 +1237,6 @@ class MySceneGraph {
             }
             nodeGraph.transfMatrix = nodeTransf;
 
-            if (componentID == "spherePiece" || componentID == "conePiece" || componentID == "cubePiece" || componentID == "cylinderPiece") {
-                nodeTransf2 = mat4.translate(nodeTransf2, nodeTransf2, [15, 0, 0]);
-                nodeGraph2.transfMatrix = nodeTransf2;
-            }
             // Animation
             // If animation bock is defined
             if (animationIndex != -1) {
@@ -1279,9 +1256,6 @@ class MySceneGraph {
 
                 // Creates new keyframe animation 
                 var kfAnimation = new MyKeyframeAnimation(animationId, this.animations[animationId]);
-                if (componentID == "spherePiece" || componentID == "conePiece" || componentID == "cubePiece" || componentID == "cylinderPiece") {
-                    nodeGraph2.animation = kfAnimation;
-                }
                 nodeGraph.animation = kfAnimation;
             }
 
@@ -1304,9 +1278,6 @@ class MySceneGraph {
                 materialIds.push(this.reader.getString(grandgrandChildren[j], 'id'));
             }
 
-            if (componentID == "spherePiece" || componentID == "conePiece" || componentID == "cubePiece" || componentID == "cylinderPiece") {
-                nodeGraph2.materials = materialIds;
-            }
             nodeGraph.materials = materialIds;
 
             // Texture
@@ -1316,24 +1287,15 @@ class MySceneGraph {
             }
 
             // Gets texture id
-            if (componentID == "spherePiece" || componentID == "conePiece" || componentID == "cubePiece" || componentID == "cylinderPiece") {
-                nodeGraph2.texture = this.reader.getString(grandChildren[textureIndex], 'id');
-            }
             nodeGraph.texture = this.reader.getString(grandChildren[textureIndex], 'id');
 
             // Gets texture scale factors if defined texture is not 'inherit' nor 'none'
             if (nodeGraph.texture != 'inherit' && nodeGraph.texture != 'none') {
                 if (this.reader.getString(grandChildren[textureIndex], 'length_s') != null) {
                     nodeGraph.length_s = this.reader.getString(grandChildren[textureIndex], 'length_s');
-                    if (componentID == "spherePiece" || componentID == "conePiece" || componentID == "cubePiece" || componentID == "cylinderPiece") {
-                        nodeGraph2.length_s = this.reader.getString(grandChildren[textureIndex], 'length_s');
-                    }
                 }
                 if (this.reader.getString(grandChildren[textureIndex], 'length_t') != null) {
                     nodeGraph.length_t = this.reader.getString(grandChildren[textureIndex], 'length_t');
-                    if (componentID == "spherePiece" || componentID == "conePiece" || componentID == "cubePiece" || componentID == "cylinderPiece") {
-                        nodeGraph2.length_t = this.reader.getString(grandChildren[textureIndex], 'length_t');
-                    }
                 }
             }
 
@@ -1353,25 +1315,14 @@ class MySceneGraph {
 
             // Any number of children
             for (var j = 0; j < grandgrandChildren.length; j++) {
-                var childrenID = this.reader.getString(grandgrandChildren[j], 'id');
-                childrenGraph.push(childrenID);
-                if (childrenID == "spherePiece" || childrenID == "conePiece" || childrenID == "cubePiece" || childrenID == "cylinderPiece") {
-                    childrenGraph.push(this.reader.getString(grandgrandChildren[j], 'id') + '2');
-                }
+                childrenGraph.push(this.reader.getString(grandgrandChildren[j], 'id'));
             }
 
-            if (componentID == "spherePiece" || componentID == "conePiece" || componentID == "cubePiece" || componentID == "cylinderPiece") {
-                nodeGraph2.children = childrenGraph;
-            }
             nodeGraph.children = childrenGraph;
 
             // Adds node with all its properties defined to the graph
             this.nodesGraph[this.reader.getString(children[i], 'id')] = nodeGraph;
-            if (componentID == "spherePiece" || componentID == "conePiece" || componentID == "cubePiece" || componentID == "cylinderPiece") {
-                this.nodesGraph[this.reader.getString(children[i], 'id') + '2'] = nodeGraph2;
-            }
         }
-        console.log(this.nodesGraph);
         this.log("Parsed components");
         return null;
     }
@@ -1585,7 +1536,7 @@ class MySceneGraph {
         this.defaultMaterial.setSpecular(0.9, 0.9, 0.9, 1);
         this.defaultMaterial.setShininess(10.0);
 
-        this.processNode(actualNode, matTrans, null, 'none', 1, 1, 0, true, false);
+        this.processNode(actualNode, matTrans, null, 'none', 1, 1);
     }
 
     /**
@@ -1597,16 +1548,14 @@ class MySceneGraph {
      * @param {float} length_sP - texture scale factor s inherited by the node parent
      * @param {float} length_tP - texture scale factor t inherited by the node parent
      */
-    processNode(nodeProc, transP, matP, texP, length_sP, length_tP, id, visibility, selectable) {
+    processNode(nodeProc, transP, matP, texP, length_sP, length_tP) {
         var material = matP;
         var texture = texP;
         var length_s = length_sP;
         var length_t = length_tP;
-        var visible = visibility;
-        var select = selectable;
 
         var tex_plus_len = [];  // Node texture properties updated
-        var materialIndex = this.scene.materialsChange % nodeProc.materials.length; // Array index of node material to be used on this instance
+        var materialIndex = 0; // Array index of node material to be used on this instance
 
         // Checks if it is a valid node
         if (nodeProc.id == null) {
@@ -1615,46 +1564,36 @@ class MySceneGraph {
 
         // Primitive node
         if (nodeProc.isPrimitive == true) {
-            if (this.scene.pickMode == false && visible) {
-                var matToApply = null;
+            var matToApply = null;
 
-                // Saves the material if there is one defined or a default material otherwise
-                if (material != null) {
-                    matToApply = this.materials[material];
-                } else {
-                    matToApply = this.defaultMaterial;
-                }
-
-                // Applies texture to the material if there is one defined
-                if (texture != null && texture != 'none') {
-                    matToApply.setTexture(this.textures[texture]);
-                    matToApply.setTextureWrap('REPEAT', 'REPEAT');
-                } else {
-                    matToApply.setTexture(null);
-                }
-
-                // Apllies material
-                matToApply.apply();
-
-                // Updates primitive texture coordinates according to the parent's texture coordinates 
-                if (length_s != 0 && length_t != 0) {
-                    this.primitives[nodeProc.id].updateTexCoords(length_s, length_t);
-                }
-
-                // Applies transformation matrix
-                this.scene.multMatrix(transP);
-
-                //i++;
-                // Primitive display
-                this.primitives[nodeProc.id].display();
-            } else if (this.scene.pickMode && select) {
-                // Applies transformation matrix
-                this.scene.multMatrix(transP);
-
-                //i++;
-                // Primitive display
-                this.primitives[nodeProc.id].display();
+            // Saves the material if there is one defined or a default material otherwise
+            if (material != null) {
+                matToApply = this.materials[material];
+            } else {
+                matToApply = this.defaultMaterial;
             }
+
+            // Applies texture to the material if there is one defined
+            if (texture != null && texture != 'none') {
+                matToApply.setTexture(this.textures[texture]);
+                matToApply.setTextureWrap('REPEAT', 'REPEAT');
+            } else {
+                matToApply.setTexture(null);
+            }
+
+            // Apllies material
+            matToApply.apply();
+
+            // Updates primitive texture coordinates according to the parent's texture coordinates 
+            if (length_s != 0 && length_t != 0) {
+                this.primitives[nodeProc.id].updateTexCoords(length_s, length_t);
+            }
+
+            // Applies transformation matrix
+            this.scene.multMatrix(transP);
+
+            // Primitive display
+            this.primitives[nodeProc.id].display();
         }
         else  // Intermediate node
         {
@@ -1665,18 +1604,13 @@ class MySceneGraph {
             texture = tex_plus_len[0];
             length_s = tex_plus_len[1];
             length_t = tex_plus_len[2];
-            visible = nodeProc.visibility;
-            if (nodeProc.selectable) {
-                select = nodeProc.selectable;
-            }
+
             // Process each child node, keeping the transformation matrix of the current node in the stack of the scene
             for (var i = 0; i < nodeProc.children.length; i++) {
-                id++;
                 this.scene.pushMatrix();
-                this.processNode(this.nodesGraph[nodeProc.children[i]], transP, material, texture, length_s, length_t, id + 1, visible, select);
+                this.processNode(this.nodesGraph[nodeProc.children[i]], transP, material, texture, length_s, length_t);
                 this.scene.popMatrix();
             }
-
         }
     }
 

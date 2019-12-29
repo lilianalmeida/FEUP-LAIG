@@ -9,12 +9,12 @@ class XMLscene extends CGFscene {
      * @constructor
      * @param {MyInterface} myinterface 
      */
-    constructor(myinterface) {
+    constructor(myinterface, filename) {
         super();
         this.interface = myinterface;
         this.lightsEnabled = {};    // Saves the state of each light defined
-        this.materialsChange = 0;   // Increase to be made to each node material array index when processing nodes
         this.lastTime = 0;
+        this.filename = filename;
     }
 
     /**
@@ -23,7 +23,6 @@ class XMLscene extends CGFscene {
      */
     init(application) {
         super.init(application);
-
         this.sceneInited = false;
 
         this.initCameras();
@@ -35,24 +34,14 @@ class XMLscene extends CGFscene {
         this.gl.enable(this.gl.CULL_FACE);
         this.gl.depthFunc(this.gl.LEQUAL);
 
-        this.rttTexture = new CGFtextureRTT(this, this.gl.canvas.width, this.gl.canvas.height);
-        this.securityCamera = new MySecurityCamera(this);
-        this.board = new MyBoard(this,-4,4,-4,4);
+        this.gameOrchestrator = new MyGameOrchestrator(this, this.filename);
 
-        this.indexForPick = 1;
         this.axis = new CGFaxis(this);
         this.setUpdatePeriod(UPDATE_RATE);
 
+        this.indexForPick = 1;
         this.setPickEnabled(true);
 
-        this.defaultMaterial = new CGFappearance(this);
-        this.defaultMaterial.setAmbient(0.9, 0.9, 0.9, 1);
-        this.defaultMaterial.setDiffuse(0.9, 0.9, 0.9, 1);
-        this.defaultMaterial.setSpecular(0.9, 0.9, 0.9, 1);
-        this.defaultMaterial.setShininess(10.0);
-        this.tex = new CGFtexture(this, "scenes/images/T1.png");
-        this.defaultMaterial.setTexture(this.tex);
-        this.defaultMaterial.setTextureWrap('REPEAT', 'REPEAT');
     }
     /**
      * Checks key input at each period defined with setUpdatePeriod
@@ -61,18 +50,10 @@ class XMLscene extends CGFscene {
         var deltaTime = currentTime - this.lastTime;
 
         if (currentTime % 2 == 0 && this.sceneInited) {
-            this.checkKey();
+
         }
 
-        if (this.sceneInited) {
-            for (var node in this.graph.nodesGraph) {
-                if (this.graph.nodesGraph[node].animation != null) {
-                    this.graph.nodesGraph[node].animation.update(deltaTime / 1000);
-                }
-            }
-        }
-
-        this.securityCamera.update(currentTime);
+        this.gameOrchestrator.update(deltaTime);
 
         this.lastTime = currentTime;
     }
@@ -81,7 +62,6 @@ class XMLscene extends CGFscene {
      */
     initCameras() {
         this.cameraDefault = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
-        this.cameraRTT = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
 
         this.camera = this.cameraDefault;
     }
@@ -89,16 +69,18 @@ class XMLscene extends CGFscene {
      * Initializes the scene lights with the values read from the XML file.
      */
     initLights() {
-        var i = 0;
+        let graph = this.gameOrchestrator.theme;
+
         // Lights index.
+        var i = 0;
 
         // Reads the lights from the scene graph.
-        for (var key in this.graph.lights) {
+        for (var key in graph.lights) {
             if (i >= 8)
                 break;              // Only eight lights allowed by WebGL.
 
-            if (this.graph.lights.hasOwnProperty(key)) {
-                var light = this.graph.lights[key];
+            if (graph.lights.hasOwnProperty(key)) {
+                var light = graph.lights[key];
 
                 this.lights[i].setPosition(light[2][0], light[2][1], light[2][2], light[2][3]);
                 this.lights[i].setAmbient(light[3][0], light[3][1], light[3][2], light[3][3]);
@@ -130,6 +112,7 @@ class XMLscene extends CGFscene {
 
                 i++;
             }
+            console.log(this.lights);
         }
     }
     setDefaultAppearance() {
@@ -142,18 +125,19 @@ class XMLscene extends CGFscene {
      * As loading is asynchronous, this may be called already after the application has started the run loop
      */
     onGraphLoaded() {
-        this.axis = new CGFaxis(this, this.graph.referenceLength);
+        let graph = this.gameOrchestrator.theme;
+        this.axis = new CGFaxis(this, graph.referenceLength);
 
-        this.gl.clearColor(this.graph.background[0], this.graph.background[1], this.graph.background[2], this.graph.background[3]);
+        this.gl.clearColor(graph.background[0], graph.background[1], graph.background[2], graph.background[3]);
 
-        this.setGlobalAmbientLight(this.graph.ambient[0], this.graph.ambient[1], this.graph.ambient[2], this.graph.ambient[3]);
+        this.setGlobalAmbientLight(graph.ambient[0], graph.ambient[1], graph.ambient[2], graph.ambient[3]);
 
         this.initLights();
 
         // Initializes interface controllers
-        this.interface.addCameraGroup();
+        //this.interface.addCameraGroup();
         this.interface.addLightGroup();
-        this.interface.initKeys();
+        //this.interface.initKeys();
 
         this.initViews();
 
@@ -163,40 +147,31 @@ class XMLscene extends CGFscene {
      * Initializes scene camera with the parsed default view
      */
     initViews() {
-        this.cameraDefault = this.graph.views[this.graph.defaultView];
-        this.cameraRTT = this.graph.securityCameras[this.graph.defaultView];
+        let graph = this.gameOrchestrator.theme;
+        this.cameraDefault = graph.views[graph.defaultView];
     }
     /**
      * Changes the scene camera when the current view is changed in the interface
      */
     changeView() {
-        this.cameraDefault = this.graph.views[this.interface.cameraIndex];
-        this.cameraRTT = this.graph.securityCameras[this.interface.securityCameraIndex];
+        let graph = this.gameOrchestrator.theme;
+        this.cameraDefault = graph.views[this.interface.cameraIndex];
     }
-    /**
-     * Checks if key 'M' is pressed and increments the current array material index for each node
-     */
-    checkKey() {
-        if (this.interface.isKeyPressed('KeyM')) {
-            this.materialsChange++;
+    logPicking() {
+        if (this.pickMode == false) {
+            if (this.pickResults != null && this.pickResults.length > 0) {
+                for (var i = 0; i < this.pickResults.length; i++) {
+                    var obj = this.pickResults[i][0];
+                    if (obj) {
+                        var customId = this.pickResults[i][1];
+                        console.log("Picked object: " + obj.constructor.name + ", with pick id " + customId);
+                    }
+                }
+                this.pickResults.splice(0, this.pickResults.length);
+            }
         }
     }
 
-    logPicking() {
-		if (this.pickMode == false) {
-			if (this.pickResults != null && this.pickResults.length > 0) {
-				for (var i = 0; i < this.pickResults.length; i++) {
-					var obj = this.pickResults[i][0];
-					if (obj) {
-						var customId = this.pickResults[i][1];
-						console.log("Picked object: " + obj + ", with pick id " + customId);						
-					}
-				}
-				this.pickResults.splice(0, this.pickResults.length);
-			}
-		}
-    }
-    
     /**
      * Displays the scene.
      */
@@ -206,15 +181,17 @@ class XMLscene extends CGFscene {
         this.rttTexture.detachFromFrameBuffer();*/
         this.render(this.cameraDefault);
 
-       /**  this.gl.disable(this.gl.DEPTH_TEST);
-        this.securityCamera.display(this.rttTexture);
-        this.gl.enable(this.gl.DEPTH_TEST); */
+        /**  this.gl.disable(this.gl.DEPTH_TEST);
+         this.securityCamera.display(this.rttTexture);
+         this.gl.enable(this.gl.DEPTH_TEST); */
     }
     /**
      * Renders the scene applying the camera given.
      */
     render(camera) {
         // ---- BEGIN Background, camera and axis setup
+
+        this.gameOrchestrator.orchestrate();
 
         // Clear image and depth buffer everytime we update the scene
         this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
@@ -232,10 +209,11 @@ class XMLscene extends CGFscene {
 
         this.pushMatrix();
         this.axis.display();
-        
+
         this.logPicking();
         this.clearPickRegistration();
         this.indexForPick = 1;
+
         // Sets lights state (ON or OFF) and visibility according to its state in the interface
         for (var i = 0; i < this.lights.length; i++) {
             if (this.lightsEnabled[i]) {
@@ -248,14 +226,8 @@ class XMLscene extends CGFscene {
             this.lights[i].update();
         }
         var i = 0;
-        if (this.sceneInited) {
-            // Draw axis
-            this.setDefaultAppearance();
-            // Displays the scene (MySceneGraph function).
-            this.graph.displayScene();
-        }
-        this.defaultMaterial.apply();
-        this.board.display();
+
+        this.gameOrchestrator.display();
         this.popMatrix();
         // ---- END Background, camera and axis setup
     }

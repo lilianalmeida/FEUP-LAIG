@@ -20,7 +20,7 @@ class MyInterface extends CGFinterface {
 
         this.gui = new dat.GUI();
 
-        this.initKeys();
+        //this.initKeys();
 
         return true;
     }
@@ -50,9 +50,9 @@ class MyInterface extends CGFinterface {
         lightsGroup.close();
 
         var i = 0;
-        for (var key in this.scene.graph.lights) {
-            if (this.scene.graph.lights.hasOwnProperty(key)) {
-                this.scene.lightsEnabled[i] = this.scene.graph.lights[key][0];
+        for (var key in this.scene.gameOrchestrator.theme.lights) {
+            if (this.scene.gameOrchestrator.theme.lights.hasOwnProperty(key)) {
+                this.scene.lightsEnabled[i] = this.scene.gameOrchestrator.theme.lights[key][0];
                 lightsGroup.add(this.scene.lightsEnabled, i).name(key);
             }
             i++;

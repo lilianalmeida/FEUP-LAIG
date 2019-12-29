@@ -3,7 +3,7 @@
 
     <views default="frontView">
         <perspective id="frontView" near="0.005" far="500" angle="45">
-            <from x="0" y="65.5" z="90.5" />
+            <from x="0" y="35.5" z="45.5" />
             <to x="0" y="1.5" z="0" />
         </perspective>
 
@@ -147,19 +147,6 @@
         <primitive id="plane">
             <plane npartsU="2" npartsV="2" />
         </primitive>
-        <primitive id="cylinderBase">
-            <patch npointsU="2" npointsV="4" npartsU="10" npartsV="10">
-                <controlpoint xx="-1" yy="0.0" zz="0" />
-                <controlpoint xx="-1" yy="1.3333" zz="0" />
-                <controlpoint xx="1" yy="1.3333" zz="0" />
-                <controlpoint xx="1" yy="0.0" zz="0" />
-
-                <controlpoint xx="-1" yy="0.0" zz="0" />
-                <controlpoint xx="-1" yy="-1.3333" zz="0" />
-                <controlpoint xx="1" yy="-1.3333" zz="0" />
-                <controlpoint xx="1" yy="0.0" zz="0" /> 
-            </patch>
-        </primitive>
     </primitives>
 
     <components>
@@ -173,10 +160,6 @@
             <children>
                 <componentref id="room" />
                 <componentref id="table" />
-                <componentref id="cylinderPiece" />
-                <componentref id="cubePiece" />
-                <componentref id="spherePiece" />
-                <componentref id="conePiece" />
             </children>
         </component>
 
@@ -504,65 +487,6 @@
             <texture id="moonSurfaceText" length_s="1" length_t = "1"/>
             <children>
                 <primitiveref id = "plane"/>
-            </children>
-        </component>
-
-
-        <component id="cylinderPiece" visibility="1" selectable="1">
-            <transformation>
-                <translate x="-10" y="0.2" z="5" />
-                <rotate axis="x" angle="-90" />
-                <scale x="0.45" y="0.45" z="1"/>
-            </transformation>
-            <materials>
-                <material id="inherit" />
-            </materials>
-            <texture id="rectanglboardTexturee" length_s="1" length_t = "1"/>
-            <children>
-                <primitiveref id = "cylinder"/>
-            </children>
-        </component>
-
-        <component id="cubePiece" visibility="1" selectable="1">
-            <transformation>
-                <translate x="-10" y="0.7" z="7" />
-                <scale x="0.2" y="0.2" z="0.2"/>
-            </transformation>
-            <materials>
-                <material id="inherit" />
-            </materials>
-            <texture id="rectanglboardTexturee" length_s="1" length_t = "1"/>
-            <children>
-                <componentref id = "prism"/>
-            </children>
-        </component>
-
-        <component id="spherePiece" visibility="1" selectable="1">
-            <transformation>
-                <translate x="-10" y="0.7" z="9" />
-                <scale x="0.5" y="0.5" z="0.5"/>
-            </transformation>
-            <materials>
-                <material id="inherit" />
-            </materials>
-            <texture id="rectanglboardTexturee" length_s="1" length_t = "1"/>
-            <children>
-                <primitiveref id = "sphere"/>
-            </children>
-        </component>
-
-        <component id="conePiece" visibility="1" selectable="1">
-            <transformation>
-                <translate x="-10" y="0.2" z="10.5" />
-                <rotate axis="x" angle="-90" />
-                <scale x="0.45" y="0.45" z="1"/>
-            </transformation>
-            <materials>
-                <material id="inherit" />
-            </materials>
-            <texture id="rectanglboardTexturee" length_s="1" length_t = "1"/>
-            <children>
-                <primitiveref id = "cone"/>
             </children>
         </component>
     </components>

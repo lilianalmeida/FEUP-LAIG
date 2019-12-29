@@ -2,13 +2,19 @@
  * MyPiece
  * @constructor
  * @param scene - Reference to MyScene object
- * @param id - node id
- * @param isPrimitive - true if the node is a leaf-node, false otherwise
+ * @param id - Piece id
+ * @param tile - Tile where the piece is
+ * @param player - Player who owns the piece
  */
-class MyPiece extends CGFobject {
-    constructor(scene, id,node) {
-        super(scene);
+class MyPiece{
+    constructor(scene, id, tile, player, x, z) {
+        this.scene = scene;
         this.id = id;
-        this.node = null;
+        this.tile = tile;
+        this.player = player;
+        this.x = x;
+        this.z = z;
     }
+
+    display(){}
 }
