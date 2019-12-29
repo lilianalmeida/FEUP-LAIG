@@ -93,7 +93,7 @@ class MyBoard extends CGFobject {
         for (let piece in this.pieces) {
             if (this.scene.pickMode){
                 if (this.pieces[piece].tile == null){
-                    this.scene.registerForPick(this.scene.indexForPick++, this);
+                    this.scene.registerForPick(this.scene.indexForPick++, this.pieces[piece]);
                     this.pieces[piece].display();
                 }
             }else{
@@ -152,18 +152,25 @@ class MyBoard extends CGFobject {
     }
 
     addPieceToTile(piece, tile) {
-        this.tiles[tile[0]][tile[1]].piece = this.pieces[piece];
-        this.pieces[piece].tile = this.tiles[tile[0]][tile[1]];
-        console.log(this.pieces[piece]);
-        console.log(this.tiles[tile[0]][tile[1]]);
+        tile.piece = piece;
+        piece.tile = tile;
     }
     //TODO: Needed?
     removePieceFromTile(piece, tile) {
-        this.tiles[tile].piece = null;
+        tile.piece = null;
         this.pieces[piece].tile = null;
     }
     getPieceOfTile(tile) {
-        return this.tiles[tile].piece;
+        //return this.tiles[tile].piece;
+    }
+    getTile(tile) {
+        let newT = tile -1;
+        console.log(Math.floor(newT/4));
+        console.log(newT%4);
+        return this.tiles[Math.floor(newT/4)][newT%4];
+    }
+    getPiece(piece) {
+        return this.pieces[piece];
     }
     getTileofPiece(piece) {
         return this.pieces[piece].tile;
