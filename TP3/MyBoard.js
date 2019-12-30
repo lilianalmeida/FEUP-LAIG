@@ -12,11 +12,12 @@ class MyBoard extends CGFobject {
         this.y1 = y1;
         this.x2 = x2;
         this.y2 = y2;
+        this.content = this.emptyBoard();
         this.initBoard();
         this.createTiles();
         this.initMaterials();
         this.initPieces();
-    }
+    }   
     initMaterials() {
         this.boardMaterial = new CGFappearance(this.scene);
         this.boardMaterial.setAmbient(0.9, 0.9, 0.9, 1);
@@ -180,5 +181,9 @@ class MyBoard extends CGFobject {
     }
     getTileWithCoordinates(tile_coordinates) {
 
+    }
+
+    emptyBoard(){
+        return "[[empty,empty,empty,empty],[empty,empty,empty,empty],[empty,empty,empty,empty],[empty,empty,empty,empty]]";
     }
 }
