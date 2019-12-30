@@ -3,16 +3,22 @@
  * @constructor
  * @param scene - Reference to MyScene object
  */
-class MyGameSequence{
-    constructor(scene, piece, origin, destination, oldGameState) {
-        this.scene = scene;
+class MyGameSequence {
+    constructor() {
         this.moves = [];
     }
-    addGameMove(move){
+    addGameMove(move) {
         this.moves.push(move);
     }
-    undo(){
-
+    undo() {
+        let lastMove = this.moves.pop();
+        return lastMove.oldGameState;
     }
-    //TODO: something for move replay
+    getMoveByIndex(index){
+        if (index < this.moves.length){
+            return this.moves[index];
+        }else{
+            return false;
+        }
+    }
 }

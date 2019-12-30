@@ -6,9 +6,10 @@
  * @param isPrimitive - true if the node is a leaf-node, false otherwise
  */
 class MyTile extends CGFobject {
-    constructor(scene, piece, gameboard, x, y, width) {
+    constructor(scene, id, piece, gameboard, x, y, width) {
         super(scene);
         this.piece = piece;
+        this.id = id;
         this.x = x;
         this.y = y;
         this.width = width;
@@ -24,6 +25,7 @@ class MyTile extends CGFobject {
         return this.piece;
     }
 
+    // Always in pickMode
     display() {
         this.scene.pushMatrix();
         this.scene.translate(0, 0.5, 0);
