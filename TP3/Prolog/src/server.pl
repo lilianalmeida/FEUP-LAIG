@@ -114,7 +114,7 @@ parse_input(play,[Board, Player]):-
 	random_select(Player, [1, 2], _),
 	display_game(Board, Player).
 
-parse_input(move(Row,C, S, P, B), [NewBoard, Res, State]):-
+parse_input(move(Row,C, S, P, B), [Res, NewBoard, State]):-
 	write('move input\n'),
 	write(Row),nl,
 	write(C),nl,
@@ -125,7 +125,7 @@ parse_input(move(Row,C, S, P, B), [NewBoard, Res, State]):-
 	(game_over(NewBoard, P),
 	State = won
     ;
-    next_player(P, NewPlayer),
+    	next_player(P, NewPlayer),
         % Checks for next turn valid moves
         (valid_moves(NewBoard, NewPlayer, AllBoards),
 
@@ -143,7 +143,61 @@ parse_input(move(Row,C, S, P, B), [NewBoard, Res, State]):-
 	NewBoard = [],
 	State = repeat.
 
+parse_input(bot_move(Board, Level, Player), [NewBoard, State]):-
+	% Move Computer Piece 
+    once(computer_move(Board, Player, Level, NewBoard)),
+   
+    % Check Game Over
+    (game_over(NewBoard, Player),
+	State = won
+    ;
+    next_player(Player, NewPlayer),
 
+        % Checks for next turn valid moves
+        (valid_moves(NewBoard, NewPlayer, AllBoards),
+
+        % No more valid moves
+        (list_empty(AllBoards)),
+        display_tie(NewBoard),
+		State = tie      
+        ;
+
+        % Next player turn
+        display_game(NewBoard, NewPlayer),
+        sleep(0.5),
+        State = goOn
+        )
+    );
+	NewBoard = [],
+	State = repeat.
+
+	
 test(_,[],N) :- N =< 0.
 test(A,[A|Bs],N) :- N1 is N-1, test(A,Bs,N1).
-	
+
+json(List, Output):-
+    is_list(List),
+    list_to_json(List, Output).
+
+json(Number, Number):-
+    number(Number).
+
+json(Element, JSONElem):-
+  surround(Element, '"', '"', JSONElem).
+
+
+
+surround(Element, Left, Right, Surrounded):-
+  atom_concat(Left, Element, Temp),
+  atom_concat(Temp, Right, Surrounded).
+
+
+matrix_to_json([], []).
+matrix_to_json([List | R], [JsonList | Json]):-
+  list_to_json(List, JsonList),
+  matrix_to_json(R, Json).
+
+list_to_json([], []).
+list_to_json([Element | Rest], [JSONElem | JsonRest]):-
+  json(Element, JSONElem),
+  list_to_json(Rest, JsonRest).

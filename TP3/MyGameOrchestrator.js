@@ -1,4 +1,4 @@
-const PickState = { FirstPick: 1, SecondPick: 2 };
+const GameState = { FirstPick: 1, SecondPick: 2 };
 /**
  * MyGameOrchestrator
  * @constructor
@@ -9,12 +9,11 @@ class MyGameOrchestrator {
     constructor(scene, filename) {
         this.scene = scene;
         this.gameSequence = new MyGameSequence(this.scene);
-        //this.animator = new MyAnimator(…);
-        this.gameboard = new MyBoard(this.scene, -4, 4, -4, 4);
+        //this.animator = new MyAnimator(this, this.gameSequence);
+        this.gameboard = new MyBoard(this.scene, -6, 6, -6, 6);
         this.theme = new MySceneGraph(filename, this.scene);
-        this.prolog = new MyPrologInterface();
-        this.prolog.board = this.gameboard.emptyBoard();
-        this.pickState = PickState.FirstPick;
+        this.prolog = new MyPrologInterface(this.gameboard,this.gameSequence);
+        this.gameState = GameState.FirstPick;
         this.picked = null;
     }
     update(time) {
@@ -25,36 +24,40 @@ class MyGameOrchestrator {
                 }
             }
         }*/
-        // this.animator.update(time);
+        //this.animator.update(time);
     }
     parsePicking(obj, customId) {
-        if (obj instanceof MyPiece && this.pickState == PickState.FirstPick) {
-            this.picked = this.gameboard.getPiece(obj.id + "p" + obj.player);
-            console.log(this.picked);
-            this.move = new MyGameMove(this.scene, this.picked, null, null, this.gameboard);
-            this.pickState = PickState.SecondPick;
-        } else if (obj instanceof MyTile && this.pickState == PickState.SecondPick) {
-            let tile = this.gameboard.getTile(customId);
-            console.log(tile);
+        if (obj instanceof MyPiece) {
+            if (this.gameState == GameState.SecondPick && this.move.piece == obj) {
+                this.move = null;
+                this.gameState = GameState.FirstPick;
+            }
+            else {
+                let piece = this.gameboard.getPiece(obj.id + "p" + obj.player);
+                this.move = new MyGameMove(this.scene, piece, null, this.gameboard);
+                this.gameState = GameState.SecondPick;
+            }
+        } else if (obj instanceof MyTile && this.gameState == GameState.SecondPick) {
+            let tile = this.gameboard.getTile(obj.id);
             this.move.destination = obj;
-            console.log(this.prolog.approval);
-            this.prolog.requestMove(this.gameboard.content, this.picked, [this.move.destination.x, this.move.destination.y]);
-            //this.prolog.requestBotMove(this.gameboard.content,2,this.picked.player == 2? 1:2)
-            console.log("merdas " + this.prolog.approval);
+            this.prolog.requestMove(this.move.piece, this.gameboard.getTileWithCoordinates(this.move.destination.id));
             if (this.prolog.approval) {
                 this.gameboard.content = this.prolog.board;
-                console.log("new board");
-                console.log(this.gameboard.content);
-                console.log("******");
                 this.move.animateMove();
                 this.gameSequence.addGameMove(this.move);
+                this.prolog.requestBotMove(2,this.move.piece.player == 2? 1:2)
             }
-            console.log("depois do if");
-            this.pickState = PickState.FirstPick;
+            //this.animator.start();
+            this.gameState = GameState.FirstPick;
         }
 
 
-        console.log(this.pickState);
+    }
+    undo(){
+        this.gameboard = this.gameSequence.undo();
+    }
+    gameMovie(){
+        
     }
     display() {
         if (this.scene.sceneInited) {

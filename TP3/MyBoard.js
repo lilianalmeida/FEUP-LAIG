@@ -16,8 +16,9 @@ class MyBoard extends CGFobject {
         this.initBoard();
         this.createTiles();
         this.initMaterials();
+        console.log(this.tiles);
         this.initPieces();
-    }   
+    }
     initMaterials() {
         this.boardMaterial = new CGFappearance(this.scene);
         this.boardMaterial.setAmbient(0.9, 0.9, 0.9, 1);
@@ -27,12 +28,6 @@ class MyBoard extends CGFobject {
         this.tex = new CGFtexture(this.scene, "scenes/images/T1.png");
         this.boardMaterial.setTexture(this.tex);
         this.boardMaterial.setTextureWrap('REPEAT', 'REPEAT');
-
-        this.defaultMaterial = new CGFappearance(this.scene);
-        this.defaultMaterial.setAmbient(0.9, 0.9, 0.9, 1);
-        this.defaultMaterial.setDiffuse(0.9, 0.9, 0.9, 1);
-        this.defaultMaterial.setSpecular(0.9, 0.9, 0.9, 1);
-        this.defaultMaterial.setShininess(10.0);
     }
     initBoard() {
         let controlPoints = [  // U = 0 
@@ -64,40 +59,42 @@ class MyBoard extends CGFobject {
         for (let i = 0; i < 4; i++) {
             this.tiles[i] = new Array(4);
             for (let j = 0; j < 4; j++) {
-                this.tiles[i][j] = new MyTile(this.scene, null, this, this.x1 + j * tileWidth, this.y1 + i * tileWidth, tileWidth);
+                this.tiles[i][j] = new MyTile(this.scene, (i * 4) + (j + 1), null, this, this.x1 + j * tileWidth, -this.y1 - (i + 1) * tileWidth, tileWidth);
             }
         }
     }
     displayTiles() {
         for (let i = 0; i < 4; i++) {
             for (let j = 0; j < 4; j++) {
-                this.scene.registerForPick(this.scene.indexForPick++, this.tiles[i][j]);
-                this.tiles[i][j].display();
+                if (this.tiles[i][j].piece == null) {
+                    this.scene.registerForPick(this.scene.indexForPick++, this.tiles[i][j]);
+                    this.tiles[i][j].display();
+                }
             }
         }
     }
     initPieces() {
         let increment = 1;
         for (let i = 1; i <= 2; i++) {
-            this.pieces["cylinder1" + "p" + i] = new MyCylinderPiece(this.scene, "cylinder1", null, i, -10 * increment, 10.5 * increment);
-            this.pieces["cylinder2" + "p" + i] = new MyCylinderPiece(this.scene, "cylinder2", null, i, -8 * increment, 10.5 * increment);
-            this.pieces["sphere1" + "p" + i] = new MySpherePiece(this.scene, "sphere1", null, i, -10 * increment, 9 * increment);
-            this.pieces["sphere2" + "p" + i] = new MySpherePiece(this.scene, "sphere2", null, i, -8 * increment, 9 * increment);
-            this.pieces["cube1" + "p" + i] = new MyCubePiece(this.scene, "cube1", null, i, -10 * increment, 7 * increment);
-            this.pieces["cube2" + "p" + i] = new MyCubePiece(this.scene, "cube2", null, i, -8 * increment, 7 * increment);
-            this.pieces["cone1" + "p" + i] = new MyConePiece(this.scene, "cone1", null, i, -10 * increment, 5 * increment);
-            this.pieces["cone2" + "p" + i] = new MyConePiece(this.scene, "cone2", null, i, -8 * increment, 5 * increment);
+            this.pieces["cylinder1" + "p" + i] = new MyCylinderPiece(this.scene, "cylinder1", null, i, -10 * increment, 0, 11 * increment);
+            this.pieces["cylinder2" + "p" + i] = new MyCylinderPiece(this.scene, "cylinder2", null, i, -8 * increment, 0, 11 * increment);
+            this.pieces["sphere1" + "p" + i] = new MySpherePiece(this.scene, "sphere1", null, i, -10 * increment, 0, 9 * increment);
+            this.pieces["sphere2" + "p" + i] = new MySpherePiece(this.scene, "sphere2", null, i, -8 * increment, 0, 9 * increment);
+            this.pieces["cube1" + "p" + i] = new MyCubePiece(this.scene, "cube1", null, i, -10 * increment, 0, 7 * increment);
+            this.pieces["cube2" + "p" + i] = new MyCubePiece(this.scene, "cube2", null, i, -8 * increment, 0, 7 * increment);
+            this.pieces["cone1" + "p" + i] = new MyConePiece(this.scene, "cone1", null, i, -10 * increment, 0, 5 * increment);
+            this.pieces["cone2" + "p" + i] = new MyConePiece(this.scene, "cone2", null, i, -8 * increment, 0, 5 * increment);
             increment = -1;
         }
     }
     displayPieces() {
         for (let piece in this.pieces) {
-            if (this.scene.pickMode){
-                if (this.pieces[piece].tile == null){
+            if (this.scene.pickMode) {
+                if (this.pieces[piece].tile == null) {
                     this.scene.registerForPick(this.scene.indexForPick++, this.pieces[piece]);
                     this.pieces[piece].display();
                 }
-            }else{
+            } else {
                 this.pieces[piece].display();
             }
         }
@@ -120,24 +117,24 @@ class MyBoard extends CGFobject {
             this.scene.popMatrix();
 
             this.scene.pushMatrix();
-            this.scene.translate(0, 0, 4);
+            this.scene.translate(0, 0, 6);
             this.boarder.display();
             this.scene.popMatrix();
 
             this.scene.pushMatrix();
-            this.scene.translate(4, 0, 0);
+            this.scene.translate(6, 0, 0);
             this.scene.rotate(Math.PI / 2, 0, 1, 0);
             this.boarder.display();
             this.scene.popMatrix();
 
             this.scene.pushMatrix();
-            this.scene.translate(0, 0, -4);
+            this.scene.translate(0, 0, -6);
             this.scene.rotate(Math.PI, 0, 1, 0);
             this.boarder.display();
             this.scene.popMatrix();
 
             this.scene.pushMatrix();
-            this.scene.translate(-4, 0, 0);
+            this.scene.translate(-6, 0, 0);
             this.scene.rotate(-Math.PI / 2, 0, 1, 0);
             this.boarder.display();
             this.scene.popMatrix();
@@ -147,11 +144,16 @@ class MyBoard extends CGFobject {
             this.displayTiles();
         }
 
-
-        this.defaultMaterial.apply();
         this.displayPieces();
     }
 
+    getPiece(piece_id) {
+        return this.pieces[piece_id];
+    }
+    getTile(tile_id) {
+        let newT = tile_id - 1;
+        return this.tiles[Math.floor(newT / 4)][newT % 4];
+    }
     addPieceToTile(piece, tile) {
         tile.piece = piece;
         piece.tile = tile;
@@ -159,31 +161,23 @@ class MyBoard extends CGFobject {
     //TODO: Needed?
     removePieceFromTile(piece, tile) {
         tile.piece = null;
-        this.pieces[piece].tile = null;
+        piece.tile = null;
     }
     getPieceOfTile(tile) {
-        //return this.tiles[tile].piece;
-    }
-    getTile(tile) {
-        let newT = tile -1;
-        console.log(Math.floor(newT/4));
-        console.log(newT%4);
-        return this.tiles[Math.floor(newT/4)][newT%4];
-    }
-    getPiece(piece) {
-        return this.pieces[piece];
+        tile.piece;
     }
     getTileofPiece(piece) {
-        return this.pieces[piece].tile;
+        piece.tile;
     }
-    movePiece() {
-
+    movePiece(piece, tile) {
+        this.addPieceToTile(piece, tile);
     }
-    getTileWithCoordinates(tile_coordinates) {
-
+    getTileWithCoordinates(tile_id) {
+        let newT = tile_id - 1;
+        return [Math.floor(newT / 4) + 1, newT % 4 + 1];
     }
 
-    emptyBoard(){
+    emptyBoard() {
         return "[[empty,empty,empty,empty],[empty,empty,empty,empty],[empty,empty,empty,empty],[empty,empty,empty,empty]]";
     }
 }
