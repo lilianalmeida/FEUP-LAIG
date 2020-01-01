@@ -11,7 +11,7 @@ class MyGameOrchestrator {
         this.scene = scene;
 
         this.gameSequence = new MyGameSequence(this.scene);
-        //this.animator = new MyAnimator(this, this.gameSequence);
+        this.animator = new MyAnimator(this, this.gameSequence);
         this.gameboard = new MyBoard(this.scene, -6, 6, -6, 6);
         this.theme = new MySceneGraph(filename, this.scene);
         this.prolog = new MyPrologInterface(this.gameboard, this.gameSequence);
@@ -24,14 +24,7 @@ class MyGameOrchestrator {
 
     }
     update(time) {
-        /*if (this.scene.sceneInited) {
-            for (var node in this.theme.nodesGraph) {
-                if (this.theme.nodesGraph[node].animation != null) {
-                    this.theme.nodesGraph[node].animation.update(deltaTime / 1000);
-                }
-            }
-        }*/
-        //this.animator.update(time);
+        this.animator.update(time);
     }
 
     newGame(mode) {
@@ -44,46 +37,50 @@ class MyGameOrchestrator {
     }
     parsePicking(obj, customId) {
 
-        if (!this.prolog.gameOver) {
-            if (this.gameMode == GameMode.bvb) {
-                this.prolog.requestBotMove(this.level, this.currentPlayer)
-                this.currentPlayer = this.currentPlayer == 1 ? 2 : 1;
-                return;
-            }
-            if (obj instanceof MyPiece && obj.player == this.currentPlayer) {
-                if (this.gameState == GameState.SecondPick && this.move.piece == obj) {
-                    this.move = null;
+        if(!this.animator.animationRunning){
+            if (!this.prolog.gameOver) {
+                if (this.gameMode == GameMode.bvb) {
+                    this.prolog.requestBotMove(this.level, this.currentPlayer)
+                    this.currentPlayer = this.currentPlayer == 1 ? 2 : 1;
+                    return;
+                }
+                if (obj instanceof MyPiece && obj.player == this.currentPlayer) {
+                    if (this.gameState == GameState.SecondPick && this.move.piece == obj) {
+                        this.move = null;
+                        this.gameState = GameState.FirstPick;
+                    }
+                    else {
+                        let piece = this.gameboard.getPiece(obj.id + "p" + obj.player);
+                        this.move = new MyGameMove(this.scene, piece, null, this.gameboard);
+                        this.gameState = GameState.SecondPick;
+                    }
+                } else if (obj instanceof MyTile && this.gameState == GameState.SecondPick) {
+                    let tile = this.gameboard.getTile(obj.id);
+                    this.move.destination = obj;
+                    this.prolog.requestMove(this.move.piece, this.gameboard.getTileWithCoordinates(this.move.destination.id));
+                    if (this.prolog.approval) {
+                        this.move.animateMove();
+                        this.gameSequence.addGameMove(this.move);
+                        this.animator.start();
+                        if (this.gameMode == GameMode.pvb && !this.prolog.gameOver && !this.animator.animationRunning) {    
+                            this.prolog.requestBotMove(this.level, this.move.piece.player == 2 ? 1 : 2)
+                        }
+                        console.log("Apppp");
+                        if (this.gameMode == GameMode.pvp) {
+                            this.currentPlayer = this.currentPlayer == 1 ? 2 : 1;
+                        }
+                    }
                     this.gameState = GameState.FirstPick;
                 }
-                else {
-                    let piece = this.gameboard.getPiece(obj.id + "p" + obj.player);
-                    this.move = new MyGameMove(this.scene, piece, null, this.gameboard);
-                    this.gameState = GameState.SecondPick;
-                }
-            } else if (obj instanceof MyTile && this.gameState == GameState.SecondPick) {
-                let tile = this.gameboard.getTile(obj.id);
-                this.move.destination = obj;
-                this.prolog.requestMove(this.move.piece, this.gameboard.getTileWithCoordinates(this.move.destination.id));
-                if (this.prolog.approval) {
-                    this.gameboard.content = this.prolog.board;
-                    this.move.animateMove();
-                    this.gameSequence.addGameMove(this.move);
-                    console.log("MODE: "+this.gameMode);
-                    if (this.gameMode == GameMode.pvb && !this.prolog.gameOver) {
-                        console.log("BOT LEVEL: " + this.level);
-                        this.prolog.requestBotMove(this.level, this.move.piece.player == 2 ? 1 : 2)
-                    }
-                    if (this.gameMode == GameMode.pvp) {
-                        this.currentPlayer = this.currentPlayer == 1 ? 2 : 1;
-                    }
-                }
-                //this.animator.start();
-                this.gameState = GameState.FirstPick;
             }
-
         }
+
         else {
-            this.newGame(GameMode.pvp);
+            //this.newGame(GameMode.pvp);
+            this.move = null;
+            this.gameState = GameState.FirstPick;
+            console.log("undoo");
+            //this.undo();
         }
     }
 
@@ -103,7 +100,13 @@ class MyGameOrchestrator {
     }
 
     undo() {
-        this.gameboard = this.gameSequence.undo();
+        let lastMove = this.gameSequence.moves.pop();
+        let lastPiece = lastMove.piece;
+        lastPiece.x = lastPiece.initialPosition["x"];
+        lastPiece.y = lastPiece.initialPosition["y"];
+        lastPiece.z = lastPiece.initialPosition["z"];
+        this.currentPlayer = this.currentPlayer == 1 ? 2 : 1;
+        this.gameboard.removePieceFromTile(lastMove.piece, lastMove.destination);
     }
     gameMovie() {
 
@@ -114,17 +117,9 @@ class MyGameOrchestrator {
             this.scene.setDefaultAppearance();
             // Displays the scene (MySceneGraph function).
             this.theme.displayScene();
-
             this.gameboard.display();
-            if (!this.prolog.gameOver) {
-                if (this.gameMode == GameMode.bvb) {
-                    this.prolog.requestBotMove(this.level, this.currentPlayer)
-                    this.currentPlayer = this.currentPlayer == 1 ? 2 : 1;
-                    return;
-                }
-            }
         }
-
-        //this.animator.display();
+        this.gameboard.display();
+        this.animator.display();
     }
 }

@@ -128,36 +128,29 @@ class MyPrologInterface {
     getBotMove(newBoard) {
         let temp = "";
         let current = this.convertBoardToString();
-        //console.log("Current: " + current);
-        //console.log("New    : " + newBoard);
         let counter = 0;
         let i = 0;
         let piece;
         for (; i < current.length && i < newBoard.length; i++) {
             if (current[i] != newBoard[i]) {
-                //console.log("i: " + i + " = " + newBoard[i]);
+                console.log("i: " + i + " = " + newBoard[i]);
                 temp = newBoard.substring(i, newBoard.length);
                 //console.log(temp);
                 let temp2 = temp.match(/[^\[\,][^\, \[ \]]{1,6}[^\]\,]/)[0];
-                //console.log(temp2);
+                console.log(temp2);
                 piece = temp2.substring(0, temp2.length);
-                //console.log(piece);
+                console.log(piece);
                 break;
             }
             if (newBoard[i] == ",") {
                 counter++;
             }
         }
-        //console.log(counter);
         let newPos = this.board.getTileWithCoordinates(counter + 1);
         let newPiece = this.reversePieceName(piece);
-        //console.log(newPos);
-        //console.log(this.board.getPiece(newPiece));
         let move = new MyGameMove(this.board.scene, this.board.getPiece(newPiece), this.board.getTile(counter + 1), this.board);
-        //console.log(move);
         move.animateMove();
-        this.gameSequence.addGameMove(this.move);
-        //console.log(this.gameSequence);
+        this.gameSequence.addGameMove(move);
     }
 
     //Handle the Reply

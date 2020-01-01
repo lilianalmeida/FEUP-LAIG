@@ -20,14 +20,11 @@ class MyInterface extends CGFinterface {
 
         this.gui = new dat.GUI();
         this.configGame();
-        //this.initKeys();
+        this.initKeys();
 
         return true;
     }
 
-   
-
-    
     configGame() {
         var settingsFolder = this.gui.addFolder("Settings");
         settingsFolder.open();
@@ -39,6 +36,7 @@ class MyInterface extends CGFinterface {
         this.mode = "pvp";
         settingsFolder.add(this, 'mode', this.modes).name('Mode').onChange(this.scene.gameOrchestrator.changeMode.bind(this.scene.gameOrchestrator));
         settingsFolder.add(this.scene.gameOrchestrator,'newGame').name('New Game');
+        settingsFolder.add(this.scene.gameOrchestrator,'undo').name('Undo');
 
     }
 
