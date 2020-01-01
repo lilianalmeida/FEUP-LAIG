@@ -46,6 +46,7 @@ class MyGameOrchestrator {
                     this.currentPlayer = this.currentPlayer == 1 ? 2 : 1;
                     return;
                 }
+<<<<<<< HEAD
                 if (obj instanceof MyPiece && obj.player == this.currentPlayer) {
                     console.log("3");
                     if (this.gameState == GameState.SecondPick && this.move.piece == obj) {
@@ -80,6 +81,18 @@ class MyGameOrchestrator {
                         }
                     }
                     this.gameState = GameState.FirstPick;
+=======
+            } else if (obj instanceof MyTile && this.gameState == GameState.SecondPick) {
+                let tile = this.gameboard.getTile(obj.id);
+                this.move.destination = obj;
+                this.prolog.requestMove(this.move.piece, this.gameboard.getTileWithCoordinates(this.move.destination.id));
+                if (this.prolog.approval) {
+                    this.move.animateMove();
+                    this.gameSequence.addGameMove(this.move);
+                    this.animator.start(); 
+                    /*this.prolog.requestBotMove(2, this.move.piece.player == 2 ? 1 : 2);
+                    this.animator.start();*/
+>>>>>>> f1eacc8e3df05e95be152f7ba23c09b05581bd49
                 }
             }
         }
@@ -124,7 +137,7 @@ class MyGameOrchestrator {
 
     }
     gameMovie() {
-
+        this.animator.startMovie();
     }
     display() {
         if (this.scene.sceneInited) {
@@ -134,7 +147,9 @@ class MyGameOrchestrator {
             this.theme.displayScene();
             this.gameboard.display();
         }
-        this.gameboard.display();
+        if (!this.animator.isMovie) {
+            this.gameboard.display();
+        }
         this.animator.display();
     }
 }
