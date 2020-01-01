@@ -4,12 +4,11 @@
  * @param scene - Reference to MyScene object
  */
 class MyGameMove {
-    constructor(scene, piece, origin, destination, oldGameState) {
+    constructor(scene, piece, destination, gameBoard) {
         this.scene = scene;
         this.piece = piece;
-        this.origin = origin;
         this.destination = destination;
-        this.oldGameState = oldGameState;
+        this.gameBoard = gameBoard;
         this.arcAnimation = null;
     }
     animateMove() {
@@ -33,7 +32,6 @@ class MyGameMove {
         this.piece.x = this.destination.x + this.destination.width / 2;
         this.piece.y += 0.2;
         this.piece.z = -this.destination.y - this.destination.width / 2;*/
-        return this.oldGameState;
     }
     calculateAnimValues(){
         //console.log("HHEREE");

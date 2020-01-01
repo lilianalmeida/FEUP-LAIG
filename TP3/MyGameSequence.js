@@ -8,11 +8,12 @@ class MyGameSequence {
         this.moves = [];
     }
     addGameMove(move) {
+        console.log("inside " + move);
         this.moves.push(move);
     }
     undo() {
         let lastMove = this.moves.pop();
-        return lastMove.oldGameState;
+        lastMove.gameBoard.removePieceFromTile(lastMove.piece, lastMove.destination);
     }
     getMoveByIndex(index){
         if (index < this.moves.length){

@@ -12,6 +12,7 @@ class MyBoard extends CGFobject {
         this.y1 = y1;
         this.x2 = x2;
         this.y2 = y2;
+        this.content = this.emptyBoard();
         this.initBoard();
         this.createTiles();
         this.initMaterials();
@@ -58,7 +59,7 @@ class MyBoard extends CGFobject {
         for (let i = 0; i < 4; i++) {
             this.tiles[i] = new Array(4);
             for (let j = 0; j < 4; j++) {
-                this.tiles[i][j] = new MyTile(this.scene, (i * 4) + (j + 1), null, this, this.x1 + j * tileWidth, this.y1 + i * tileWidth, tileWidth);
+                this.tiles[i][j] = new MyTile(this.scene, (i * 4) + (j + 1), null, this, this.x1 + j * tileWidth, -this.y1 - (i + 1) * tileWidth, tileWidth);
             }
         }
     }
@@ -171,7 +172,12 @@ class MyBoard extends CGFobject {
     movePiece(piece, tile) {
         this.addPieceToTile(piece, tile);
     }
-    getTileWithCoordinates(tile_coordinates) {
-        //potencialmente o getTile
+    getTileWithCoordinates(tile_id) {
+        let newT = tile_id - 1;
+        return [Math.floor(newT / 4) + 1, newT % 4 + 1];
+    }
+
+    emptyBoard() {
+        return "[[empty,empty,empty,empty],[empty,empty,empty,empty],[empty,empty,empty,empty],[empty,empty,empty,empty]]";
     }
 }

@@ -20,10 +20,11 @@ class MyAnimator {
     update(time) {
         let move = this.gameSequence.moves[this.gameSequence.moves.length - 1];
         if (this.animationRunning && move.arcAnimation != null) {
+            console.log(this.gameSequence);
             move.arcAnimation.update(time);
             if (move.arcAnimation.terminated) {
                 move.piece.animTransformation = null;
-                move.oldGameState.addPieceToTile(move.piece, move.destination);
+                move.gameBoard.addPieceToTile(move.piece, move.destination);
                 move.piece.x = move.destination.x + move.destination.width / 2;
                 move.piece.y += 0.2;
                 move.piece.z = -move.destination.y - move.destination.width / 2;
