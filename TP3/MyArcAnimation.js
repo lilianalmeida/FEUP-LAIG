@@ -36,6 +36,12 @@ class MyArcAnimation extends MyAnimation {
 
     }
 
+    resetAnimation(){
+        this.elapsedTime = 0; 
+        this.elapsedAngle = this.startang;
+        this.terminated = false;
+    }
+
     /**
      * updates the actual position of the animation
      */

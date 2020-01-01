@@ -157,6 +157,10 @@ class MyBoard extends CGFobject {
     addPieceToTile(piece, tile) {
         tile.piece = piece;
         piece.tile = tile;
+
+        piece.x = tile.x + tile.width / 2;
+        piece.y += 0.2;
+        piece.z = -tile.y - tile.width / 2;
     }
     //TODO: Needed?
     removePieceFromTile(piece, tile) {

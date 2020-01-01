@@ -12,7 +12,7 @@ class MyGameMove {
         this.arcAnimation = null;
     }
     animateMove() {
-        let timeCircular = 2.0;
+        let timeCircular = 3.0;
 
         this.calculateAnimValues();
 

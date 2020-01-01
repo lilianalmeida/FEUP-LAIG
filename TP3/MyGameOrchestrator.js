@@ -40,9 +40,9 @@ class MyGameOrchestrator {
                 if (this.prolog.approval) {
                     this.move.animateMove();
                     this.gameSequence.addGameMove(this.move);
-                    this.animator.start(); //TODO: ANIMATORS
-                    this.prolog.requestBotMove(2, this.move.piece.player == 2 ? 1 : 2);
-                    this.animator.start();
+                    this.animator.start(); 
+                    /*this.prolog.requestBotMove(2, this.move.piece.player == 2 ? 1 : 2);
+                    this.animator.start();*/
                 }
                 this.gameState = GameState.FirstPick;
             }
@@ -50,14 +50,14 @@ class MyGameOrchestrator {
             this.move = null;
             this.gameState = GameState.FirstPick;
             console.log("undoo");
-            this.undo();
+            //this.undo();
         }
     }
     undo() {
         this.gameSequence.undo();
     }
     gameMovie() {
-
+        this.animator.startMovie();
     }
     display() {
         if (this.scene.sceneInited) {
@@ -66,7 +66,9 @@ class MyGameOrchestrator {
             // Displays the scene (MySceneGraph function).
             this.theme.displayScene();
         }
-        this.gameboard.display();
+        if (!this.animator.isMovie) {
+            this.gameboard.display();
+        }
         this.animator.display();
     }
 }
