@@ -1,23 +1,27 @@
 <lxs>
     <scene root="root" axis_length="5"/>
 
-    <views default="frontView">
-        <perspective id="frontView" near="0.005" far="500" angle="45">
-            <from x="0" y="35.5" z="45.5" />
+    <views default="Player1">
+        <perspective id="Player1" near="0.005" far="500" angle="45">
+            <from x="0" y="27" z="21.65" />
             <to x="0" y="1.5" z="0" />
         </perspective>
 
-        <ortho id="backView" near="0.005" far="500" left="-8.0" right="8.0" top="8.0" bottom="-8.0">
-            <from x="11.13" y="7.65" z="-16.9" />
-            <to x="1.96" y="3.35" z="0.18" />
-            <up x="-0.11" y="1" z="0.19" />
-        </ortho>
+        <perspective id="Player2" near="0.005" far="500" angle="45">
+            <from x="0" y="27" z="-21.65" />
+            <to x="0" y="1.5" z="0" />
+        </perspective>
 
-        <ortho id="otherView" near="0.005" far="500" left="-8.0" right="8.0" top="8.0" bottom="-8.0">
-            <from x="5.13" y="10.65" z="-10.9" />
-            <to x="5.96" y="2.35" z="1.18" />
-            <up x="-0.11" y="1" z="0.19" />
-        </ortho>
+        <perspective id="Player1 From Above" near="0.005" far="500" angle="90">
+            <from x="0" y="15" z="0.1" />
+            <to x="0" y="0" z="0" />
+        </perspective>
+
+        <perspective id="Player2 From Above" near="0.005" far="500" angle="90">
+            <from x="0" y="15" z="-0.1" />
+            <to x="0" y="0" z="0" />
+        </perspective>
+        
     </views>
 
     <globals>
@@ -45,7 +49,7 @@
 
     <textures>
         <texture id="boardTexture" file="scenes/images/T1.png" />
-        <texture id="wood" file="scenes/images/wood.jpg" />
+        <texture id="wood" file="scenes/images/tampo.jpg" />
         <texture id="roomLeft" file="scenes/images/LeftSpace.png" />
         <texture id="roomRight" file="scenes/images/rightSpace.png" />
         <texture id="roomTop" file="scenes/images/UpSpace.png" />

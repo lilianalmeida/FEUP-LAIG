@@ -42,8 +42,10 @@ class MyArcAnimation extends MyAnimation {
     update(deltaTime){
         this.elapsedTime += deltaTime;
         this.elapsedAngle = (this.elapsedTime/this.time)*this.rotang;
-        
 
+        //console.log("Maior " + this.direction*this.elapsedAngle);
+        //console.log("Do que " + this.direction*this.rotang);
+        
         if(this.direction*this.elapsedAngle >= this.direction*this.rotang){
             this.terminated = true;
         }
@@ -64,7 +66,7 @@ class MyArcAnimation extends MyAnimation {
         mat4.translate(transform,transform,[this.radius,0,0]);
 
         if(this.direction == 1){
-            mat4.rotate(transform,transform,Math.PI,[0,1,0]);
+            mat4.rotate(transform,transform,this.rotang,[0,1,0]);
         }
         return transform;
     }
@@ -81,11 +83,12 @@ class MyArcAnimation extends MyAnimation {
 
         
         if(this.direction == 1){
-            mat4.rotate(transform,transform,Math.PI,arcVec);
+            mat4.rotate(transform,transform,this.rotang,arcVec);
         }
         
 
         let outVec = [transform[12], transform[13], transform[14]];
+        //console.log("out" + outVec);
         return outVec;
     }
 

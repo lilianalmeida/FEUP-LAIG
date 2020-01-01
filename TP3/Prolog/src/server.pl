@@ -164,7 +164,6 @@ parse_input(bot_move(Board, Level, Player), [NewBoard, State]):-
 
         % Next player turn
         display_game(NewBoard, NewPlayer),
-        sleep(0.5),
         State = goOn
         )
     );

@@ -27,6 +27,7 @@ class MyTile extends CGFobject {
 
     // Always in pickMode
     display() {
+        console.log("PICKIIING");
         this.scene.pushMatrix();
         this.scene.translate(0, 0.5, 0);
         this.scene.rotate(-Math.PI / 2, 1, 0, 0);

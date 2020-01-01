@@ -53,7 +53,7 @@ class XMLscene extends CGFscene {
 
         }
 
-        this.gameOrchestrator.update(deltaTime);
+        this.gameOrchestrator.update(deltaTime / 1000);
 
         this.lastTime = currentTime;
     }
