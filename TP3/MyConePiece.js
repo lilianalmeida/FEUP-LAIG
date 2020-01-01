@@ -15,12 +15,14 @@ class MyConePiece extends MyPiece {
 
     displayPiece() {
         this.scene.pushMatrix();
-        this.scene.translate(this.x, 0.3 + this.y, this.z);
+        if (this.animTransformation != null) {
+            this.scene.translate(this.animTransformation[0], this.animTransformation[1] + 0.5, this.animTransformation[2]);
+        } else {
+            this.scene.translate(this.x, 0.3 + this.y, this.z);
+
+        }
         this.scene.rotate(-Math.PI / 2, 1, 0, 0);
         this.scene.scale(0.45 * 1.7, 0.45 * 1.7, 1 * 1.5);
-        if (this.animTrasn != null) {
-            this.scene.multMatrix(this.animTrasn);
-        }
 
         if (!this.scene.pickMode) {
             this.cone.display();

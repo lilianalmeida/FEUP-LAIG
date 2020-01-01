@@ -15,7 +15,7 @@ class MyPiece {
         this.x = x;
         this.y = y;
         this.z = z;
-        this.animTrasn = null;
+        this.animTransformation = null;
 
         this.whiteMaterial = new CGFappearance(this.scene);
         this.whiteMaterial.setAmbient(0.9, 0.9, 0.5, 1);

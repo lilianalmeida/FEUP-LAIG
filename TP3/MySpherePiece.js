@@ -15,11 +15,12 @@ class MySpherePiece extends MyPiece {
     displayPiece() {
 
         this.scene.pushMatrix();
-        this.scene.translate(this.x, 1 + this.y, this.z);
-        this.scene.scale(0.5 * 1.5, 0.5 * 1.5, 0.5 * 1.5);
-        if (this.animTrasn != null) {
-            this.scene.multMatrix(this.animTrasn);
+        if (this.animTransformation != null) {
+            this.scene.translate(this.animTransformation[0], this.animTransformation[1] + 1.2, this.animTransformation[2]);
+        } else {
+            this.scene.translate(this.x, 1 + this.y, this.z);
         }
+        this.scene.scale(0.5 * 1.5, 0.5 * 1.5, 0.5 * 1.5);
 
         if (!this.scene.pickMode) {
             this.sphere.display();
