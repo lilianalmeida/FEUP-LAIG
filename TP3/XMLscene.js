@@ -137,6 +137,8 @@ class XMLscene extends CGFscene {
         // Initializes interface controllers
         //this.interface.addCameraGroup();
         this.interface.addLightGroup();
+        this.interface.addCameraGroup();
+
         //this.interface.initKeys();
 
         this.initViews();
@@ -157,6 +159,7 @@ class XMLscene extends CGFscene {
         let graph = this.gameOrchestrator.theme;
         this.cameraDefault = graph.views[this.interface.cameraIndex];
     }
+
     logPicking() {
         if (this.pickMode == false) {
             if (this.pickResults != null && this.pickResults.length > 0) {
@@ -198,7 +201,6 @@ class XMLscene extends CGFscene {
 
         this.camera = camera;
         this.interface.setActiveCamera(this.camera);
-
         // Initialize Model-View matrix as identity (no transformation
         this.updateProjectionMatrix();
         this.loadIdentity();

@@ -19,27 +19,40 @@ class MyInterface extends CGFinterface {
         //  http://workshop.chromeexperiments.com/examples/gui
 
         this.gui = new dat.GUI();
-
+        this.configGame();
         //this.initKeys();
 
         return true;
     }
 
-    /**
-     * Adds a dropdown box to select a ID view from all views available
-     */
+   
+
+    
+    configGame() {
+        var settingsFolder = this.gui.addFolder("Settings");
+        settingsFolder.open();
+        this.levels = Object.keys(this.scene.gameOrchestrator.levels);
+        this.level = "easy";
+        settingsFolder.add(this, 'level', this.levels).name('Level').onChange(this.scene.gameOrchestrator.changeLevel.bind(this.scene.gameOrchestrator));        
+
+        this.modes = Object.keys(GameMode);
+        this.mode = "pvp";
+        settingsFolder.add(this, 'mode', this.modes).name('Mode').onChange(this.scene.gameOrchestrator.changeMode.bind(this.scene.gameOrchestrator));
+        settingsFolder.add(this.scene.gameOrchestrator,'newGame').name('New Game');
+
+    }
+
     addCameraGroup() {
         var camerasGroup = this.gui.addFolder("Cameras");
         camerasGroup.open();
+        console.log(this.scene.gameOrchestrator.theme);
+        this.viewsVec = Object.keys(this.scene.gameOrchestrator.theme.views);
+        this.securityViewsVec = Object.keys(this.scene.gameOrchestrator.theme.securityCameras);
 
-        this.viewsVec = Object.keys(this.scene.graph.views);
-        this.securityViewsVec = Object.keys(this.scene.graph.securityCameras);
-
-        this.cameraIndex = this.scene.graph.defaultView;
-        this.securityCameraIndex = this.scene.graph.defaultView;
+        this.cameraIndex = this.scene.gameOrchestrator.theme.defaultView;
+        this.securityCameraIndex = this.scene.gameOrchestrator.theme.defaultView;
 
         camerasGroup.add(this, 'cameraIndex', this.viewsVec).name('View').onChange(this.scene.changeView.bind(this.scene));
-        camerasGroup.add(this, 'securityCameraIndex', this.securityViewsVec).name('SC View').onChange(this.scene.changeView.bind(this.scene));
     }
 
     /**
