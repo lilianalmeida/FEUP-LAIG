@@ -4,17 +4,16 @@
  * @param scene - Reference to MyScene object
  */
 class MyPrologInterface {
-    constructor(gameBoard, gameSequence) {
+    constructor(gameOrch) {
         this.hasReply = false;
-        this.board = gameBoard;
-        this.gameSequence = gameSequence;
-        //console.log(this.board.tiles);
+        this.gameOrch = gameOrch;
+        this.board = this.gameOrch.gameboard;
+        this.gameSequence = this.gameOrch.gameSequence;
         this.approval = false;
         this.gameOver = false;
     }
 
     convertBoardToString() {
-        //console.log(this.board.tiles);
         let newBoard = "[";
         for (let i = 0; i < 4; i++) {
             newBoard += "[";
@@ -23,7 +22,7 @@ class MyPrologInterface {
                     newBoard += "empty";
                 }
                 else {
-                    //console.log(this.board.tiles[i][j].piece);
+                    ////console.log(this.board.tiles[i][j].piece);
                     newBoard += this.pieceNameOutput(this.board.tiles[i][j].piece);
                 }
                 if (j != 3) {
@@ -37,7 +36,7 @@ class MyPrologInterface {
             }
         }
         newBoard += "]";
-        //console.log(newBoard);
+        ////console.log(newBoard);
         return newBoard;
     }
 
@@ -79,7 +78,7 @@ class MyPrologInterface {
                 break;
         }
         let firstTry = piece + "1" + "p" + player;
-        //console.log(firstTry);
+        ////console.log(firstTry);
         if (this.board.getPiece(firstTry).tile == null) {
             piece = firstTry;
         } else {
@@ -133,13 +132,13 @@ class MyPrologInterface {
         let piece;
         for (; i < current.length && i < newBoard.length; i++) {
             if (current[i] != newBoard[i]) {
-                console.log("i: " + i + " = " + newBoard[i]);
+                //console.log("i: " + i + " = " + newBoard[i]);
                 temp = newBoard.substring(i, newBoard.length);
-                //console.log(temp);
+                ////console.log(temp);
                 let temp2 = temp.match(/[^\[\,][^\, \[ \]]{1,6}[^\]\,]/)[0];
-                console.log(temp2);
+                //console.log(temp2);
                 piece = temp2.substring(0, temp2.length);
-                console.log(piece);
+                //console.log(piece);
                 break;
             }
             if (newBoard[i] == ",") {
@@ -156,12 +155,26 @@ class MyPrologInterface {
     //Handle the Reply
     handleMoveReply(data) {
         let response = data.target.response;
-        console.log("Resp: " + response)
+        //console.log("Resp: " + response)
         let good = response.match("good") != null ? response.match("good")[0] : null;
         if (good != null) {
             this.approval = true;
             //this.board = response.match(/\[{2}.*\]{2}/)[0];
             this.gameOver = response.match("won") != null || response.match("tie") != null ? true : false;
+            
+            if(this.gameOver){
+            let currentScore = this.gameOrch.score;
+            console.log("O player é   " + this.player)
+            if(this.player == 2){
+                this.gameOrch.score["white"] += 1;  
+            }
+            else{
+                this.gameOrch.score["black"] += 1;  
+            }
+            //console.log("player " + player + " Score: "+ this.gameOrch.score[player]);
+            //console.log("New player " + player + " Score: "+ this.gameOrch.score[player]);
+   
+        }
         } else {
             this.approval = false;
         }
@@ -170,10 +183,16 @@ class MyPrologInterface {
     //Handle the Reply
     handleBotMoveReply(data) {
         let response = data.target.response;
-        console.log(response)
+        //console.log(response)
         let tmp = response.match(/\[{2}.*\]{2}/)[0];
         this.getBotMove(tmp.substring(1, tmp.length));
         this.gameOver = response.match("won") != null || response.match("tie") != null ? true : false;
+        let currentScore = this.gameOrch.score;
+            //console.log(currentScore);
+        if(this.gameOver){
+            let player = this.botPlayer == 1? "white":"black";   
+            this.gameOrch.score[player] += 1;     
+        }
 
     }
 
@@ -198,17 +217,21 @@ class MyPrologInterface {
         this.gameOver = false;
         this.makeRequest("play", this.handleStart.bind(this))
     }
-    requestMove(piece, destination) {
+    requestMove(player,piece, destination) {
+        //console.log("Player "+ player+ " Move!!");
         let move = "move(" + destination[0] + "," + destination[1] + "," + this.pieceName(piece) + "," + piece.player + "," + this.convertBoardToString() + ")";
         this.makeRequest(move, this.handleMoveReply.bind(this));
-        console.log(move);
+        //console.log("piece player  " + piece.player);
+        this.player = player;
+        console.log("Req Move: player is : "+ this.player);
+        //console.log(move);
         return this.approval;
     }
 
     async requestBotMove(level, player) {
         this.botPlayer = player;
         let move = "bot_move(" + this.convertBoardToString() + "," + level + "," + player + ")";
-        console.log(move);
+        //console.log(move);
         this.makeRequest(move, this.handleBotMoveReply.bind(this));
     }
 
