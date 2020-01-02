@@ -166,6 +166,9 @@ class MyBoard extends CGFobject {
     removePieceFromTile(piece, tile) {
         tile.piece = null;
         piece.tile = null;
+        piece.x = piece.initialPosition["x"];
+        piece.y = piece.initialPosition["y"];
+        piece.z = piece.initialPosition["z"];
     }
     getPieceOfTile(tile) {
         tile.piece;

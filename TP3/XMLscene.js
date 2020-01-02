@@ -15,9 +15,11 @@ class XMLscene extends CGFscene {
         this.lightsEnabled = {};    // Saves the state of each light defined
         this.lastTime = 0;
         this.filename = filename;
-        this.cameraRotation = true;
+        this.cameraRotation = false;
         this.cameraRotationActive = false;
         this.cameraRotationAngle = Math.PI;
+
+        this.countTime = false;
     }
 
     /**
@@ -39,6 +41,7 @@ class XMLscene extends CGFscene {
 
         this.gameOrchestrator = new MyGameOrchestrator(this, this.filename);
 
+
         this.axis = new CGFaxis(this);
         this.setUpdatePeriod(UPDATE_RATE);
 
@@ -55,13 +58,16 @@ class XMLscene extends CGFscene {
         if (currentTime % 2 == 0 && this.sceneInited) {
 
         }
-
-        this.gameOrchestrator.update(deltaTime / 1000);
+        if (this.countTime) {
+            this.gameOrchestrator.update(deltaTime / 1000);
+        }else{
+            this.countTime = true;
+        }
 
         this.lastTime = currentTime;
 
         if (this.cameraRotationActive) {
-            var stepAngle = Math.PI * deltaTime /1000;
+            var stepAngle = Math.PI * deltaTime / 1000;
             this.cameraRotationAngle -= stepAngle;
             if (this.cameraRotationAngle < 0) {
                 this.cameraRotationActive = false;

@@ -26,24 +26,6 @@ class MyAnimator {
         this.gameBoardMovie = new MyBoard(this.gameOrchestrator.scene, -6, 6, -6, 6);
     }
     update(time) {
-<<<<<<< HEAD
-        let move = this.gameSequence.moves[this.gameSequence.moves.length - 1];
-        if (this.animationRunning && move.arcAnimation != null) {
-            //console.log(this.gameSequence);
-            move.arcAnimation.update(time);
-            if (move.arcAnimation.terminated) {
-                move.piece.animTransformation = null;
-                move.gameBoard.addPieceToTile(move.piece, move.destination);
-                move.piece.x = move.destination.x + move.destination.width / 2;
-                move.piece.y += 0.2;
-                move.piece.z = -move.destination.y - move.destination.width / 2;
-                this.animationRunning = false;
-                //for all moves
-                // start animation
-                //when it's ended{
-                //this.sequenceIndex++;
-                //}
-=======
         if (this.animationRunning) {
             let move;
             let gameBoard;
@@ -62,9 +44,8 @@ class MyAnimator {
                 if (move.arcAnimation.terminated) {
                     let piece = gameBoard.getPiece(move.piece.id + "p" + move.piece.player);
                     let destinationTile = gameBoard.getTile(move.destination.id);
-                    piece.animTransformation = null;
-                    gameBoard.addPieceToTile(piece, destinationTile);
-                    move.arcAnimation.resetAnimation();
+                    
+                    this.endAnimation(piece, destinationTile, gameBoard, move);
                     
                     if (this.isMovie) {
                         console.log("Moviee ENded");
@@ -73,12 +54,21 @@ class MyAnimator {
                             this.reset();
                         }
                     }else{
-                        this.animationRunning = false;
+                        this.gameOrchestrator.nextTurn();
                     }
-                    this.gameOrchestrator.scene.cameraRotationActive = true;
+                    //TODO: CAmera
+                   // this.gameOrchestrator.scene.cameraRotationActive = true;
                 }
->>>>>>> f1eacc8e3df05e95be152f7ba23c09b05581bd49
             }
+        }
+    }
+
+    endAnimation(piece, destinationTile, gameBoard, move){
+        piece.animTransformation = null;
+        gameBoard.addPieceToTile(piece, destinationTile);
+        move.arcAnimation.resetAnimation();
+        if (!this.isMovie){
+            this.animationRunning = false;
         }
     }
 

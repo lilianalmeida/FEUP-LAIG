@@ -187,11 +187,11 @@ class MyPrologInterface {
         let tmp = response.match(/\[{2}.*\]{2}/)[0];
         this.getBotMove(tmp.substring(1, tmp.length));
         this.gameOver = response.match("won") != null || response.match("tie") != null ? true : false;
-        let currentScore = this.gameOrch.score;
-            //console.log(currentScore);
+        
         if(this.gameOver){
             let player = this.botPlayer == 1? "white":"black";   
-            this.gameOrch.score[player] += 1;     
+            this.gameOrch.score[player] += 1;
+            console.log(this.gameOrch.score);  
         }
 
     }
@@ -202,9 +202,11 @@ class MyPrologInterface {
         if(this.player == null){
             if (response.match("]],1]") != null) {
                 this.player = 1;
+                this.botPlayer = 2;
             }
             else if (response.match("]],2]") != null) {
                 this.player = 2;
+                this.botPlayer = 1;
             }
         }
     }
@@ -231,7 +233,7 @@ class MyPrologInterface {
     async requestBotMove(level, player) {
         this.botPlayer = player;
         let move = "bot_move(" + this.convertBoardToString() + "," + level + "," + player + ")";
-        //console.log(move);
+        console.log(move);
         this.makeRequest(move, this.handleBotMoveReply.bind(this));
     }
 

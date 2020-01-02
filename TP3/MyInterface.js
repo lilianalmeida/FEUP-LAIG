@@ -37,6 +37,7 @@ class MyInterface extends CGFinterface {
         settingsFolder.add(this, 'mode', this.modes).name('Mode').onChange(this.scene.gameOrchestrator.changeMode.bind(this.scene.gameOrchestrator));
         settingsFolder.add(this.scene.gameOrchestrator,'newGame').name('New Game');
         settingsFolder.add(this.scene.gameOrchestrator,'undo').name('Undo');
+        settingsFolder.add(this.scene.gameOrchestrator,'gameMovie').name('Movie');
 
     }
 
