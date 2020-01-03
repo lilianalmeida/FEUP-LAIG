@@ -30,15 +30,14 @@ class MyInterface extends CGFinterface {
         settingsFolder.open();
         this.levels = Object.keys(this.scene.gameOrchestrator.levels);
         this.level = "easy";
-        settingsFolder.add(this, 'level', this.levels).name('Level').onChange(this.scene.gameOrchestrator.changeLevel.bind(this.scene.gameOrchestrator));        
-
+        settingsFolder.add(this, 'level', this.levels).name('Level').onChange(this.scene.gameOrchestrator.changeLevel.bind(this.scene.gameOrchestrator));
         this.modes = Object.keys(GameMode);
         this.mode = "pvp";
         settingsFolder.add(this, 'mode', this.modes).name('Mode').onChange(this.scene.gameOrchestrator.changeMode.bind(this.scene.gameOrchestrator));
         settingsFolder.add(this.scene.gameOrchestrator,'newGame').name('New Game');
         settingsFolder.add(this.scene.gameOrchestrator,'undo').name('Undo');
         settingsFolder.add(this.scene.gameOrchestrator,'gameMovie').name('Movie');
-
+        settingsFolder.add(this.scene,'changeScene').name('Next Scene');
     }
 
     addCameraGroup() {

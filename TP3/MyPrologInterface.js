@@ -165,7 +165,7 @@ class MyPrologInterface {
             if(this.gameOver){
             let currentScore = this.gameOrch.score;
             console.log("O player é   " + this.player)
-            if(this.player == 2){
+            if(this.player == 1){
                 this.gameOrch.score["white"] += 1;  
             }
             else{

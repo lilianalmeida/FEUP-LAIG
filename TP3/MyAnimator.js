@@ -61,6 +61,11 @@ class MyAnimator {
                 }
             }
         }
+        for(let i in this.gameOrchestrator.gameboard.pieces){
+            if(this.gameOrchestrator.gameboard.pieces[i].floating){
+                this.gameOrchestrator.gameboard.pieces[i].float();
+            }
+        }
     }
 
     endAnimation(piece, destinationTile, gameBoard, move){
@@ -70,6 +75,7 @@ class MyAnimator {
         if (!this.isMovie){
             this.animationRunning = false;
         }
+        //this.gameOrchestrator.scene.cameraRotationActive = true;
     }
 
     display() {

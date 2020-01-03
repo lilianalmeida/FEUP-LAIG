@@ -23,9 +23,7 @@ class MyGameOrchestrator {
         }else{
             this.gameTime +=time;
         }
-
         this.animator.update(time);
-        console.log(this.gameTime);
     }
 
     newGame() {
@@ -40,6 +38,24 @@ class MyGameOrchestrator {
         console.log(this.gameMode);
         if (this.gameMode == GameMode.bvb) {
             this.nextTurn();
+        }
+        if(this.gameMode == GameMode.pvb){
+            console.log("1");
+            if(this.human == null || this.human == undefined){
+                console.log("2");
+                this.human = this.currentPlayer;
+                if(this.bot == null){console.log("3");
+                    this.bot = this.human==1? 2:1;
+                }
+                console.log("Bot IS "+ this.bot);
+                console.log("HUMAn IS "+ this.human);
+
+
+            }
+            if(this.currentPlayer != this.human){
+                this.prolog.requestBotMove(this.level, this.currentPlayer)
+                this.animator.start();
+            }
         }
     }
     parsePicking(obj, customId) {
@@ -56,11 +72,16 @@ class MyGameOrchestrator {
                 console.log("3");
                 if (this.gameState == GameState.SecondPick && this.move.piece == obj) {
                     console.log("4");
+                    this.move.piece.fall();
                     this.move = null;
                     this.gameState = GameState.FirstPick;
                 }
                 else {
+                    if(this.move != null){
+                        this.move.piece.fall();
+                    }
                     let piece = this.gameboard.getPiece(obj.id + "p" + obj.player);
+                    piece.startFloating();
                     this.move = new MyGameMove(this.scene, piece, null, this.gameboard);
                     this.gameState = GameState.SecondPick;
                 }
@@ -69,6 +90,7 @@ class MyGameOrchestrator {
                 this.move.destination = obj;
                 this.prolog.requestMove(this.currentPlayer, this.move.piece, this.gameboard.getTileWithCoordinates(this.move.destination.id));
                 if (this.prolog.approval) {
+                    this.move.piece.fall();
                     console.log("APPPPPROVED");
                     this.move.animateMove();
                     this.gameSequence.addGameMove(this.move);
@@ -89,9 +111,9 @@ class MyGameOrchestrator {
     nextTurn() {
         if (!this.prolog.gameOver) {
             this.currentPlayer = this.currentPlayer == 1 ? 2 : 1;
-            console.log("bot player " + this.prolog.botPlayer);
+            console.log("bot player " + this.bot);
             console.log("current player" + this.currentPlayer);
-            if (this.gameMode == GameMode.pvb && !this.prolog.gameOver && this.prolog.botPlayer == this.currentPlayer) {
+            if (this.gameMode == GameMode.pvb && !this.prolog.gameOver && this.bot == this.currentPlayer) {
                 this.sleep(500);
                 this.prolog.requestBotMove(this.level, this.move.piece.player == 2 ? 1 : 2);
                 this.animator.start();

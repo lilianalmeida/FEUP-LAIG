@@ -9,12 +9,13 @@ class XMLscene extends CGFscene {
      * @constructor
      * @param {MyInterface} myinterface 
      */
-    constructor(myinterface, filename) {
+    constructor(myinterface) {
         super();
         this.interface = myinterface;
         this.lightsEnabled = {};    // Saves the state of each light defined
         this.lastTime = 0;
-        this.filename = filename;
+        this.filenames = ["robot.xml", "other.xml"]
+        this.filename = this.filenames[0];
         this.cameraRotation = false;
         this.cameraRotationActive = false;
         this.cameraRotationAngle = Math.PI;
@@ -30,6 +31,30 @@ class XMLscene extends CGFscene {
         super.init(application);
         this.sceneInited = false;
 
+        this.initCameras();
+
+        this.enableTextures(true);
+
+        this.gl.clearDepth(100.0);
+        this.gl.enable(this.gl.DEPTH_TEST);
+        this.gl.enable(this.gl.CULL_FACE);
+        this.gl.depthFunc(this.gl.LEQUAL);
+
+        this.gameOrchestrator = new MyGameOrchestrator(this, this.filename);
+
+
+        this.axis = new CGFaxis(this);
+        this.setUpdatePeriod(UPDATE_RATE);
+
+        this.indexForPick = 1;
+        this.setPickEnabled(true);
+
+    }
+
+    changeScene(){
+        let index = (this.filenames.length + 1) % this.filenames.length;
+        this.filename = this.filenames[index];
+        
         this.initCameras();
 
         this.enableTextures(true);
