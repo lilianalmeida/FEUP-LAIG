@@ -54,7 +54,9 @@ class MyAnimator {
                             this.reset();
                         }
                     }else{
-                        this.gameOrchestrator.nextTurn();
+                        if(!this.gameOrchestrator.prolog.gameOver){
+                            this.gameOrchestrator.nextTurn();
+                        }
                     }
                     //TODO: CAmera
                    // this.gameOrchestrator.scene.cameraRotationActive = true;
@@ -75,7 +77,7 @@ class MyAnimator {
         if (!this.isMovie){
             this.animationRunning = false;
         }
-        //this.gameOrchestrator.scene.cameraRotationActive = true;
+        this.gameOrchestrator.scene.cameraRotationActive = true;
     }
 
     display() {

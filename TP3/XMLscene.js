@@ -9,13 +9,13 @@ class XMLscene extends CGFscene {
      * @constructor
      * @param {MyInterface} myinterface 
      */
-    constructor(myinterface) {
+    constructor(myinterface,filename) {
         super();
         this.interface = myinterface;
         this.lightsEnabled = {};    // Saves the state of each light defined
         this.lastTime = 0;
         this.filenames = ["robot.xml", "other.xml"]
-        this.filename = this.filenames[0];
+        this.filename = filename;
         this.cameraRotation = false;
         this.cameraRotationActive = false;
         this.cameraRotationAngle = Math.PI;
@@ -41,7 +41,9 @@ class XMLscene extends CGFscene {
         this.gl.depthFunc(this.gl.LEQUAL);
 
         this.gameOrchestrator = new MyGameOrchestrator(this, this.filename);
-
+        /* this.rttTexture = new CGFtexture(this, "scenes/images/6.png");
+         this.securityCamera = new MySecurityCamera(this);
+        */
 
         this.axis = new CGFaxis(this);
         this.setUpdatePeriod(UPDATE_RATE);
@@ -51,10 +53,10 @@ class XMLscene extends CGFscene {
 
     }
 
-    changeScene(){
+    changeScene() {
         let index = (this.filenames.length + 1) % this.filenames.length;
         this.filename = this.filenames[index];
-        
+
         this.initCameras();
 
         this.enableTextures(true);
@@ -78,6 +80,8 @@ class XMLscene extends CGFscene {
      * Checks key input at each period defined with setUpdatePeriod
      */
     update(currentTime) {
+        //this.securityCamera.update(currentTime);
+        
         var deltaTime = currentTime - this.lastTime;
 
         if (currentTime % 2 == 0 && this.sceneInited) {
@@ -85,20 +89,43 @@ class XMLscene extends CGFscene {
         }
         if (this.countTime) {
             this.gameOrchestrator.update(deltaTime / 1000);
-        }else{
+        } else {
             this.countTime = true;
         }
 
         this.lastTime = currentTime;
 
         if (this.cameraRotationActive) {
-            var stepAngle = Math.PI * deltaTime / 1000;
-            this.cameraRotationAngle -= stepAngle;
-            if (this.cameraRotationAngle < 0) {
+            if (this.cameraRotationAngle == Math.PI) {
+                this.camP1 = new CGFcamera(Math.PI / 4, 0.005, 500, vec3.fromValues(0, 27, 21.65), vec3.fromValues(0, 0, 0));
+                this.camP2 = new CGFcamera(Math.PI / 4, 0.005, 500, vec3.fromValues(0, 27, -21.65), vec3.fromValues(0, 0, 0))
+                if (this.gameOrchestrator.currentPlayer == 2) {
+                    this.cameraDefault = this.camP1;
+
+                } else if (this.gameOrchestrator.currentPlayer == 1) {
+                    this.cameraDefault = this.camP2;
+                }
+            }
+
+            if (this.stepAngle == null) {
+                this.stepAngle = Math.PI / 2 * deltaTime / 1000;
+            }
+            this.cameraRotationAngle -= this.stepAngle;
+
+            if (this.cameraRotationAngle < 0 && !this.gameOrchestrator.prolog.gameOver) {
                 this.cameraRotationActive = false;
                 this.cameraRotationAngle = Math.PI;
-                //this.game.setCamera();
-            } else this.camera.orbit(vec3.fromValues(0, 1, 0), stepAngle);
+                if (this.gameOrchestrator.currentPlayer == 1) {
+                    this.cameraDefault = this.camP1;
+
+                } else if (this.gameOrchestrator.currentPlayer == 2) {
+                    this.cameraDefault = this.camP2;
+                }
+
+            } else {
+
+                this.camera.orbit(vec3.fromValues(0, 1, 0), this.stepAngle);
+            }
         }
     }
     /**
@@ -106,6 +133,8 @@ class XMLscene extends CGFscene {
      */
     initCameras() {
         this.cameraDefault = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
+        this.camera = this.cameraDefault;
+        //this.cameraRTT = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
 
         this.camera = this.cameraDefault;
     }
@@ -224,14 +253,15 @@ class XMLscene extends CGFscene {
      * Displays the scene.
      */
     display() {
-        /**this.rttTexture.attachToFrameBuffer();
-        this.render(this.cameraRTT);
-        this.rttTexture.detachFromFrameBuffer();*/
+        //this.rttTexture.attachToFrameBuffer();
+        //this.render(this.cameraRTT);
+        //this.rttTexture.detachFromFrameBuffer();
         this.render(this.cameraDefault);
 
-        /**  this.gl.disable(this.gl.DEPTH_TEST);
-         this.securityCamera.display(this.rttTexture);
-         this.gl.enable(this.gl.DEPTH_TEST); */
+        /*this.gl.disable(this.gl.DEPTH_TEST);
+        this.securityCamera.display(this.rttTexture);
+        this.gl.enable(this.gl.DEPTH_TEST);
+        */
     }
     /**
      * Renders the scene applying the camera given.

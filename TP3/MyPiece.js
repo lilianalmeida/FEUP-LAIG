@@ -28,7 +28,7 @@ class MyPiece {
         this.whiteMaterial.setTextureWrap('REPEAT', 'REPEAT');
 
         this.redMaterial = new CGFappearance(this.scene);
-        this.redMaterial.setAmbient(1, 0, 1, 1);
+        this.redMaterial.setAmbient(1, 0.4, 0.2, 1);
         this.redMaterial.setDiffuse(0.05, 0.05, 0.05, 1);
         this.redMaterial.setSpecular(0.3, 0.3, 0.3, 1.0);
         this.redMaterial.setShininess(10.0);
