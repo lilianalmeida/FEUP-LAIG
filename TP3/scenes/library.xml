@@ -21,7 +21,7 @@
             <from x="0" y="15" z="-0.1" />
             <to x="0" y="0" z="0" />
         </perspective>
-        
+
     </views>
 
     <globals>
@@ -49,14 +49,15 @@
 
     <textures>
         <texture id="boardTexture" file="scenes/images/T1.png" />
-        <texture id="wood" file="scenes/images/tampo.jpg" />
-        <texture id="roomLeft" file="scenes/images/LeftSpace.png" />
-        <texture id="roomRight" file="scenes/images/rightSpace.png" />
-        <texture id="roomTop" file="scenes/images/UpSpace.png" />
+        <texture id="wood" file="scenes/images/wood2.jpg" />
+        <texture id="roomWall" file="scenes/images/books.jfif" />
+        <texture id="roomRight" file="scenes/images/booksSide.png" />
+        <texture id="roomLeft" file="scenes/images/booksSide.png" />
+        <texture id="roomTop" file="scenes/images/floor.png" />
         <texture id="roomBottom" file="scenes/images/DownSpace.png" />
-        <texture id="roomBack" file="scenes/images/BackSpace.png" />
-        <texture id="roomFront" file="scenes/images/FrontSpace.png" />
-        <texture id="moonSurfaceText" file="scenes/images/moonSurface.jpg" />
+        <texture id="roomBack" file="scenes/images/sunset.jpg" />
+        <texture id="roomFront" file="scenes/images/sunset.jpg" />
+        <texture id="floor" file="scenes/images/wood.jpg" />
     </textures>
 
     <materials>
@@ -74,11 +75,11 @@
             <specular r="0.9" g="0.66" b="0.08" a="1.0" />
         </material>
 
-        <material id="robotMaterialEyes" shininess="4">
-            <emission r="0.0" g="0.0" b="0.0" a="1.0" />
-            <ambient r="0.0" g="0.0" b="1.0" a="1.0" />
-            <diffuse r="0.0" g="0.0" b="0.8" a="1.0" />
-            <specular r="0.0" g="0.0" b="0.8" a="1.0" />
+        <material id="pillowMaterial" shininess="2">
+            <emission r="0.28" g="0.11" b="0.12" a="0.5" />
+            <ambient r="0.28" g="0.11" b="0.12" a="0.5" />
+            <diffuse r="0.28" g="0.11" b="0.12" a="0.5" />
+            <specular r="0.28" g="0.11" b="0.12" a="0.5" />
         </material>
     </materials>
 
@@ -90,43 +91,6 @@
     </transformations>
 
     <animations>
-        <animation id="moveRobot">
-            <keyframe instant="2">
-                <translate x="0" y="0" z="0" />
-                <rotate angle_x="0" angle_y="0" angle_z="0" />
-                <scale x="1" y="1" z="1" />
-            </keyframe>
-            <keyframe instant="5">
-                <translate x="0" y="0" z="0" />
-                <rotate angle_x="0" angle_y="18.4" angle_z="0" />
-                <scale x="1" y="1" z="1" />
-            </keyframe>
-            <keyframe instant="7">
-                <translate x="5" y="-0.5" z="15" />
-                <rotate angle_x="0" angle_y="18.4" angle_z="0" />
-                <scale x="1" y="1" z="1" />
-            </keyframe>
-            <keyframe instant="13">
-                <translate x="5" y="-0.5" z="15" />
-                <rotate angle_x="0" angle_y="18.4" angle_z="0" />
-                <scale x="1" y="1" z="1" />
-            </keyframe>
-            <keyframe instant="17">
-                <translate x="5" y="-0.5" z="15" />
-                <rotate angle_x="0" angle_y="-161.6" angle_z="0" />
-                <scale x="1" y="1" z="1" />
-            </keyframe>
-            <keyframe instant="19">
-                <translate x="2" y="0.0" z="1.5" />
-                <rotate angle_x="0" angle_y="-161.6" angle_z="0" />
-                <scale x="1" y="1" z="1" />
-            </keyframe>
-            <keyframe instant="22">
-                <translate x="-1" y="-0.15" z="-12" />
-                <rotate angle_x="0" angle_y="-161.6" angle_z="0" />
-                <scale x="1" y="1" z="1" />
-            </keyframe>
-        </animation>
     </animations>
 
     <primitives>
@@ -151,6 +115,19 @@
         <primitive id="plane">
             <plane npartsU="2" npartsV="2" />
         </primitive>
+        <primitive id="cylinderBase">
+            <patch npointsU="2" npointsV="4" npartsU="10" npartsV="10">
+                <controlpoint xx="-1" yy="0.0" zz="0" />
+                <controlpoint xx="-1" yy="1.3333" zz="0" />
+                <controlpoint xx="1" yy="1.3333" zz="0" />
+                <controlpoint xx="1" yy="0.0" zz="0" />
+
+                <controlpoint xx="-1" yy="0.0" zz="0" />
+                <controlpoint xx="-1" yy="-1.3333" zz="0" />
+                <controlpoint xx="1" yy="-1.3333" zz="0" />
+                <controlpoint xx="1" yy="0.0" zz="0" />
+            </patch>
+        </primitive>
     </primitives>
 
     <components>
@@ -164,10 +141,13 @@
             <children>
                 <componentref id="room" />
                 <componentref id="tableStool" />
+                <componentref id ="longTable1"/>
+                <componentref id ="longTable2"/>
+
             </children>
         </component>
 
-         <component id="table" visibility="1" selectable="0">
+        <component id="table" visibility="1" selectable="0">
             <transformation>
             </transformation>
             <materials>
@@ -178,63 +158,8 @@
                 <componentref id = "tablePrim"/>
                 <componentref id = "leg1"/>
                 <componentref id = "leg2"/>
-                 <componentref id = "leg3"/>
-                  <componentref id = "leg4"/>
-            </children>
-        </component>
-
-        
-        <component id="tableStool" visibility="1" selectable="0">
-            <transformation>
-            </transformation>
-            <materials>
-                <material id="inherit" />
-            </materials>
-            <texture id="wood" length_s="1" length_t = "1"/>
-            <children>
-                <componentref id = "stool1"/>
-                <componentref id = "stool2"/>
-                <componentref id = "table"/>
-            </children>
-        </component>
-
-
-        <component id="stool1">
-            <transformation>
-                <translate x="0" y="-9" z="24" />
-            </transformation>
-            <materials>
-                <material id="inherit" />
-            </materials>
-            <texture id="inherit"/>
-            <children>
-                <componentref id = "stool"/>
-            </children>
-        </component>
-
-        <component id="stool">
-            <transformation>
-                <scale x="0.52" y="15" z="0.52"/>
-            </transformation>
-            <materials>
-                <material id="inherit" />
-            </materials>
-            <texture id="inherit"/>
-            <children>
-                <componentref id = "tablePrim"/>
-            </children>
-        </component>
-
-        <component id="stool2">
-            <transformation>
-                <translate x="0" y="-9" z="-24" />
-            </transformation>
-            <materials>
-                <material id="inherit" />
-            </materials>
-            <texture id="inherit"/>
-            <children>
-                <componentref id = "stool"/>
+                <componentref id = "leg3"/>
+                <componentref id = "leg4"/>
             </children>
         </component>
 
@@ -306,7 +231,7 @@
         <component id="leg" visibility="1" selectable="0">
             <transformation>
                 <rotate axis="z" angle="90" />
-                <scale x="4" y="0.2" z="0.2"/>
+                <scale x="4" y="0.5" z="0.5"/>
             </transformation>
             <materials>
                 <material id="inherit" />
@@ -437,17 +362,16 @@
                 <componentref id = "roomFront"/>
                 <componentref id = "roomBack"/>
                 <componentref id = "roomTop"/>
-                <componentref id = "roomBottom"/>
                 <componentref id = "surface"/>
             </children>
         </component>
 
         <component id="roomRight" visibility="1" selectable="0">
             <transformation>
-                <translate x="50" y="0" z="0" />
+                <translate x="100" y="30" z="0" />
                 <rotate axis="z" angle="90" />
                 <rotate axis="y" angle="-90" />
-                <scale x="100" y="100" z="100"/>
+                <scale x="200" y="1000" z="100"/>
             </transformation>
             <materials>
                 <material id="inherit" />
@@ -460,10 +384,10 @@
 
         <component id="roomLeft" visibility="1" selectable="0">
             <transformation>
-                <translate x="-50" y="0" z="0" />
+                <translate x="-100" y="30" z="0" />
                 <rotate axis= "z" angle = "-90"/>
                 <rotate axis="y" angle="90" />
-                <scale x="100" y="100" z="100"/>
+                <scale x="200" y="1000" z="100"/>
             </transformation>
             <materials>
                 <material id="inherit" />
@@ -476,14 +400,14 @@
 
         <component id="roomBack" visibility="1" selectable="0">
             <transformation>
-                <translate x="0" y="0" z="-50" />
+                <translate x="0" y="30" z="-100" />
                 <rotate axis="x" angle="90" />
-                <scale x="100" y="100" z="100"/>
+                <scale x="200" y="1" z="100"/>
             </transformation>
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="roomBack" length_s="1" length_t = "1"/>
+            <texture id="roomWall" length_s="1" length_t = "1"/>
             <children>
                 <primitiveref id = "plane"/>
             </children>
@@ -491,30 +415,15 @@
 
         <component id="roomFront" visibility="1" selectable="0">
             <transformation>
-                <translate x="0" y="0" z="50" />   
+                <translate x="0" y="30" z="100" />
                 <rotate axis="x" angle="-90" />
                 <rotate axis="y" angle="180" />
-                <scale x="100" y="100" z="100"/>
+                <scale x="200" y="1" z="100"/>
             </transformation>
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="roomFront" length_s="1" length_t = "1"/>
-            <children>
-                <primitiveref id = "plane"/>
-            </children>
-        </component>
-
-        <component id="roomBottom" visibility="1" selectable="0">
-            <transformation>
-                <translate x="0" y="-50" z="0" />
-                <rotate axis="y" angle="180" />
-                <scale x="100" y="100" z="100"/>
-            </transformation>
-            <materials>
-                <material id="inherit" />
-            </materials>
-            <texture id="roomBottom" length_s="1" length_t = "1"/>
+            <texture id="roomWall" length_s="1" length_t = "1"/>
             <children>
                 <primitiveref id = "plane"/>
             </children>
@@ -522,9 +431,9 @@
 
         <component id="roomTop" visibility="1" selectable="0">
             <transformation>
-                <translate x="0" y="50" z="0" />
+                <translate x="0" y="100" z="0" />
                 <rotate axis="z" angle="180" />
-                <scale x="100" y="100" z="100"/>
+                <scale x="400" y="50" z="400"/>
             </transformation>
             <materials>
                 <material id="inherit" />
@@ -538,15 +447,211 @@
         <component id="surface" visibility="1" selectable="0">
             <transformation>
                 <translate x="0" y="-20" z="0" />
-                <scale x="100" y="100" z="100"/>
+                <scale x="200" y="100" z="200"/>
             </transformation>
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="moonSurfaceText" length_s="1" length_t = "1"/>
+            <texture id="floor" length_s="1" length_t = "1"/>
             <children>
                 <primitiveref id = "plane"/>
             </children>
         </component>
+
+        <component id="table" visibility="1" selectable="0">
+            <transformation>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="wood" length_s="1" length_t = "1"/>
+            <children>
+                <componentref id = "tablePrim"/>
+                <componentref id = "leg1"/>
+                <componentref id = "leg2"/>
+                <componentref id = "leg3"/>
+                <componentref id = "leg4"/>
+            </children>
+        </component>
+
+        <component id="longTable1" visibility="1" selectable="0">
+            <transformation>
+                <translate x= "-85" y= "0" z="0"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="wood" length_s="1" length_t = "1"/>
+            <children>
+                <componentref id = "longTable"/>
+            </children>
+        </component>
+
+        <component id="longTable2" visibility="1" selectable="0">
+            <transformation>
+                <translate x= "85" y= "0" z="0"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="wood" length_s="1" length_t = "1"/>
+            <children>
+                <componentref id = "longTable"/>
+            </children>
+        </component>
+
+        <component id="longTable" visibility="1" selectable="0">
+            <transformation>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="wood" length_s="1" length_t = "1"/>
+            <children>
+                <componentref id = "longTablePrim"/>
+                <componentref id = "longLeg1"/>
+                <componentref id = "longLeg2"/>
+                <componentref id = "longLeg3"/>
+                <componentref id = "longLeg4"/>
+            </children>
+        </component>
+
+        <component id="longTablePrim" visibility="1" selectable="0">
+            <transformation>
+                <scale x = "1" y= "5" z="5"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <componentref id = "tablePrim"/>
+            </children>
+        </component>
+
+        <component id="longLeg1" visibility="1" selectable="0">
+            <transformation>
+                <translate x= "0" y= "0" z="50"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <componentref id = "leg1"/>
+            </children>
+        </component>
+
+        <component id="longLeg2" visibility="1" selectable="0">
+            <transformation>
+                <translate x= "0" y= "0" z="-50"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <componentref id = "leg2"/>
+            </children>
+        </component>
+
+        <component id="longLeg3" visibility="1" selectable="0">
+            <transformation>
+                <translate x= "0" y= "0" z="-50"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <componentref id = "leg3"/>
+            </children>
+        </component>
+
+        <component id="longLeg4" visibility="1" selectable="0">
+            <transformation>
+                <translate x= "0" y= "0" z="50"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <componentref id = "leg4"/>
+            </children>
+        </component>
+
+        <component id="tableStool" visibility="1" selectable="0">
+            <transformation>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="wood" length_s="1" length_t = "1"/>
+            <children>
+                <componentref id = "stool1"/>
+                <componentref id = "stool2"/>
+                <componentref id = "table"/>
+            </children>
+        </component>
+
+
+        <component id="stool1">
+            <transformation>
+                <translate x="0" y="0" z="24" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <componentref id = "stool"/>
+            </children>
+        </component>
+
+        <component id="stool">
+            <transformation>
+                <translate x="0" y="-12" z="0" />
+                <scale x="0.52" y="25" z="0.52"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <componentref id = "tablePrim"/>
+                <!--<componentref id = "pillow"/>-->
+            </children>
+        </component>
+
+        <component id="stool2">
+            <transformation>
+                <translate x="0" y="0" z="-24" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <componentref id = "stool"/>
+            </children>
+        </component>
+
+        <component id="pillow">
+            <transformation>
+                <translate x="0" y="0.5" z="0" />
+                <scale x="10" y="0.5" z="10"/>
+            </transformation>
+            <materials>
+                <material id="pillowMaterial" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <primitiveref id = "sphere"/>
+            </children>
+        </component>
+
+
+
     </components>
 </lxs>

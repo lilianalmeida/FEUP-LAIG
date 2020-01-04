@@ -19,7 +19,7 @@ serialInclude(['../lib/CGF.js', 'XMLscene.js', 'MySceneGraph.js', 'MyInterface.j
 
         // get file name provided in URL, e.g. http://localhost/myproj/?file=myfile.xml 
         // or use "demo.xml" as default (assumes files in subfolder "scenes", check MySceneGraph constructor) 
-        var filename = getUrlVars()['file'] || "field.xml";
+        var filename = getUrlVars()['file'] || "library.xml";
         var myScene = new XMLscene(myInterface,filename);
 
         app.init();

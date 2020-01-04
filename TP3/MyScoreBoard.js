@@ -6,8 +6,8 @@
 class MySecurityCamera extends CGFobject {
     constructor(scene) {
         super(scene);
-        this.screen = new MyRectangle(this.scene, 0.0, 0.5, 0.5, 1);
-
+        this.SBplayer1 = new MyRectangle(this.scene, 0.5, 1, -1, -0.5);
+        this.SBplayer2 = new MyRectangle(this.scene, 0.5, 1, -1, -0.5);
         this.initShader();
     }
     /**

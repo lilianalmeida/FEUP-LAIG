@@ -73,13 +73,6 @@
             <diffuse r="0.9" g="0.66" b="0.08" a="1.0" />
             <specular r="0.9" g="0.66" b="0.08" a="1.0" />
         </material>
-
-        <material id="robotMaterialEyes" shininess="4">
-            <emission r="0.0" g="0.0" b="0.0" a="1.0" />
-            <ambient r="0.0" g="0.0" b="1.0" a="1.0" />
-            <diffuse r="0.0" g="0.0" b="0.8" a="1.0" />
-            <specular r="0.0" g="0.0" b="0.8" a="1.0" />
-        </material>
     </materials>
 
     <transformations>
@@ -163,7 +156,7 @@
             <texture id="none"/>
             <children>
                 <componentref id="room" />
-                <componentref id="table" />
+                <componentref id="tableStool" />
             </children>
         </component>
 
@@ -180,6 +173,62 @@
                 <componentref id = "leg2"/>
                  <componentref id = "leg3"/>
                   <componentref id = "leg4"/>
+            </children>
+        </component>
+
+         
+        <component id="tableStool" visibility="1" selectable="0">
+            <transformation>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="wood" length_s="1" length_t = "1"/>
+            <children>
+                <componentref id = "stool1"/>
+                <componentref id = "stool2"/>
+                <componentref id = "table"/>
+            </children>
+        </component>
+
+
+         <component id="stool1">
+            <transformation>
+                <translate x="0" y="0" z="24" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <componentref id = "stool"/>
+            </children>
+        </component>
+
+        <component id="stool">
+            <transformation>
+                <translate x="0" y="-12" z="0" />
+                <scale x="0.52" y="25" z="0.52"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <componentref id = "tablePrim"/>
+            </children>
+        </component>
+
+        <component id="stool2">
+            <transformation>
+                <translate x="0" y="0" z="-24" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <componentref id = "stool"/>
             </children>
         </component>
 

@@ -20,14 +20,19 @@ class MyGameOrchestrator {
     update(time) {
         if (this.gameTime == null) {
             this.gameTime = time;
-        }else{
-            this.gameTime +=time;
-            if(!this.prolog.gameOver){
-                document.getElementById("time").innerText ="Time passed: " + Math.round(this.gameTime) + " seconds";
+        } else {
+            this.gameTime += time;
+            if (!this.prolog.gameOver) {
+                document.getElementById("time").innerText = "Time passed: " + Math.round(this.gameTime) + " seconds";
             }
 
         }
         this.animator.update(time);
+    }
+    changeScene(filename) {
+        this.scene.sceneInited = false;
+        this.theme = new MySceneGraph(filename, this.scene);
+        this.scene.graph = this.theme;
     }
 
     newGame() {
@@ -36,23 +41,23 @@ class MyGameOrchestrator {
         this.gameboard = new MyBoard(this.scene, -6, 6, -6, 6);
         this.prolog = new MyPrologInterface(this);
         this.prolog.requestStart();
-        this.cameraRotationActive = true;
         this.gameTime = 0;
         this.currentPlayer = this.prolog.player;
+        this.scene.camera = this.currentPlayer == 1 ? this.scene.camp1 : this.scene.camp2;
         this.gameState = GameState.FirstPick;
         this.gameMode = GameMode[this.scene.interface.mode];
-        console.log(this.gameMode);
         if (this.gameMode == GameMode.bvb) {
             this.nextTurn();
         }
-        if(this.gameMode == GameMode.pvb){
-            if(this.human == null || this.human == undefined){
+        if (this.gameMode == GameMode.pvb) {
+            if (this.human == null || this.human == undefined) {
                 this.human = this.currentPlayer;
-                if(this.bot == null){
-                    this.bot = this.human==1? 2:1;
+                if (this.bot == null) {
+                    this.bot = this.human == 1 ? 2 : 1;
                 }
             }
-            if(this.currentPlayer != this.human){
+            if (this.currentPlayer != this.human) {
+                this.sleep(1000);
                 this.prolog.requestBotMove(this.level, this.currentPlayer)
                 this.animator.start();
             }
@@ -66,15 +71,13 @@ class MyGameOrchestrator {
         if (!this.animator.animationRunning) {
 
             if (obj instanceof MyPiece && obj.player == this.currentPlayer) {
-                console.log("3");
                 if (this.gameState == GameState.SecondPick && this.move.piece == obj) {
-                    console.log("4");
                     this.move.piece.fall();
                     this.move = null;
                     this.gameState = GameState.FirstPick;
                 }
                 else {
-                    if(this.move != null){
+                    if (this.move != null) {
                         this.move.piece.fall();
                     }
                     let piece = this.gameboard.getPiece(obj.id + "p" + obj.player);
@@ -85,16 +88,14 @@ class MyGameOrchestrator {
             } else if (obj instanceof MyTile && this.gameState == GameState.SecondPick) {
                 let tile = this.gameboard.getTile(obj.id);
                 this.move.destination = obj;
-                console.log("Player "+ this.currentPlayer + " requesting move");
                 this.prolog.requestMove(this.currentPlayer, this.move.piece, this.gameboard.getTileWithCoordinates(this.move.destination.id));
                 if (this.prolog.approval) {
                     this.move.piece.fall();
-                    console.log("APPPPPROVED");
                     this.move.animateMove();
                     this.gameSequence.addGameMove(this.move);
                     this.animator.start();
                 }
-                else{
+                else {
                     this.move.piece.fall();
                 }
                 this.gameState = GameState.FirstPick;
@@ -104,20 +105,16 @@ class MyGameOrchestrator {
         else {
             this.move = null;
             this.gameState = GameState.FirstPick;
-            console.log("undoo");
         }
         console.log(this.score);
     }
 
     nextTurn() {
-        console.log("Next TURN");
-        console.log("last Player" + this.currentPlayer);
         if (!this.prolog.gameOver) {
             this.currentPlayer = this.currentPlayer == 1 ? 2 : 1;
-            document.getElementById("player").innerText ="Player "+ this.currentPlayer + "'s turn";
-            console.log("current player" + this.currentPlayer);
+            document.getElementById("player").innerText = "Player " + this.currentPlayer + "'s turn";
             if (this.gameMode == GameMode.pvb && !this.prolog.gameOver && this.bot == this.currentPlayer) {
-                this.sleep(500);
+                this.sleep(1000);
                 this.prolog.requestBotMove(this.level, this.move.piece.player == 2 ? 1 : 2);
                 this.animator.start();
             }
@@ -127,7 +124,6 @@ class MyGameOrchestrator {
                 this.animator.start();
             }
         }
-        console.log("current player" + this.currentPlayer);        
     }
 
     changeLevel() {
@@ -143,36 +139,27 @@ class MyGameOrchestrator {
     }
 
     undo() {
-        console.log("Entrei undo");
         if (this.gameSequence.moves.length == 0) {
-            console.log("Im zero");
             return;
         }
         this.scene.cameraRotationActive = true;
         let lastMove = this.gameSequence.moves[this.gameSequence.moves.length - 1];
         let lastPiece = lastMove.piece;
         if (!this.animator.isMovie) {
-            console.log("not movie");
             if (this.animator.animationRunning) {
-                console.log("ruunig");
                 this.animator.endAnimation(lastMove.piece, lastMove.destination, lastMove.gameBoard, lastMove);
                 this.currentPlayer = this.currentPlayer == 1 ? 2 : 1;
             }
 
-            console.log("undo");
             this.gameSequence.moves.pop();
-
             this.gameboard.removePieceFromTile(lastMove.piece, lastMove.destination);
-
-            console.log("next Turn");
             this.nextTurn();
 
             if (this.prolog.gameOver) {
                 this.score[this.currentPlayer == 1 ? "white" : "black"] -= 1;
                 this.prolog.gameOver = false;
             }
-            document.getElementById("player").innerText ="Player "+ this.currentPlayer + "'s turn";
-
+            document.getElementById("player").innerText = "Player " + this.currentPlayer + "'s turn";
         }
     }
 
@@ -180,8 +167,8 @@ class MyGameOrchestrator {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    updateScoreBoard(){
-        document.getElementById("score").innerText ="(P1) " + this.score["white"] + "-" + this.score["black"] + " (P2)";
+    updateScoreBoard() {
+        document.getElementById("score").innerText = "P1 " + this.score["white"] + "-" + this.score["black"] + " P2";
     }
     gameMovie() {
         this.animator.startMovie();

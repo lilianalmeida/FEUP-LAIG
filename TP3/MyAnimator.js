@@ -37,6 +37,7 @@ class MyAnimator {
                 console.log("Moviee" + this.sequenceIndex);
                 move = this.gameSequence.moves[this.sequenceIndex];
                 gameBoard = this.gameBoardMovie;
+                this.gameOrchestrator.scene.cameraRotationActive = false;
             }
             
             if (move.arcAnimation != null) {
