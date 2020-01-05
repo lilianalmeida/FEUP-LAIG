@@ -62,7 +62,7 @@ class XMLscene extends CGFscene {
 
         this.lastTime = currentTime;
 
-        if (this.cameraRotationActive) {
+        if (this.cameraRotationActive && this.cameraRotation) {
             if (this.cameraRotationAngle == Math.PI) {
                 this.camP1 = new CGFcamera(Math.PI / 4, 0.005, 500, vec3.fromValues(0, 27, 21.65), vec3.fromValues(0, 0, 0));
                 this.camP2 = new CGFcamera(Math.PI / 4, 0.005, 500, vec3.fromValues(0, 27, -21.65), vec3.fromValues(0, 0, 0))
@@ -73,11 +73,19 @@ class XMLscene extends CGFscene {
                 }
             }
             if (this.stepAngle == null) {
-                this.stepAngle = Math.PI/2 * deltaTime / 1000;
+                this.stepAngle = Math.PI/3 * deltaTime / 1000;
             }
+            
+            if(this.gameOrchestrator.prolog.gameOver){
+                this.stepAngle = Math.PI/8 * deltaTime / 1000;
+            }else{
+                this.stepAngle = Math.PI/3 * deltaTime / 1000;
+            }
+
             this.cameraRotationAngle -= this.stepAngle;
             if (this.cameraRotationAngle < 0 && !this.gameOrchestrator.prolog.gameOver) {
                 this.cameraRotationActive = false;
+                console.log("stopping");
                 this.cameraRotationAngle = Math.PI;
                 if (this.gameOrchestrator.currentPlayer == 1) {
                     this.cameraDefault = this.camP1;

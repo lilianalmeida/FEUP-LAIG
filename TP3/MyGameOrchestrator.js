@@ -1,6 +1,6 @@
 const GameState = { FirstPick: 1, SecondPick: 2 };
 const GameMode = { pvp: 1, pvb: 2, bvb: 3 };
-const TurnTime = 15;
+const TurnTime = 30;
 /**
  * MyGameOrchestrator
  * @constructor
@@ -22,30 +22,50 @@ class MyGameOrchestrator {
         if (this.gameTime == null) {
             this.gameTime = time;
         } else {
-            if(!this.prolog.gameOver){
-                this.gameTime += time;
-            }
-            if(!this.animator.animationRunning && !this.prolog.gameOver && !this.scene.cameraRotationActive){
-                this.turnTime -= time;
-            }
             if (!this.prolog.gameOver) {
-                this.updatePlayerBoard();
+                if(!this.animator.animationRunning &&!this.scene.cameraRotationActive){
+                    this.turnTime -= time;
+                    this.updatePlayerBoard();
+                }
+                this.gameTime += time;
                 document.getElementById("time").innerText = "Time passed: " + Math.round(this.gameTime) + " seconds";
-            }
-            if(this.turnTime <= 0){
-                console.log("Zero time left");
-                this.turnTime = 0;
-                this.prolog.gameOver= true;
-                this.scene.cameraRotationActive = true;
-                this.updatePlayerBoard();
+                
+                
+                if(this.turnTime <= 0){
+                    this.turnTime = 0;
+                    this.prolog.gameOver= true;
+                    if(this.currentPlayer == 1){
+                        this.score["black"] += 1;
+                    }
+                    else if(this.currentPlayer == 2){
+                        this.score["white"] += 1;
+                    }
+                    this.updateScoreBoard();
+                    this.scene.cameraRotationActive = true;
+                    this.updatePlayerBoard();
+                }
+            
             }
         }
         this.animator.update(time);
     }
+
     changeScene(filename) {
         this.scene.sceneInited = false;
         this.theme = new MySceneGraph(filename, this.scene);
         this.scene.graph = this.theme;
+    }
+
+    resetCameras(){
+        console.log("Current player: "+ this.currentPlayer);
+        if(this.currentPlayer == 1){
+            console.log("1");
+            this.scene.cameraDefault = new CGFcamera(Math.PI / 4, 0.005, 500, vec3.fromValues(0, 27, 21.65), vec3.fromValues(0, 0, 0));
+        }
+        else if(this.currentPlayer == 2){
+            console.log("2");
+            this.scene.cameraDefault = new CGFcamera(Math.PI / 4, 0.005, 500, vec3.fromValues(0, 27, -21.65), vec3.fromValues(0, 0, 0));
+        }
     }
 
     newGame() {
@@ -60,6 +80,7 @@ class MyGameOrchestrator {
         //this.scene.camera = this.currentPlayer == 1 ? this.scene.camp1 : this.scene.camp2;
         this.gameState = GameState.FirstPick;
         this.gameMode = GameMode[this.scene.interface.mode];
+        //this.resetCameras()
         if (this.gameMode == GameMode.bvb) {
             this.nextTurn();
         }
@@ -134,7 +155,7 @@ class MyGameOrchestrator {
                 this.animator.start();
             }
             else if (this.gameMode == GameMode.bvb) {
-                this.sleep(1500);
+                this.sleep(2500);
                 this.prolog.requestBotMove(this.level, this.currentPlayer)
                 this.animator.start();
             }

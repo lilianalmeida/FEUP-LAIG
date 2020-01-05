@@ -39,6 +39,7 @@ class MyInterface extends CGFinterface {
         this.modes = Object.keys(GameMode);
         this.mode = "pvp";
         this.settingsFolder.add(this, 'mode', this.modes).name('Mode').onChange(this.scene.gameOrchestrator.changeMode.bind(this.scene.gameOrchestrator));
+        this.settingsFolder.add(this.scene, 'cameraRotation').name('Rotate Camera');
         this.settingsFolder.add(this.scene.gameOrchestrator,'newGame').name('New Game');
         this.settingsFolder.add(this.scene.gameOrchestrator,'undo').name('Undo');
         this.settingsFolder.add(this.scene.gameOrchestrator,'gameMovie').name('Movie');
@@ -49,7 +50,6 @@ class MyInterface extends CGFinterface {
             return;
         }
         this.camerasGroup = this.gui.addFolder("Cameras");
-        this.camerasGroup.open();
         this.viewsVec = Object.keys(this.scene.gameOrchestrator.theme.views);
         this.securityViewsVec = Object.keys(this.scene.gameOrchestrator.theme.securityCameras);
 
