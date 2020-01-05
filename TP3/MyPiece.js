@@ -62,6 +62,12 @@ class MyPiece {
         this.floatingAngle = 0;
     }
 
+    dropOnBoard() {
+        this.floating = false;
+        this.y = 0.2;
+        this.floatingAngle = 0;
+    }
+    
     display() {
         if (this.player == 1) {
             this.whiteMaterial.apply();

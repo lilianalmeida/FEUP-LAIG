@@ -23,11 +23,13 @@ class MyGameOrchestrator {
             this.gameTime = time;
         } else {
             if (!this.prolog.gameOver) {
-                if(!this.animator.animationRunning &&!this.scene.cameraRotationActive){
+                if(!this.animator.animationRunning &&!this.scene.cameraRotationActive && !this.animator.isMovie){
                     this.turnTime -= time;
                     this.updatePlayerBoard();
                 }
+               if( !this.animator.isMovie){
                 this.gameTime += time;
+               }
                 document.getElementById("time").innerText = "Time passed: " + Math.round(this.gameTime) + " seconds";
                 
                 
@@ -115,7 +117,12 @@ class MyGameOrchestrator {
                 }
                 else {
                     if (this.move != null) {
-                        this.move.piece.fall();
+                        if(this.move.piece.tile != null){
+                            this.move.piece.dropOnBoard();
+                        }else{
+                            this.move.piece.fall();
+                        }
+
                     }
                     let piece = this.gameboard.getPiece(obj.id + "p" + obj.player);
                     piece.startFloating();
@@ -179,6 +186,9 @@ class MyGameOrchestrator {
     }
 
     undo() {
+        if(this.move.piece != null){
+            this.move.piece.fall();
+        }
         if (this.gameSequence.moves.length == 0) {
             return;
         }
@@ -233,6 +243,9 @@ class MyGameOrchestrator {
     }
 
     gameMovie() {
+        if(this.animator.animationRunning){
+            return;
+        }
         this.animator.startMovie();
     }
     display() {
