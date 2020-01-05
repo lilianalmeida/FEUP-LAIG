@@ -38,6 +38,7 @@ class MyAnimator {
                 move = this.gameSequence.moves[this.sequenceIndex];
                 gameBoard = this.gameBoardMovie;
                 this.gameOrchestrator.scene.cameraRotationActive = false;
+                this.gameOrchestrator.turnTime = TurnTime;
             }
             
             if (move.arcAnimation != null) {
@@ -79,6 +80,7 @@ class MyAnimator {
             this.animationRunning = false;
         }
         this.gameOrchestrator.scene.cameraRotationActive = true;
+        this.gameOrchestrator.turnTime = TurnTime;
     }
 
     display() {

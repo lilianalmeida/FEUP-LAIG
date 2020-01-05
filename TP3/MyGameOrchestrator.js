@@ -1,5 +1,6 @@
 const GameState = { FirstPick: 1, SecondPick: 2 };
 const GameMode = { pvp: 1, pvb: 2, bvb: 3 };
+const TurnTime = 15;
 /**
  * MyGameOrchestrator
  * @constructor
@@ -21,11 +22,23 @@ class MyGameOrchestrator {
         if (this.gameTime == null) {
             this.gameTime = time;
         } else {
-            this.gameTime += time;
+            if(!this.prolog.gameOver){
+                this.gameTime += time;
+            }
+            if(!this.animator.animationRunning && !this.prolog.gameOver && !this.scene.cameraRotationActive){
+                this.turnTime -= time;
+            }
             if (!this.prolog.gameOver) {
+                this.updatePlayerBoard();
                 document.getElementById("time").innerText = "Time passed: " + Math.round(this.gameTime) + " seconds";
             }
-
+            if(this.turnTime <= 0){
+                console.log("Zero time left");
+                this.turnTime = 0;
+                this.prolog.gameOver= true;
+                this.scene.cameraRotationActive = true;
+                this.updatePlayerBoard();
+            }
         }
         this.animator.update(time);
     }
@@ -42,8 +55,9 @@ class MyGameOrchestrator {
         this.prolog = new MyPrologInterface(this);
         this.prolog.requestStart();
         this.gameTime = 0;
+        this.turnTime = TurnTime;
         this.currentPlayer = this.prolog.player;
-        this.scene.camera = this.currentPlayer == 1 ? this.scene.camp1 : this.scene.camp2;
+        //this.scene.camera = this.currentPlayer == 1 ? this.scene.camp1 : this.scene.camp2;
         this.gameState = GameState.FirstPick;
         this.gameMode = GameMode[this.scene.interface.mode];
         if (this.gameMode == GameMode.bvb) {
@@ -62,6 +76,8 @@ class MyGameOrchestrator {
                 this.animator.start();
             }
         }
+        this.updatePlayerBoard();
+
     }
     parsePicking(obj, customId) {
         if (this.prolog.gameOver) {
@@ -112,7 +128,6 @@ class MyGameOrchestrator {
     nextTurn() {
         if (!this.prolog.gameOver) {
             this.currentPlayer = this.currentPlayer == 1 ? 2 : 1;
-            document.getElementById("player").innerText = "Player " + this.currentPlayer + "'s turn";
             if (this.gameMode == GameMode.pvb && !this.prolog.gameOver && this.bot == this.currentPlayer) {
                 this.sleep(1000);
                 this.prolog.requestBotMove(this.level, this.move.piece.player == 2 ? 1 : 2);
@@ -122,6 +137,10 @@ class MyGameOrchestrator {
                 this.sleep(1500);
                 this.prolog.requestBotMove(this.level, this.currentPlayer)
                 this.animator.start();
+            }
+
+            if(!this.prolog.gameOver){
+                this.updatePlayerBoard();
             }
         }
     }
@@ -156,10 +175,13 @@ class MyGameOrchestrator {
             this.nextTurn();
 
             if (this.prolog.gameOver) {
+                console.log("game was over!");
+                console.log("player " +this.currentPlayer);
                 this.score[this.currentPlayer == 1 ? "white" : "black"] -= 1;
                 this.prolog.gameOver = false;
             }
-            document.getElementById("player").innerText = "Player " + this.currentPlayer + "'s turn";
+            this.updatePlayerBoard();
+            this.updateScoreBoard();
         }
     }
 
@@ -170,6 +192,25 @@ class MyGameOrchestrator {
     updateScoreBoard() {
         document.getElementById("score").innerText = "P1 " + this.score["white"] + "-" + this.score["black"] + " P2";
     }
+
+    declareWinner(player){
+        document.getElementById("player").innerText = "Player " + player + " Wins!";
+    }
+
+    declareTie(){
+        document.getElementById("player").innerText = "It's a tie!";
+    }
+
+    updatePlayerBoard() {
+        console.log("Updating player board");
+        if(this.turnTime > 0){
+            document.getElementById("player").innerText = "Player " + this.currentPlayer + " has " + Math.round(this.turnTime) + " seconds to play";
+        }
+        else if(this.turnTime <= 0 && this.prolog.gameOver){
+            document.getElementById("player").innerText = "Player " + this.currentPlayer + " lost for not playing";
+        }
+    }
+
     gameMovie() {
         this.animator.startMovie();
     }

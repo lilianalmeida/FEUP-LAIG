@@ -159,7 +159,7 @@ class MyPrologInterface {
         if (good != null) {
             this.approval = true;
             //this.board = response.match(/\[{2}.*\]{2}/)[0];
-            this.gameOver =  response.match("won") != null || response.match("tie") != null ? true : false;
+            this.gameOver = response.match("won") != null || response.match("tie") != null ? true : false;
             console.log(this.gameOver);
             console.log("1: player " + this.player)
 
@@ -176,7 +176,7 @@ class MyPrologInterface {
                     this.gameOrch.score["black"] += 1;
                 }
                 this.gameOrch.updateScoreBoard();
-                document.getElementById("player").innerText = "Player " + this.player + " Wins!";
+                this.gameOrch.declareWinner(this.player);
             }
         } else {
             this.approval = false;
@@ -196,9 +196,9 @@ class MyPrologInterface {
             this.gameOrch.score[player] += 1;
             console.log(this.gameOrch.score);
             this.gameOrch.updateScoreBoard();
-            document.getElementById("player").innerText = "Player " + this.player + " Wins!";
+            this.gameOrch.declareWinner(this.botPlayer);
         }
-        else if(response.match("tie") != null){
+        else if (response.match("tie") != null) {
             document.getElementById("player").innerText = "It's a Tie!";
         }
 
@@ -217,7 +217,6 @@ class MyPrologInterface {
                 this.botPlayer = 1;
             }
             this.gameOrch.updateScoreBoard();
-            document.getElementById("player").innerText = "Player " + this.player + "'s turn";
         }
     }
 
@@ -234,7 +233,6 @@ class MyPrologInterface {
     requestMove(player, piece, destination) {
         let move = "move(" + destination[0] + "," + destination[1] + "," + this.pieceName(piece) + "," + player + "," + this.convertBoardToString() + ")";
         this.player = player;
-        console.log("Prolog player is "+ this.player);
         this.makeRequest(move, this.handleMoveReply.bind(this));
         return this.approval;
     }

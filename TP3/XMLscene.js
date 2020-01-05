@@ -73,7 +73,7 @@ class XMLscene extends CGFscene {
                 }
             }
             if (this.stepAngle == null) {
-                this.stepAngle = Math.PI / 2 * deltaTime / 1000;
+                this.stepAngle = Math.PI/2 * deltaTime / 1000;
             }
             this.cameraRotationAngle -= this.stepAngle;
             if (this.cameraRotationAngle < 0 && !this.gameOrchestrator.prolog.gameOver) {
