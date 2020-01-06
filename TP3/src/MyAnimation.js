@@ -6,7 +6,6 @@
 class MyAnimation {
     constructor(id) {
         this.id = id;
-        this.terminated = false;
     }
     /**
      * Updates animation state according to time passed

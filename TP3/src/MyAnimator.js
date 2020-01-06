@@ -98,7 +98,8 @@ class MyAnimator {
 
             if (move.arcAnimation != null) {
                 let piece = gameBoard.getPiece(move.piece.id + "p" + move.piece.player);
-                piece.animTransformation = move.arcAnimation.applyPieces(move.dirVec, move.angleVec);
+                move.arcAnimation.setUpAnimation(move.dirVec, move.angleVec);
+                piece.animTransformation = move.arcAnimation.apply();
 
                 if (this.isMovie){
                     console.log(gameBoard);

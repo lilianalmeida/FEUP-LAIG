@@ -16,7 +16,7 @@ class XMLscene extends CGFscene {
         this.lastTime = 0;
         this.filenames = ["space.xml","field.xml", "library.xml"];
         this.filename = filename;
-        this.cameraRotation = false;
+        this.cameraRotation = true;
         this.cameraRotationActive = false;
         this.cameraRotationAngle = Math.PI;
         this.countTime = false;

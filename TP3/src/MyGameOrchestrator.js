@@ -57,19 +57,7 @@ class MyGameOrchestrator {
         this.theme = new MySceneGraph(filename, this.scene);
         this.scene.graph = this.theme;
     }
-
-    resetCameras(){
-        console.log("Current player: "+ this.currentPlayer);
-        if(this.currentPlayer == 1){
-            console.log("1");
-            this.scene.cameraDefault = new CGFcamera(Math.PI / 4, 0.005, 500, vec3.fromValues(0, 27, 21.65), vec3.fromValues(0, 0, 0));
-        }
-        else if(this.currentPlayer == 2){
-            console.log("2");
-            this.scene.cameraDefault = new CGFcamera(Math.PI / 4, 0.005, 500, vec3.fromValues(0, 27, -21.65), vec3.fromValues(0, 0, 0));
-        }
-    }
-
+    
     newGame() {
         this.gameSequence = new MyGameSequence(this.scene);
         this.animator = new MyAnimator(this, this.gameSequence);
@@ -82,7 +70,6 @@ class MyGameOrchestrator {
         //this.scene.camera = this.currentPlayer == 1 ? this.scene.camp1 : this.scene.camp2;
         this.gameState = GameState.FirstPick;
         this.gameMode = GameMode[this.scene.interface.mode];
-        //this.resetCameras()
         if (this.gameMode == GameMode.bvb) {
             this.nextTurn();
         }
