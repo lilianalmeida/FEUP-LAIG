@@ -40,9 +40,9 @@ class MyGameMove {
         this.dirVec = tempVec;
         this.angleVec = Math.atan(tempVec[0] / tempVec[2]);
 
-        if ((Math.round(tempVec[2]) == 0.0) && tempVec[0] > 0) {
+        /*if ((Math.round(tempVec[2]) == 0.0) && tempVec[0] > 0) {
             this.angleVec = -Math.PI / 2;
-        }
+        }*/
     }
 
     rotateVecY(out, a, b, c) {
